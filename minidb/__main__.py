@@ -22,14 +22,44 @@ class minidb:
     """
 
     def inputFromFile(self, file):
-        """
-
+        """Import data from given vertical bar delimited `file` into array-table. (1 or more columns)
+        Parameters
+        ----------
+        `file` : string,
+            path to the input file.
+        Returns
+        -------
+        None
         """
         print("inputFromFile()")
 
-    def select(self):
+    def outputToFile(self, table, file):
+        """Output contents of `table` (with vertical bar separators) into `file`.
+        Parameters
+        ----------
+        `table` : string,
+            name of the table to output
+            
+        `file` : string
+            path to the output file where output must be written.
+        Returns
+        -------
+        None
         """
+        print("outputToFile()")
 
+    def select(self, table, criteria):
+        """Select all columns from `table` satisfying the given `criteria`. Prints the result to standard output.
+        Parameters
+        ----------
+        table : string,
+            name of the table to output,
+            
+        `criteria` : string,
+            condition(s) that each selected row must satisfy
+        Returns
+        -------
+        None
         """
         print("select()")
     
@@ -111,6 +141,9 @@ class minidb:
 
             if cmd == "inputfromfile":
                 self.inputFromFile()
+
+            elif cmd == "outputtofile":
+                self.outputToFile()
                 
             elif cmd == "select":
                 self.select()
