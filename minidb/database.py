@@ -55,33 +55,69 @@ class database:
         """
         print("select()")
     
-    def project(self):
-        """
-
+    def project(self, table, *columns):
+        """select a subset of columns from a table
+        Parameters
+        ----------
+        `table` : string,
+            name of the table from which to select columns,
+            
+        `columns` : string (multiple),
+            columns to keep in the projection
+        Returns
+        -------
+        None
         """
         print("project()")
     
-    def concat(self):
-        """
-
+    def concat(self, table1, table2):
+        """concatenate two tables (with the same schema)
+        Parameters
+        ----------
+        `table1` : string,
+            name of the first table,
+            
+        `table2` : string,
+            name of the second table
+        Returns
+        -------
+        None
         """
         print("concat()")
     
-    def sort(self):
-        """
-
+    def sort(self, table, *columns):
+        """sort `table` by each column in `columns` in the given order
+        Parameters
+        ----------
+        `table` : string,
+            name of the table,
+            
+        `columns` : string,
+            name of the columns to sort by (in the given order)
+        Returns
+        -------
+        None
         """
         print("sort()")
     
-    def join(self):
-        """
-
+    def join(self, *tables, criteria):
+        """select all columns from each of the `tables'. Filter rows by ones that satisfy the `criteria`
+        Parameters
+        ----------
+        `tables` : string (multiple),
+            names of the tables,
+            
+        `criteria` : string,
+            condition(s) that each selected row must satisfy
+        Returns
+        -------
+        None
         """
         print("join()")
 
     def avggroup(self):
         """
-
+        
         """
         print("avggroup()")
 
