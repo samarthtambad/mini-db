@@ -1,6 +1,7 @@
 
 from table import Table
 
+
 class Database:
 
     def __init__(self):
@@ -15,17 +16,13 @@ class Database:
     (iv) any side effects to globals.
     """
 
-    def inputFromFile(self, file):
-        """Import data from given vertical bar delimited `file` into array-table. (1 or more columns)
-        Parameters
-        ----------
-        `file` : string,
-            path to the input file.
-        Returns
-        -------
-        None
+    def input_from_file(self, file):
+        """ Import data from given vertical bar delimited `file`
+        into array-table. (1 or more columns)
+        :param file: path to the input file.
+        :return: reference to the created table
         """
-        print("inputFromFile()")
+        # print("input_from_file()")
         table = None
         first = True
         with open(file, "r") as f:
@@ -41,138 +38,118 @@ class Database:
                         table.insert_row(key, values)
                     except:
                         continue
-        table.print()
+        # table.print()
+        self.tables.append(table)
+        return table
 
-
-
-    def outputToFile(self, table, file):
-        """Output contents of `table` (with vertical bar separators) into `file`.
-        Parameters
-        ----------
-        `table` : string,
-            name of the table to output
-            
-        `file` : string
-            path to the output file where output must be written.
-        Returns
-        -------
-        None
+    def output_to_file(self, table, file):
+        """ Output contents of `table` (with vertical bar separators) into `file`.
+        :param table: name of the table to output
+        :param file: path to the output file where output must be written.
+        :return: None
         """
-        print("outputToFile()")
+        print("output_to_file()")
 
     def select(self, table, criteria):
-        """Select all columns from `table` satisfying the given `criteria`. Prints the result to standard output.
-        Parameters
-        ----------
-        table : string,
-            name of the table to output,
-            
-        `criteria` : string,
-            condition(s) that each selected row must satisfy
-        Returns
-        -------
-        None
+        """ Select all columns from `table` satisfying the given `criteria`.
+        Prints the result to standard output.
+        :param table: name of the table to output
+        :param criteria: condition(s) that each selected row must satisfy
+        :return: None
         """
         print("select()")
     
-    def project(self, table, *columns):
-        """select a subset of columns from a table
-        Parameters
-        ----------
-        `table` : string,
-            name of the table from which to select columns,
-            
-        `columns` : string (multiple),
-            columns to keep in the projection
-        Returns
-        -------
-        None
+    def project(self, table, columns):
+        """ select a subset of columns from a table
+        :param table: name of the table from which to select columns
+        :param columns: columns to keep in the projection
+        :return: None
         """
         print("project()")
     
     def concat(self, table1, table2):
-        """concatenate two tables (with the same schema)
-        Parameters
-        ----------
-        `table1` : string,
-            name of the first table,
-            
-        `table2` : string,
-            name of the second table
-        Returns
-        -------
-        None
+        """ concatenate two tables (with the same schema)
+        :param table1: name of the first table
+        :param table2: name of the second table
+        :return: None
         """
         print("concat()")
     
-    def sort(self, table, *columns):
-        """sort `table` by each column in `columns` in the given order
-        Parameters
-        ----------
-        `table` : string,
-            name of the table,
-            
-        `columns` : string,
-            name of the columns to sort by (in the given order)
-        Returns
-        -------
-        None
+    def sort(self, table, columns):
+        """ sort `table` by each column in `columns` in the given order
+        :param table: name of the table
+        :param columns: name of the columns to sort by (in the given order)
+        :return: None
         """
         print("sort()")
     
-    def join(self, *tables, criteria):
-        """select all columns from each of the `tables'. Filter rows by ones that satisfy the `criteria`
-        Parameters
-        ----------
-        `tables` : string (multiple),
-            names of the tables,
-            
-        `criteria` : string,
-            condition(s) that each selected row must satisfy
-        Returns
-        -------
-        None
+    def join(self, tables, criteria):
+        """ select all columns from each of the `tables'.
+        Filter rows by ones that satisfy the `criteria`
+        :param tables: names of the tables
+        :param criteria: condition(s) that each selected row must satisfy
+        :return: None
         """
         print("join()")
 
-    def avggroup(self):
-        """
-        
+    def avggroup(self, table, avg_column, other_columns):
+        """ select avg(`sum_column`), `other_columns` from table
+        :param table: name of the table
+        :param avg_column: name of column over which avg is taken
+        :param other_columns: names of other columns
+        :return: None
         """
         print("avggroup()")
 
-    def sumgroup(self):
-        """
-
+    def sumgroup(self, table, sum_column, other_columns):
+        """ select sum(`sum_column`), `other_columns` from table
+        :param table: name of the table
+        :param sum_column: name of column over which sum is taken
+        :param other_columns: names of other columns
+        :return: None
         """
         print("sumgroup()")
 
-    def movavg(self):
-        """
-
+    def movavg(self, table, column, n):
+        """ perform `n` item moving average over `column` of `table'
+        :param table: name of the table
+        :param column: name of the column
+        :param n: number of items over which to take moving average
+        :return: None
         """
         print("movavg()")
 
-    def movsum(self):
-        """
-
+    def movsum(self, table, column, n):
+        """ perform `n` item moving sum over `column` of `table'
+        :param table: name of the table
+        :param column: name of the column
+        :param n: number of items over which to take moving sum
+        :return: None
         """
         print("movsum()")
     
-    def avg(self):
-        """
-
+    def avg(self, table, column):
+        """ select avg(`column`) from `table`
+        :param table: name of the table
+        :param column: name of the column
+        :return: None
         """
         print("avg()")
 
-    def Btree(self):
+    def btree(self, table, column):
+        """ create a Btree index on `table` based on `column`
+        Note: all indexes will be based on 1 column
+        :param table: name of the table
+        :param column: name of the column
+        :return: None
         """
-        
-        """
-        print("Btree()")
+        print("btree()")
 
-    def Hash(self):
+    def hash(self, table, column):
+        """ create a Hash index on `table` based on `column`
+        Note: all indexes will be based on 1 column
+        :param table: name of the table
+        :param column: name of the column
+        :return: None
         """
-        
-        """
-        print("Hash()")
+        print("hash()")

@@ -2,11 +2,12 @@
 from database import Database as mdb
 import re
 
-
 """TODO, Remove before submitting
 Each operation will be on a single line. Each time you execute a line,
 you should print the time it took to execute.
 """
+
+
 def start():
     db = mdb()
 
@@ -15,10 +16,10 @@ def start():
         cmd = txt.split("(")[0]
 
         if cmd == "inputfromfile":
-            db.inputFromFile("sales1")
+            db.input_from_file("sales1")
 
         elif cmd == "outputtofile":
-            db.outputToFile()
+            db.output_to_file()
             
         elif cmd == "select":
             db.select()
@@ -30,7 +31,7 @@ def start():
             db.concat()
 
         elif cmd == "sort":
-            db.sort()
+            db.sort(table)
 
         elif cmd == "join":
             db.join()
@@ -51,15 +52,15 @@ def start():
             db.avg()
 
         elif cmd == "Btree":
-            db.Btree()
+            db.btree()
 
         elif cmd == "Hash":
-            db.Hash()
+            db.hash()
 
         elif cmd == "exit":
             break
 
-        else: # default
+        else:  # default
             print("Wrong command. Use help to find out the correct usage")
             
 
