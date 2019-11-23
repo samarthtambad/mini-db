@@ -1,5 +1,5 @@
 # from BTrees.IIBTree import IIBTree
-from database import database as mdb
+from database import Database as mdb
 import re
 
 
@@ -15,7 +15,7 @@ def start():
         cmd = txt.split("(")[0]
 
         if cmd == "inputfromfile":
-            db.inputFromFile()
+            db.inputFromFile("sales1")
 
         elif cmd == "outputtofile":
             db.outputToFile()

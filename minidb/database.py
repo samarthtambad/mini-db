@@ -1,8 +1,10 @@
 
-class database:
+from table import Table
+
+class Database:
 
     def __init__(self):
-        pass
+        self.tables = []
 
     """TODO, Remove before submitting
     You will hand in clean and well structured source code in which each 
@@ -24,6 +26,24 @@ class database:
         None
         """
         print("inputFromFile()")
+        table = None
+        first = True
+        with open(file, "r") as f:
+            for line in f:
+                split = line.split("|")
+                if first:
+                    first = False
+                    table = Table(split)
+                    continue
+                else:
+                    try:
+                        key, values = split[0], split[1:]
+                        table.insert_row(key, values)
+                    except:
+                        continue
+        table.print()
+
+
 
     def outputToFile(self, table, file):
         """Output contents of `table` (with vertical bar separators) into `file`.
