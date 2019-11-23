@@ -25,7 +25,7 @@ def start():
             db.select()
 
         elif cmd == "project":
-            db.project()
+            db.project("table_name", "saleid", "itemid", "customerid", "storeid")
 
         elif cmd == "concat":
             db.concat()

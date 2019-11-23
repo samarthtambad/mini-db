@@ -6,6 +6,7 @@ class Database:
 
     def __init__(self):
         self.tables = []
+        self.table = None  # keeping temporarily for testing
 
     """TODO, Remove before submitting
     You will hand in clean and well structured source code in which each 
@@ -38,8 +39,9 @@ class Database:
                         table.insert_row(key, values)
                     except:
                         continue
-        # table.print()
+        table.print()
         self.tables.append(table)
+        self.table = table
         return table
 
     def output_to_file(self, table, file):
@@ -59,13 +61,17 @@ class Database:
         """
         print("select()")
     
-    def project(self, table, columns):
+    def project(self, table, *columns):  # TODO: I think this must also be a method of table
         """ select a subset of columns from a table
         :param table: name of the table from which to select columns
         :param columns: columns to keep in the projection
         :return: None
         """
         print("project()")
+        if self.table is None:
+            print("No table found")
+            return None
+        print(self.table.projection("saleid", "itemid", "customerid", "storeid"))
     
     def concat(self, table1, table2):
         """ concatenate two tables (with the same schema)
