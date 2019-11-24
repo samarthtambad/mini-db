@@ -1,5 +1,6 @@
 # from BTrees.IIBTree import IIBTree
 from minidb.database import Database as mdb
+from minidb.criteria import Criteria
 import re
 
 """TODO, Remove before submitting
@@ -16,7 +17,6 @@ def start():
 
         output,cmd,params=parse_instr(txt)
 
-
         if cmd == "inputfromfile":
             table_name = "R"
             db.input_from_file(table_name, "sales1")
@@ -24,7 +24,7 @@ def start():
         elif cmd == "outputtofile":
             table_name = "R"
             db.output_to_file(table_name, "_tmp.txt")
-            
+
         elif cmd == "select":
             db.select()
 
@@ -33,18 +33,18 @@ def start():
             db.project(table_name, "saleid", "itemid", "customerid", "storeid")
 
         elif cmd == "concat":
-            tables=get_tables(params,2)
+            tables = get_tables(params, 2)
             db.concat(tables)
 
         elif cmd == "sort":
-            table=get_tables(params,1)
+            table = get_tables(params, 1)
             db.sort(table)
 
 
         elif cmd == "join":
-            tables=get_tables(params,2) 
-            criteria=get_criteria(params)
-            db.join(tables,criteria)
+            tables = get_tables(params, 2)
+            criteria = get_criteria(params)
+            db.join(tables, criteria)
 
         elif cmd == "avggroup":
             db.avggroup()
@@ -72,28 +72,29 @@ def start():
 
         else:  # default
             print("Wrong command. Use help to find out the correct usage")
- 
+
 
 def parse_instr(txt):
-    txt=re.split("//",txt)[0]
-    output,instr=re.split("(:=)",txt)[0].strip(),re.split("(:=)",txt)[2]
+    txt = re.split("//", txt)[0]
+    output, instr = re.split("(:=)", txt)[0].strip(), re.split("(:=)", txt)[2]
     cmd = instr.split("(")[0]
-    params=instr[len(cmd):]
-    return output.strip(),cmd.strip(),params.strip()
+    params = instr[len(cmd):]
+    return output.strip(), cmd.strip(), params.strip()
+
 
 def get_criteria(params):
-    criteria=[]
-    re.split(",",params)[2]
+    criteria = []
+    re.split(",", params)[2]
     # split on and,or to get list of commands
     # TODO: loop through criteria using regexp and create new criteria objects for each string between "(" ")"
-    criteria_object=new Criteria(...)
-    criteria.append(criteria_object)
 
-def get_tables(params,num_tables):
+
+
+def get_tables(params, num_tables):
     tables = []
-    tables_=params.split("(")[1]
-    for i in range(0,num_tables):
-        tables.append(tables_.split(",")[i].strip().replace(")",""))
+    tables_ = params.split("(")[1]
+    for i in range(0, num_tables):
+        tables.append(tables_.split(",")[i].strip().replace(")", ""))
     return tables
 
 
