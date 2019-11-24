@@ -1,5 +1,5 @@
 # from BTrees.IIBTree import IIBTree
-from database import Database as mdb
+from minidb.database import Database as mdb
 import re
 
 """TODO, Remove before submitting
@@ -22,7 +22,8 @@ def start():
             db.input_from_file(table_name, "sales1")
 
         elif cmd == "outputtofile":
-            db.output_to_file()
+            table_name = "R"
+            db.output_to_file(table_name, "_tmp.txt")
             
         elif cmd == "select":
             db.select()
@@ -38,6 +39,7 @@ def start():
         elif cmd == "sort":
             table=get_tables(params,1)
             db.sort(table)
+
 
         elif cmd == "join":
             tables=get_tables(params,2) 
