@@ -2,6 +2,7 @@ from BTrees.OOBTree import OOBTree
 
 # TODO: discuss whether this implementation is efficient enough. Else, how to optimize? Or is it better to go with np.array?
 
+
 class Table:
 
     def __init__(self, columns):
@@ -49,7 +50,7 @@ class Table:
             print("Invalid command. Primary key cannot have duplicated")
             return False
 
-        columns = [key]     # TODO: decide if needed or not. kept it for ease of handling index
+        columns = [key]     # TODO: decide if needed or not. I kept it for ease of handling index
         for value in values:
             columns.append(value)
         self.rows.update({key: columns})
