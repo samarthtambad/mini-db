@@ -1,8 +1,11 @@
 
 <<<<<<< HEAD
-from table import Table
+<<<<<<< HEAD
+from minidb.table import Table
 import copy
 =======
+=======
+>>>>>>> 7427744a160c4e7d78d4da54c2591c1236a42a22
 from minidb.table import Table
 
 >>>>>>> 7427744a160c4e7d78d4da54c2591c1236a42a22
