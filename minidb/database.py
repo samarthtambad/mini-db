@@ -5,7 +5,7 @@ from table import Table
 class Database:
 
     def __init__(self):
-        self.tables = []
+        self.tables = {}
         self.table = None  # keeping temporarily for testing
 
     """TODO, Remove before submitting
@@ -17,7 +17,7 @@ class Database:
     (iv) any side effects to globals.
     """
 
-    def input_from_file(self, file):
+    def input_from_file(self, table_name, file):
         """ Import data from given vertical bar delimited `file`
         into array-table. (1 or more columns)
         :param file: path to the input file.
@@ -40,7 +40,7 @@ class Database:
                     except:
                         continue
         table.print()
-        self.tables.append(table)
+        self.tables[table_name] = table
         self.table = table
         return table
 
@@ -68,10 +68,10 @@ class Database:
         :return: None
         """
         print("project()")
-        if self.table is None:
+        if table not in self.tables:
             print("No table found")
             return None
-        print(self.table.projection("saleid", "itemid", "customerid", "storeid"))
+        print(self.tables[table].projection("saleid", "itemid", "customerid", "storeid"))
     
     def concat(self, table1, table2):
         """ concatenate two tables (with the same schema)

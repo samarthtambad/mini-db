@@ -16,7 +16,8 @@ def start():
         cmd = txt.split("(")[0]
 
         if cmd == "inputfromfile":
-            db.input_from_file("sales1")
+            table_name = "R"
+            db.input_from_file(table_name, "sales1")
 
         elif cmd == "outputtofile":
             db.output_to_file()
@@ -25,7 +26,8 @@ def start():
             db.select()
 
         elif cmd == "project":
-            db.project("table_name", "saleid", "itemid", "customerid", "storeid")
+            table_name = "R"
+            db.project(table_name, "saleid", "itemid", "customerid", "storeid")
 
         elif cmd == "concat":
             db.concat()
