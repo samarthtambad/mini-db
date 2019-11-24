@@ -74,13 +74,14 @@ class Database:
         """
         print("select()")
     
-    def project(self, table, columns):  # TODO: I think this must also be a method of table
+    # TODO: Should this create another table? How should we implement that?
+    def project(self, table, columns):
         """ select a subset of columns from a table
         :param table: name of the table from which to select columns
         :param columns: columns to keep in the projection
         :return: success True/False
         """
-        print("project()")
+        # print("project()")
         if table not in self.tables:
             print("No table found")
             return False
