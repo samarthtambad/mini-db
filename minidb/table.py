@@ -6,6 +6,7 @@ from BTrees.OOBTree import OOBTree
 class Table:
 
     def __init__(self, columns):
+        self.columns=columns
         self.num_columns = len(columns)
         self.rows = OOBTree()  # primary index
         self.col_names = {}
@@ -15,14 +16,14 @@ class Table:
     def __get_column_idx(self, col_name):
         return self.col_names[col_name]
 
-    def projection(self, *columns):
+    def projection(self, columns):
         idx = []
 
         # create a list of indexes of given columns
         for col in columns:
             if col not in self.col_names:
                 print("Invalid command. Column not present in table")
-                return False
+                return None
             idx.append(self.__get_column_idx(col))
 
         # return a sequence of rows but only include columns with index in `idx`
@@ -56,16 +57,16 @@ class Table:
         self.rows.update({key: columns})
         return True
 
-    def print(self):
+    def print(self, f=None):
         # print column names (separated by |)
         for idx, name in enumerate(self.col_names):
             if idx != 0:
-                print(" | ", end='')
-            print(name, end='')
+                print(" | ", end='', file=f)
+            print(name, end='', file=f)
         # print table rows (separated by |)
         for values in self.rows.values():
             for idx, value in enumerate(values):
                 if idx != 0:
-                    print(" | ", end='')
-                print(value, end='')
+                    print(" | ", end='', file=f)
+                print(value, end='', file=f)
         pass

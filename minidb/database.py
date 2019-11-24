@@ -1,6 +1,11 @@
 
+<<<<<<< HEAD
 from table import Table
+import copy
+=======
+from minidb.table import Table
 
+>>>>>>> 7427744a160c4e7d78d4da54c2591c1236a42a22
 
 class Database:
 
@@ -20,10 +25,16 @@ class Database:
     def input_from_file(self, table_name, file):
         """ Import data from given vertical bar delimited `file`
         into array-table. (1 or more columns)
+        corresponds to:
+            CREATE TABLE `table_name` (...)
+            LOAD DATA INFILE `file` INTO TABLE `table_name` FIELDS TERMINATED BY '|'
+        :param table_name: name of the table to create
         :param file: path to the input file.
-        :return: reference to the created table
+        :return: success True/False
         """
         # print("input_from_file()")
+        # TODO: Handle possible exceptions, return False
+        # TODO: What to do if table already exists?
         table = None
         first = True
         with open(file, "r") as f:
@@ -42,15 +53,22 @@ class Database:
         table.print()
         self.tables[table_name] = table
         self.table = table
-        return table
+        return True
 
-    def output_to_file(self, table, file):
+    def output_to_file(self, table_name, file):
         """ Output contents of `table` (with vertical bar separators) into `file`.
-        :param table: name of the table to output
+        :param table_name: name of the table to output
         :param file: path to the output file where output must be written.
-        :return: None
+        :return: success True/False
         """
-        print("output_to_file()")
+        # print("output_to_file()")
+        if table_name not in self.tables:
+            print("No table found")
+            return False
+        table = self.tables[table_name]
+        with open(file, "a") as f:
+            table.print(f)
+        return True
 
     def select(self, table, criteria):
         """ Select all columns from `table` satisfying the given `criteria`.
@@ -61,17 +79,22 @@ class Database:
         """
         print("select()")
     
-    def project(self, table, *columns):  # TODO: I think this must also be a method of table
+    # TODO: Should this create another table? How should we implement that?
+    def project(self, table, columns):
         """ select a subset of columns from a table
         :param table: name of the table from which to select columns
         :param columns: columns to keep in the projection
-        :return: None
+        :return: success True/False
         """
-        print("project()")
+        # print("project()")
         if table not in self.tables:
             print("No table found")
-            return None
-        print(self.tables[table].projection("saleid", "itemid", "customerid", "storeid"))
+            return False
+        projection = self.tables[table].projection(columns)
+        if projection is None:
+            return False
+        print(projection)
+        return True
     
     def concat(self, output, tables):  # TODO: ensure schemas are the same
         """ concatenate tables (with the same schema)
@@ -79,8 +102,11 @@ class Database:
         :return: None
         """
         print("concat()")
-        # first create a new table from t1
-        table=tables[0].duplicate_table()
+        table=copy.deepcopy(self.tables[tables[0]])
+        for row in self.tables[tables[1]].rows.values():
+            key=row[0]
+            row.pop(0)
+            table.insert_row(key,row)
         self.tables[output]=table
 
     def sort(self, output, table, columns):
