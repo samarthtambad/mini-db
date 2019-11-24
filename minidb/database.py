@@ -98,7 +98,7 @@ class Database:
         :return: None
         """
         print("concat()")
-<<<<<<< HEAD
+
         # create a copy of the first table
         table=copy.deepcopy(self.tables[tables[0]])
         for row in self.tables[tables[1]].rows.values():
@@ -107,11 +107,7 @@ class Database:
             table.insert_row(key,row)
         # save concatenated table in database with appropriate name
         self.tables[output]=table
-=======
-        # first create a new table from t1
-        table = tables[0].duplicate_table()
-        self.tables[output] = table
->>>>>>> master
+
 
     def sort(self, output, table, columns):
         """ sort `table` by each column in `columns` in the given order
@@ -133,7 +129,7 @@ class Database:
         """
         print("join()")
 
-<<<<<<< HEAD
+
         # create new table with appropriate name and columns
         t1_cols=[tables[0]+"_"+x for x in t1.columns]
         t2_cols=[tables[1]+"_"+x for x in t2.columns]
@@ -144,14 +140,6 @@ class Database:
         t1=self.tables[tables[0]]
         t2=self.tables[tables[1]]
 
-=======
-        table = None
-        self.tables[output] = table
-        t1 = self.tables[tables[0]]
-        t2 = self.tables[tables[1]]
-
-        # for c in criteria:
->>>>>>> master
 
     def avggroup(self, table, avg_column, other_columns):
         """ select avg(`sum_column`), `other_columns` from table
