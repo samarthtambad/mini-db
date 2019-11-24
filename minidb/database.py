@@ -1,5 +1,5 @@
 
-from table import Table
+from minidb.table import Table
 
 
 class Database:

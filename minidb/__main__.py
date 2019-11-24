@@ -1,5 +1,5 @@
 # from BTrees.IIBTree import IIBTree
-from database import Database as mdb
+from minidb.database import Database as mdb
 import re
 
 """TODO, Remove before submitting
@@ -34,7 +34,8 @@ def start():
             db.concat()
 
         elif cmd == "sort":
-            db.sort(table)
+            table_name = "R"
+            db.sort(table_name)
 
         elif cmd == "join":
             db.join()
