@@ -1,6 +1,6 @@
-# from BTrees.IIBTree import IIBTree
 from minidb.database import Database as mdb
 import re
+import os
 
 """TODO, Remove before submitting
 Each operation will be on a single line. Each time you execute a line,
@@ -17,7 +17,7 @@ def start():
 
         if cmd == "inputfromfile":
             table_name = "R"
-            db.input_from_file(table_name, "sales1")
+            db.input_from_file(table_name, "data/sales1")
 
         elif cmd == "outputtofile":
             table_name = "R"
@@ -28,7 +28,7 @@ def start():
 
         elif cmd == "project":
             table_name = "R"
-            db.project(table_name, "saleid", "itemid", "customerid", "storeid")
+            db.project(table_name, ["saleid", "itemid", "customerid", "storeid"])
 
         elif cmd == "concat":
             db.concat()
