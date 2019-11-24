@@ -6,6 +6,7 @@ from BTrees.OOBTree import OOBTree
 class Table:
 
     def __init__(self, columns):
+        self.columns=columns
         self.num_columns = len(columns)
         self.rows = OOBTree()  # primary index
         self.col_names = {}

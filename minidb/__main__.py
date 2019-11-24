@@ -87,8 +87,7 @@ def get_criteria(params):
     re.split(",", params)[2]
     # split on and,or to get list of commands
     # TODO: loop through criteria using regexp and create new criteria objects for each string between "(" ")"
-    criteria_object = Criteria(...)
-    criteria.append(criteria_object)
+
 
 
 def get_tables(params, num_tables):

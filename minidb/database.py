@@ -1,5 +1,6 @@
 
 from minidb.table import Table
+import copy
 
 
 class Database:
@@ -97,9 +98,16 @@ class Database:
         :return: None
         """
         print("concat()")
-        # first create a new table from t1
-        table = tables[0].duplicate_table()
-        self.tables[output] = table
+
+        # create a copy of the first table
+        table=copy.deepcopy(self.tables[tables[0]])
+        for row in self.tables[tables[1]].rows.values():
+            key=row[0]
+            row.pop(0)
+            table.insert_row(key,row)
+        # save concatenated table in database with appropriate name
+        self.tables[output]=table
+
 
     def sort(self, output, table, columns):
         """ sort `table` by each column in `columns` in the given order
@@ -120,13 +128,18 @@ class Database:
         :return: None
         """
         print("join()")
-
-        table = None
+        t1=self.tables[tables[0]]
+        t2=self.tables[tables[1]]
+        
+        # create new table with appropriate name and columns
+        t1_cols=[tables[0]+"_"+x for x in t1.columns]
+        t2_cols=[tables[1]+"_"+x for x in t2.columns]
+        table = Table(t1_cols+t2_cols)
         self.tables[output] = table
-        t1 = self.tables[tables[0]]
-        t2 = self.tables[tables[1]]
 
-        # for c in criteria:
+        # create projections for each table, create cross product of arrays
+
+
 
     def avggroup(self, table, avg_column, other_columns):
         """ select avg(`sum_column`), `other_columns` from table
