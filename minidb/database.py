@@ -20,10 +20,16 @@ class Database:
     def input_from_file(self, table_name, file):
         """ Import data from given vertical bar delimited `file`
         into array-table. (1 or more columns)
+        corresponds to:
+            CREATE TABLE `table_name` (...)
+            LOAD DATA INFILE `file` INTO TABLE `table_name` FIELDS TERMINATED BY '|'
+        :param table_name: name of the table to create
         :param file: path to the input file.
-        :return: reference to the created table
+        :return: success True/False
         """
         # print("input_from_file()")
+        # TODO: Handle possible exceptions, return False
+        # TODO: What to do if table already exists?
         table = None
         first = True
         with open(file, "r") as f:
@@ -42,15 +48,22 @@ class Database:
         table.print()
         self.tables[table_name] = table
         self.table = table
-        return table
+        return True
 
-    def output_to_file(self, table, file):
+    def output_to_file(self, table_name, file):
         """ Output contents of `table` (with vertical bar separators) into `file`.
-        :param table: name of the table to output
+        :param table_name: name of the table to output
         :param file: path to the output file where output must be written.
-        :return: None
+        :return: success True/False
         """
-        print("output_to_file()")
+        # print("output_to_file()")
+        if table_name not in self.tables:
+            print("No table found")
+            return False
+        table = self.tables[table_name]
+        with open(file, "a") as f:
+            table.print(f)
+        return True
 
     def select(self, table, criteria):
         """ Select all columns from `table` satisfying the given `criteria`.

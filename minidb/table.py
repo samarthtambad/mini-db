@@ -56,16 +56,16 @@ class Table:
         self.rows.update({key: columns})
         return True
 
-    def print(self):
+    def print(self, f=None):
         # print column names (separated by |)
         for idx, name in enumerate(self.col_names):
             if idx != 0:
-                print(" | ", end='')
-            print(name, end='')
+                print(" | ", end='', file=f)
+            print(name, end='', file=f)
         # print table rows (separated by |)
         for values in self.rows.values():
             for idx, value in enumerate(values):
                 if idx != 0:
-                    print(" | ", end='')
-                print(value, end='')
+                    print(" | ", end='', file=f)
+                print(value, end='', file=f)
         pass

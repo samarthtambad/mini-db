@@ -20,7 +20,8 @@ def start():
             db.input_from_file(table_name, "sales1")
 
         elif cmd == "outputtofile":
-            db.output_to_file()
+            table_name = "R"
+            db.output_to_file(table_name, "_tmp.txt")
             
         elif cmd == "select":
             db.select()
