@@ -18,6 +18,13 @@ class Database:
     (iv) any side effects to globals.
     """
 
+    def show_tables(self):
+        if (len(self.tables)==0):
+            print("No tables")
+        else:
+            for table in self.tables:
+                print(table)
+
     def input_from_file(self, table_name, file):
         """ Import data from given vertical bar delimited `file`
         into array-table. (1 or more columns)
@@ -33,7 +40,7 @@ class Database:
         # TODO: What to do if table already exists?
         table = None
         first = True
-        with open(file, "r") as f:
+        with open("data/"+file, "r") as f:
             for line in f:
                 split = line.split("|")
                 if first:
