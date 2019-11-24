@@ -91,23 +91,28 @@ class Database:
         print(projection)
         return True
     
-    def concat(self, table1, table2):
-        """ concatenate two tables (with the same schema)
-        :param table1: name of the first table
-        :param table2: name of the second table
+    def concat(self, output, tables):  # TODO: ensure schemas are the same
+        """ concatenate tables (with the same schema)
+        :param tables: list of tables to be concatenated
         :return: None
         """
         print("concat()")
-    
-    def sort(self, table, columns):
+        # first create a new table from t1
+        table = tables[0].duplicate_table()
+        self.tables[output] = table
+
+    def sort(self, output, table, columns):
         """ sort `table` by each column in `columns` in the given order
         :param table: name of the table
         :param columns: name of the columns to sort by (in the given order)
         :return: None
         """
         print("sort()")
-    
-    def join(self, tables, criteria):
+
+        table = None
+        self.tables[output] = table
+
+    def join(self, output, tables, criteria):
         """ select all columns from each of the `tables'.
         Filter rows by ones that satisfy the `criteria`
         :param tables: names of the tables
@@ -115,6 +120,13 @@ class Database:
         :return: None
         """
         print("join()")
+
+        table = None
+        self.tables[output] = table
+        t1 = self.tables[tables[0]]
+        t2 = self.tables[tables[1]]
+
+        # for c in criteria:
 
     def avggroup(self, table, avg_column, other_columns):
         """ select avg(`sum_column`), `other_columns` from table
