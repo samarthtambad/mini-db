@@ -90,6 +90,9 @@ class Database:
         print("sort()")
     
     def join(self, tables, criteria):
+        t1=self.tables[tables[0]]
+        t2=self.tables[tables[1]]
+        
         """ select all columns from each of the `tables'.
         Filter rows by ones that satisfy the `criteria`
         :param tables: names of the tables

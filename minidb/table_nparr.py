@@ -5,6 +5,17 @@ class Table:
     def __init__(self):
         self.table=np.array(object)
         self.header=None
+
+    def get_length():
+        return len(self.table)
+
+    def __get_column_idx(self, col_name):
+        # TODO: implement
+        return
+
+    def projection(self):
+        # TODO: implement
+        return
         
     def create_table_from_file(self,filename):
         with open(filename) as fp:
@@ -13,13 +24,13 @@ class Table:
                 new_row=Row()
                 for field in row.split("|"):
                     new_row.data.append(field)
-                self.add_row(new_row)
+                self.insert_row(new_row)
                 row=fp.readline()
             
-    def add_row(self,row):
+    def insert_row(self,row):
         self.table=np.append(self.table,row)
         
-    def print_table(self):
+    def print(self):
         for i in range(0,len(self.table)):
             print(self.table[i])
         

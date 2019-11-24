@@ -13,7 +13,7 @@ def start():
 
     while True:
         txt = input("minidb>> ")
-        cmd = txt.split("(")[0]
+        cmd,params = txt.split("(")
 
         if cmd == "inputfromfile":
             table_name = "R"
@@ -36,7 +36,9 @@ def start():
             db.sort(table)
 
         elif cmd == "join":
-            db.join()
+            tables=get_tables(params) 
+            criteria=get_criteria(params)
+            db.join(tables,criteria)
 
         elif cmd == "avggroup":
             db.avggroup()
@@ -64,7 +66,20 @@ def start():
 
         else:  # default
             print("Wrong command. Use help to find out the correct usage")
-            
+ 
+
+def get_criteria(params):
+    criteria=[]
+    criteria_=params.split("(")[1]
+
+
+def get_tables(params):
+    tables = []
+    tables_=params.split("(")[0]
+    tables[0]=tables_.split(",")[0]
+    tables[1]=tables_.split(",")[1].split(",")[0]
+    return tables
+
 
 if __name__ == "__main__":
     start()
