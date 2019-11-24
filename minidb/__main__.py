@@ -1,5 +1,6 @@
 # from BTrees.IIBTree import IIBTree
 from minidb.database import Database as mdb
+from minidb.criteria import Criteria
 import re
 
 """TODO, Remove before submitting
