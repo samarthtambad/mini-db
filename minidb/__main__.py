@@ -18,7 +18,7 @@ def start():
         output,cmd,params=parse_instr(txt)
 
         if cmd == "inputfromfile":
-            table_name = "R"
+            table_name = output
             db.input_from_file(table_name, "sales1")
 
         elif cmd == "outputtofile":
