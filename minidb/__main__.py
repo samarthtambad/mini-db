@@ -13,7 +13,9 @@ def start():
 
     while True:
         txt = input("minidb>> ")
-        cmd = txt.split("(")[0]
+
+        output,cmd,params=parse_instr(txt)
+
 
         if cmd == "inputfromfile":
             table_name = "R"
@@ -31,14 +33,18 @@ def start():
             db.project(table_name, "saleid", "itemid", "customerid", "storeid")
 
         elif cmd == "concat":
-            db.concat()
+            tables=get_tables(params,2)
+            db.concat(tables)
 
         elif cmd == "sort":
-            table_name = "R"
-            db.sort(table_name)
+            table=get_tables(params,1)
+            db.sort(table)
+
 
         elif cmd == "join":
-            db.join()
+            tables=get_tables(params,2) 
+            criteria=get_criteria(params)
+            db.join(tables,criteria)
 
         elif cmd == "avggroup":
             db.avggroup()
@@ -66,7 +72,30 @@ def start():
 
         else:  # default
             print("Wrong command. Use help to find out the correct usage")
-            
+ 
+
+def parse_instr(txt):
+    txt=re.split("//",txt)[0]
+    output,instr=re.split("(:=)",txt)[0].strip(),re.split("(:=)",txt)[2]
+    cmd = instr.split("(")[0]
+    params=instr[len(cmd):]
+    return output.strip(),cmd.strip(),params.strip()
+
+def get_criteria(params):
+    criteria=[]
+    re.split(",",params)[2]
+    # split on and,or to get list of commands
+    # TODO: loop through criteria using regexp and create new criteria objects for each string between "(" ")"
+    criteria_object=new Criteria(...)
+    criteria.append(criteria_object)
+
+def get_tables(params,num_tables):
+    tables = []
+    tables_=params.split("(")[1]
+    for i in range(0,num_tables):
+        tables.append(tables_.split(",")[i].strip().replace(")",""))
+    return tables
+
 
 if __name__ == "__main__":
     start()
