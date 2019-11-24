@@ -2,7 +2,7 @@ import numpy as np
 import os
 
 class Table:
-    def __init__(self):
+    def __init__(self,columns):
         self.table=np.array(object)
         self.header=None
 
