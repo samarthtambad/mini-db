@@ -128,8 +128,9 @@ class Database:
         :return: None
         """
         print("join()")
-
-
+        t1=self.tables[tables[0]]
+        t2=self.tables[tables[1]]
+        
         # create new table with appropriate name and columns
         t1_cols=[tables[0]+"_"+x for x in t1.columns]
         t2_cols=[tables[1]+"_"+x for x in t2.columns]
@@ -137,8 +138,7 @@ class Database:
         self.tables[output] = table
 
         # create projections for each table, create cross product of arrays
-        t1=self.tables[tables[0]]
-        t2=self.tables[tables[1]]
+
 
 
     def avggroup(self, table, avg_column, other_columns):
