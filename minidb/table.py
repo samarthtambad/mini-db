@@ -15,14 +15,14 @@ class Table:
     def __get_column_idx(self, col_name):
         return self.col_names[col_name]
 
-    def projection(self, *columns):
+    def projection(self, columns):
         idx = []
 
         # create a list of indexes of given columns
         for col in columns:
             if col not in self.col_names:
                 print("Invalid command. Column not present in table")
-                return False
+                return None
             idx.append(self.__get_column_idx(col))
 
         # return a sequence of rows but only include columns with index in `idx`

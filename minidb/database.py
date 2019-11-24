@@ -74,17 +74,21 @@ class Database:
         """
         print("select()")
     
-    def project(self, table, *columns):  # TODO: I think this must also be a method of table
+    def project(self, table, columns):  # TODO: I think this must also be a method of table
         """ select a subset of columns from a table
         :param table: name of the table from which to select columns
         :param columns: columns to keep in the projection
-        :return: None
+        :return: success True/False
         """
         print("project()")
         if table not in self.tables:
             print("No table found")
-            return None
-        print(self.tables[table].projection("saleid", "itemid", "customerid", "storeid"))
+            return False
+        projection = self.tables[table].projection(columns)
+        if projection is None:
+            return False
+        print(projection)
+        return True
     
     def concat(self, table1, table2):
         """ concatenate two tables (with the same schema)
