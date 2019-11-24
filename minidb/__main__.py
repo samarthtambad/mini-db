@@ -44,7 +44,7 @@ def start():
         elif cmd == "join":
             tables = get_tables(params, 2)
             criteria = get_criteria(params)
-            db.join(tables, criteria)
+            db.join(output,tables, criteria)
 
         elif cmd == "avggroup":
             db.avggroup()
@@ -70,16 +70,28 @@ def start():
         elif cmd == "exit":
             break
 
+        elif cmd=="show tables":
+            db.show_tables()
+
         else:  # default
             print("Wrong command. Use help to find out the correct usage")
 
 
 def parse_instr(txt):
-    txt = re.split("//", txt)[0]
-    output, instr = re.split("(:=)", txt)[0].strip(), re.split("(:=)", txt)[2]
-    cmd = instr.split("(")[0]
-    params = instr[len(cmd):]
-    return output.strip(), cmd.strip(), params.strip()
+    # first catch special commands
+    if (txt=="exit"):
+        return None,"exit",None
+    elif (txt=="show tables"):
+        return None,"show tables",None
+    else:
+        try:
+            txt = re.split("//", txt)[0]
+            output, instr = re.split("(:=)", txt)[0].strip(), re.split("(:=)", txt)[2]
+            cmd = instr.split("(")[0]
+            params = instr[len(cmd):]
+            return output.strip(), cmd.strip(), params.strip()
+        except:
+            return "incorrect"
 
 
 def get_criteria(params):
