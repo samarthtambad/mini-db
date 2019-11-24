@@ -17,7 +17,7 @@ class Table:
     def projection(self):
         # TODO: implement
         return
-        
+
     def create_table_from_file(self, filename):
         with open(filename) as fp:
             row = fp.readline() #this will be the header

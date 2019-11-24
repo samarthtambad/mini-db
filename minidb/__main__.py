@@ -14,7 +14,7 @@ def start():
     while True:
         txt = input("minidb>> ")
 
-        output, cmd, params = parse_instr(txt)
+        output,cmd,params=parse_instr(txt)
 
         if cmd == "inputfromfile":
             table_name = "R"
