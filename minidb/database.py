@@ -40,7 +40,7 @@ class Database:
         # TODO: What to do if table already exists?
         table = None
         first = True
-        with open("data/"+file, "r") as f:
+        with open(file, "r") as f:
             for line in f:
                 split = line.split("|")
                 if first:
