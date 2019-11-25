@@ -5,16 +5,22 @@ from BTrees.OOBTree import OOBTree
 
 class Table:
 
-    def __init__(self, columns):
-        self.columns=columns
-        self.num_columns = len(columns)
+    def __init__(self, name, columns):
+        self.name = name
+        self._surrogate_key = "_idx"
+        self.counter = 0
+        self.num_columns = len(columns)     # doesn't include surrogate key
         self.rows = OOBTree()  # primary index
-        self.col_names = {}
+        self.col_names = {}     # doesn't include surrogate key
         for idx, col in enumerate(columns):
-            self.col_names[col] = idx
+            self.col_names[col] = idx + 1
 
     def __get_column_idx(self, col_name):
         return self.col_names[col_name]
+
+    def __auto_increment(self):
+        self.counter += 1
+        return self.counter
 
     def projection(self, columns):
         idx = []
@@ -36,25 +42,19 @@ class Table:
 
         return result
 
-    def insert_row(self, key, values):
+    def insert_row(self, values):
         """insert a row into this table
         corresponds to: INSERT INTO TABLE VALUES(key, value1, value2, ...)
         :param key: primary key of the table
         :param values: all the other columns in the table
         :return: success, true/false
         """
-        if 1 + len(values) != self.num_columns:
+        if len(values) != self.num_columns:
             print("Invalid command. Number of columns don't match")
             return False
 
-        if key in self.rows:
-            print("Invalid command. Primary key cannot have duplicated")
-            return False
-
-        columns = [key]     # TODO: decide if needed or not. I kept it for ease of handling index
-        for value in values:
-            columns.append(value)
-        self.rows.update({key: columns})
+        key = self.__auto_increment()
+        self.rows.update({key: values})
         return True
 
     def print(self, f=None):

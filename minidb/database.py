@@ -38,12 +38,12 @@ class Database:
                 split = line.split("|")
                 if first:
                     first = False
-                    table = Table(split)
+                    table = Table(table_name, split)
                     continue
                 else:
                     try:
-                        key, values = split[0], split[1:]
-                        table.insert_row(key, values)
+                        # key, values = split[0], split[1:]
+                        table.insert_row(split[:])
                     except:
                         continue
         table.print()
