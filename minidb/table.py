@@ -44,9 +44,8 @@ class Table:
 
     def insert_row(self, values):
         """insert a row into this table
-        corresponds to: INSERT INTO TABLE VALUES(key, value1, value2, ...)
-        :param key: primary key of the table
-        :param values: all the other columns in the table
+        corresponds to: INSERT INTO TABLE VALUES(value1, value2, ...)
+        :param values: all the columns in the table
         :return: success, true/false
         """
         if len(values) != self.num_columns:
