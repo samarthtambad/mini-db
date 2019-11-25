@@ -1,7 +1,6 @@
 from minidb.database import Database as mdb
 from minidb.utils import Utils as utils
-from minidb.criteria import Criteria
-import re
+from minidb.criteria import ArgParser
 
 """TODO, Remove before submitting
 Each operation will be on a single line. Each time you execute a line,
@@ -25,12 +24,14 @@ def start():
 
         # handle other commands after parsing
         table_name, cmd, args = utils.parse(txt)
+        # in_table, columns, criteria = ArgParser(cmd, args).get_args()
 
         # there were only comments in the input text
         if cmd is None:
             continue
 
         elif cmd == "inputfromfile":
+            arg_parser.get_args()
             db.input_from_file(table_name, "data/sales1")
 
         elif cmd == "outputtofile":
