@@ -1,5 +1,5 @@
-# from BTrees.IIBTree import IIBTree
 from minidb.database import Database as mdb
+from minidb.utils import Utils as utils
 from minidb.criteria import Criteria
 import re
 
@@ -24,7 +24,7 @@ def start():
             continue
 
         # handle other commands after parsing
-        table_name, cmd, args = parse(txt)
+        table_name, cmd, args = utils.parse(txt)
 
         # there were only comments in the input text
         if cmd is None:
@@ -91,54 +91,6 @@ def start():
 
         else:  # default
             print("Wrong command. Use help to find out the correct usage")
-
-
-# def parse_instr(txt):
-#     # first catch special commands
-#     if txt == "exit":
-#         return None, "exit", None
-#     elif txt == "show tables":
-#         return None, "show tables", None
-#     else:
-#         try:
-#             txt = re.split("//", txt)[0]
-#             output, instr = re.split("(:=)", txt)[0].strip(), re.split("(:=)", txt)[2]
-#             cmd = instr.split("(")[0]
-#             params = instr[len(cmd):]
-#             return output.strip(), cmd.strip(), params.strip()
-#         except:
-#             return "incorrect", None, None
-
-
-def parse(txt):
-    txt = txt.replace(" ", "")      # remove all whitespaces
-    txt = re.split("//", txt)[0]    # remove comments
-
-    # if there were only comments in the input
-    if len(txt) == 0:
-        return None, None, None
-
-    table_name, txt = txt.split(":=", 1)    # extract table name
-    cmd, _ = txt.split("(", 1)              # extract command
-    args = txt.replace(cmd, "")         # remove command from text, only args remain
-
-    # print(table_name, cmd, args)
-    return table_name, cmd, args
-
-
-# def get_criteria(params):
-#     criteria = []
-#     re.split(",", params)[2]
-#     # split on and,or to get list of commands
-#     # TODO: loop through criteria using regexp and create new criteria objects for each string between "(" ")"
-
-
-def get_tables(params, num_tables):
-    tables = []
-    tables_ = params.split("(")[1]
-    for i in range(0, num_tables):
-        tables.append(tables_.split(",")[i].strip().replace(")", ""))
-    return tables
 
 
 if __name__ == "__main__":

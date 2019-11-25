@@ -18,8 +18,9 @@ class Database:
     (iv) any side effects to globals.
     """
 
+    # print out tables currently present in the database
     def show_tables(self):
-        if (len(self.tables)==0):
+        if len(self.tables) == 0:
             print("No tables")
         else:
             for table in self.tables:
@@ -115,7 +116,6 @@ class Database:
         # save concatenated table in database with appropriate name
         self.tables[output]=table
 
-
     def sort(self, output, table, columns):
         """ sort `table` by each column in `columns` in the given order
         :param table: name of the table
@@ -145,8 +145,6 @@ class Database:
         self.tables[output] = table
 
         # create projections for each table, create cross product of arrays
-
-
 
     def avggroup(self, table, avg_column, other_columns):
         """ select avg(`sum_column`), `other_columns` from table

@@ -1,5 +1,6 @@
 import re
 
+
 class Criteria():
     def __init__(self, criteria_str):
         comparators = "[=<>!=≥≤]"
@@ -13,4 +14,3 @@ class Criteria():
         
     def __str__(self):
         return "table 1: %s, field: %s\ntable 2: %s, field: %s" % (self.t1, self.t1_field,self.t2, self.t2_field)
-        
