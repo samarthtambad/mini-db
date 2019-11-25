@@ -31,7 +31,7 @@ def start():
             continue
 
         elif cmd == "inputfromfile":
-            arg_parser.get_args()
+            # arg_parser.get_args()
             db.input_from_file(table_name, "data/sales1")
 
         elif cmd == "outputtofile":
