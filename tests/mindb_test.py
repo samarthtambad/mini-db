@@ -1,6 +1,7 @@
 import pytest
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
@@ -26,13 +27,19 @@ def parse_assert(utils, txt, table_name, cmd, args):
 
 def test(get_db):
     db = get_db
+
+    # test taking input from file
     assert db.input_from_file("table1", "data/sales1") is True, "File not found"
+    assert len(db.tables) == 1, "Created table not saved in database"
 
-    assert db.project("table_not_present", ["saleid", "itemid", "customerid", "storeid"]) is False, "Should have thrown table not found error"
-    assert db.project("table1", ["saleid", "itemid", "customerid", "storeid"]) is True, "Error in db.project()"
-    assert db.project("table1", ["column_not_present"]) is False, "Should have thrown column not found error"
-
-    print("All tests passed")
+    # test projection function
+    assert db.project("projected_table", "table_not_present", ["saleid", "itemid", "customerid", "storeid"]) \
+        is False, "Should have thrown table not found error"
+    assert db.project("projected_table", "table1", ["column_not_present"]) is False, \
+        "Should have thrown column not found error"
+    assert db.project("projected_table", "table1", ["saleid", "itemid", "customerid", "storeid"]) \
+        is True, "Error in db.project()"
+    assert len(db.tables) == 2, "Projected table not saved in database"
 
 
 # tests for detecting parsing errors

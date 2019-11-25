@@ -84,11 +84,12 @@ class Database:
         """
         print("select()")
     
-    # TODO: Should this create another table? How should we implement that?
+    # I have modified this function to create another table. That makes more
+    # sense as we could also do operations on it.
     def project(self, projected_table_name, table_name, columns):
         """ select a subset of columns from a table
         :param projected_table_name: name of the projected table
-        :param table: name of the table from which to select columns
+        :param table_name: name of the table from which to select columns
         :param columns: columns to keep in the projection
         :return: success True/False
         """
@@ -101,7 +102,7 @@ class Database:
         if projection is None:
             return False
         self.tables[projected_table_name] = projection
-        print(projection.print())
+        projection.print()
         return True
     
     def concat(self, output, tables):  # TODO: ensure schemas are the same
