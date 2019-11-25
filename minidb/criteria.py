@@ -44,39 +44,30 @@ class ArgParser:
 
         # has only 1 argument
         if self.command in self.types[self.Types.ONE_ARGS]:
-            in_table = None
             # parse for in_table
             return in_table, None, None
 
         # has two arguments, no need to worry about criteria
         elif self.command in self.types[self.Types.TWO_ARGS]:
-            in_table = None
-            column = None
             # parse for in_table, table2/column
-            return in_table, column, None
+            return in_table, columns, None
 
         # has 3 arguments
         elif self.command in self.types[self.Types.THREE_ARGS]:
-            in_table = None
-            column = None
             n = None
             # parse for in_table, column, n
-            return in_table, column, n
+            return in_table, columns, n
 
         # has multiple arguments without criteria
         elif self.command in self.types[self.Types.MULTI_WITHOUT_CRITERIA]:
-            in_table = None
-            columns = None
             # parse for in_table, columns list
             return in_table, columns, None
 
         # has criteria in
         if self.command in self.types[self.Types.WITH_CRITERIA]:
-            in_table = None
-            columns = None
             # parse for in_table, columns, criteria
             # criteria = self.Criteria("some criteria placeholder")
-        return in_table, columns, criteria
+            return in_table, columns, criteria
 
 
 # class Criteria():
