@@ -44,6 +44,7 @@ class Database:
         with open(file, "r") as f:
             for line in f:
                 split = line.split("|")
+                split = [s.strip() for s in split]
                 if first:
                     first = False
                     table = Table(table_name, split)
@@ -84,20 +85,23 @@ class Database:
         print("select()")
     
     # TODO: Should this create another table? How should we implement that?
-    def project(self, table, columns):
+    def project(self, projected_table_name, table_name, columns):
         """ select a subset of columns from a table
+        :param projected_table_name: name of the projected table
         :param table: name of the table from which to select columns
         :param columns: columns to keep in the projection
         :return: success True/False
         """
         # print("project()")
-        if table not in self.tables:
+        if table_name not in self.tables:
             print("No table found")
             return False
-        projection = self.tables[table].projection(columns)
+        columns = [s.strip() for s in columns]
+        projection: Table = self.tables[table_name].projection(projected_table_name, columns)
         if projection is None:
             return False
-        print(projection)
+        self.tables[projected_table_name] = projection
+        print(projection.print())
         return True
     
     def concat(self, output, tables):  # TODO: ensure schemas are the same

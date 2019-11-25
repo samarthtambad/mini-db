@@ -43,7 +43,9 @@ def start():
 
         elif cmd == "project":
             # parse args
-            db.project(table_name, ["saleid", "itemid", "customerid", "storeid"])
+            orig_table_name = "R"
+            columns = ["saleid", "qty", "pricerange"]
+            db.project(table_name, orig_table_name, columns)
 
         elif cmd == "concat":
             # parse args

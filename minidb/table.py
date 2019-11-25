@@ -13,7 +13,7 @@ class Table:
         self.rows = OOBTree()  # primary index
         self.col_names = {}     # doesn't include surrogate key
         for idx, col in enumerate(columns):
-            self.col_names[col] = idx + 1
+            self.col_names[col] = idx
 
     def __get_column_idx(self, col_name):
         return self.col_names[col_name]
@@ -22,8 +22,15 @@ class Table:
         self.counter += 1
         return self.counter
 
-    def projection(self, columns):
+    # TODO: this should return another table
+    def projection(self, name, columns):
+
+        # if given list of column names is beyond this table
+        if len(columns) > self.num_columns:
+            return None
+
         idx = []
+        projected_table = Table(name, columns)
 
         # create a list of indexes of given columns
         for col in columns:
@@ -32,15 +39,34 @@ class Table:
                 return None
             idx.append(self.__get_column_idx(col))
 
-        # return a sequence of rows but only include columns with index in `idx`
-        result = []
+        # insert a row, but only include columns with index in `idx`
         for items in self.rows.values():
             row = []
             for i in idx:
                 row.append(items[i])
-            result.append(row)
+            projected_table.insert_row(row)
 
-        return result
+        return projected_table
+
+    # def projection(self, columns):
+    #     idx = []
+    #
+    #     # create a list of indexes of given columns
+    #     for col in columns:
+    #         if col not in self.col_names:
+    #             print("Invalid command. Column not present in table")
+    #             return None
+    #         idx.append(self.__get_column_idx(col))
+    #
+    #     # return a sequence of rows but only include columns with index in `idx`
+    #     result = []
+    #     for items in self.rows.values():
+    #         row = []
+    #         for i in idx:
+    #             row.append(items[i])
+    #         result.append(row)
+    #
+    #     return result
 
     def insert_row(self, values):
         """insert a row into this table
@@ -57,15 +83,26 @@ class Table:
         return True
 
     def print(self, f=None):
-        # print column names (separated by |)
-        for idx, name in enumerate(self.col_names):
-            if idx != 0:
-                print(" | ", end='', file=f)
-            print(name, end='', file=f)
+        """ print contents of the table
+        :param f: file to print to. Prints to stdout if None
+        :return: None
+        """
+        self.print_columns(f)
         # print table rows (separated by |)
         for values in self.rows.values():
             for idx, value in enumerate(values):
                 if idx != 0:
                     print(" | ", end='', file=f)
                 print(value, end='', file=f)
-        pass
+            print("")
+
+    def print_columns(self, f=None):
+        """ print column names (separated by |)
+        :param f: file to print to. Prints to stdout if None
+        :return: None
+        """
+        for idx, name in enumerate(self.col_names):
+            if idx != 0:
+                print(" | ", end='', file=f)
+            print(name, end='', file=f)
+        print("")
