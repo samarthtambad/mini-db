@@ -37,7 +37,7 @@ def start():
             db.output_to_file(table_name, "_tmp.txt")
 
         elif cmd == "select":
-            db.select(table_name,criteria)
+            db.select(table_name,in_table[0],criteria)
             pass
 
         elif cmd == "project":

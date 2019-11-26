@@ -78,10 +78,10 @@ class ArgParser:
         if self.command in self.types[self.Types.WITH_CRITERIA]:
             # parse for in_table, columns, criteria
 
-            self.criteria=self.Criteria()
-            self.criteria.conditions=[] #initialize criteria conditions to an exmpty list
-            self.criteria.comparators=re.findall(self.criteria.comparator_pattern,self.args)
-            self.criteria.num_conditions=len(self.criteria.comparators)
+            criteria=self.Criteria()
+            criteria.conditions=[] #initialize criteria conditions to an exmpty list
+            criteria.comparators=re.findall(criteria.comparator_pattern,self.args)
+            criteria.num_conditions=len(criteria.comparators)
 
             if (self.command=="join"):
                 num_tables=2
@@ -91,12 +91,12 @@ class ArgParser:
             in_table = utils.get_tables(self.args, num_tables)
             criteria_str = str(self.args.split(",")[num_tables])
             
-            self.criteria.logic_operators=re.findall(self.criteria.logic_pattern,criteria_str)
+            criteria.logic_operators=re.findall(criteria.logic_pattern,criteria_str)
             # print(self.criteria.logic_operators)
-            conditions = re.split(self.criteria.logic_pattern,criteria_str)
+            conditions = re.split(criteria.logic_pattern,criteria_str)
             
-            for i in range(0,self.criteria.num_conditions):
-                self.criteria.conditions.append(utils.parse_expression(self.criteria.comparator_pattern,str(conditions[i]),num_tables))
+            for i in range(0,criteria.num_conditions):
+                criteria.conditions.append(utils.parse_expression(criteria.comparator_pattern,str(conditions[i]),num_tables))
             # print(self.criteria.conditions)
 
             return in_table, columns, criteria

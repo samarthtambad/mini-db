@@ -1,5 +1,5 @@
 
-from minidb.table import Table
+from minidb.table_nparr import Table
 import copy
 
 
@@ -53,7 +53,8 @@ class Database:
                     else:
                         try:
                             # key, values = split[0], split[1:]
-                            table.insert_row(split[:])
+                            # print(split)
+                            table.insert_row(split)
                         except:
                             continue
             table.print()
@@ -79,7 +80,7 @@ class Database:
             table.print(f)
         return True
 
-    def select(self, table, criteria):
+    def select(self, output, in_table, criteria):
         """ Select all columns from `table` satisfying the given `criteria`.
         Prints the result to standard output.
         :param table: name of the table to output
@@ -87,6 +88,22 @@ class Database:
         :return: None
         """
         print("select()")
+        # check to make sure table to be selected from exists
+        if (in_table in self.tables):
+            table=Table(output, self.tables[in_table].col_names)
+            self.tables[in_table].select(criteria)
+
+            # create new table with appropriate name  
+            self.tables[output]=table
+            return True
+        
+        else:
+            print("Table %s does not exist" % in_table)
+            return False
+
+        # for row in self.tables[in_table]:
+
+        
     
     # I have modified this function to create another table. That makes more
     # sense as we could also do operations on it.
@@ -118,10 +135,11 @@ class Database:
 
         # create a copy of the first table
         table=copy.deepcopy(self.tables[tables[0]])
-        for row in self.tables[tables[1]].rows.values():
-            table.insert_row(row)
+        for row in self.tables[tables[1]].rows[1:]:
+            table.insert_row(row.data)
         # save concatenated table in database with appropriate name
         self.tables[output]=table
+        table.print()
 
     def sort(self, output, table, columns):
         """ sort `table` by each column in `columns` in the given order

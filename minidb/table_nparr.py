@@ -3,9 +3,10 @@ import os
 
 
 class Table:
-    def __init__(self, columns):
-        self.table = np.array(object)
-        self.header = None
+    def __init__(self, name, columns):
+        self.rows = np.array(Row(columns))
+        self.name=name
+        self.columns = columns
 
     def get_length(self):
         return len(self.table)
@@ -28,17 +29,18 @@ class Table:
                 self.insert_row(new_row)
                 row = fp.readline()
             
-    def insert_row(self, row):
-        self.table = np.append(self.table, row)
+    def insert_row(self, data):
+        self.rows = np.append(self.rows, Row(data))
         
     def print(self):
-        for i in range(0, len(self.table)):
-            print(self.table[i])
+        # print(self.columns)
+        for i in range(0, len(self.rows)):
+            print(self.rows[i])
 
 
 class Row:
-    def __init__(self):
-        self.data = []
+    def __init__(self,data):
+        self.data = data
     
     def __str__(self):
         row_str = ""
