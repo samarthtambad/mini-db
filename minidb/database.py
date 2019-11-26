@@ -41,24 +41,28 @@ class Database:
         # TODO: What to do if table already exists?
         table = None
         first = True
-        with open(file, "r") as f:
-            for line in f:
-                split = line.split("|")
-                split = [s.strip() for s in split]
-                if first:
-                    first = False
-                    table = Table(table_name, split)
-                    continue
-                else:
-                    try:
-                        # key, values = split[0], split[1:]
-                        table.insert_row(split[:])
-                    except:
+        try:
+            with open(file, "r") as f:
+                for line in f:
+                    split = line.split("|")
+                    split = [s.strip() for s in split]
+                    if first:
+                        first = False
+                        table = Table(table_name, split)
                         continue
-        table.print()
-        self.tables[table_name] = table
-        self.table = table
-        return True
+                    else:
+                        try:
+                            # key, values = split[0], split[1:]
+                            table.insert_row(split[:])
+                        except:
+                            continue
+            table.print()
+            self.tables[table_name] = table
+            self.table = table
+            return True
+        except OSError as e:
+            print(e)
+            return False
 
     def output_to_file(self, table_name, file):
         """ Output contents of `table` (with vertical bar separators) into `file`.
