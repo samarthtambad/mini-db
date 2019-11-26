@@ -17,6 +17,7 @@ class ArgParser:
         def __init__(self):
             # self.criteria = criteria
             self.comparator_pattern = re.compile("=|!=|<|>|≥|≤")
+            self.comparator=None
             pass
 
     def __init__(self, cmd, args):
@@ -45,7 +46,7 @@ class ArgParser:
 
         # has only 1 argument
         if self.command in self.types[self.Types.ONE_ARGS]:
-            # parse for in_table
+            in_table=self.args.replace("(","").replace(")","")
             return in_table, None, None
 
         # has two arguments, no need to worry about criteria
