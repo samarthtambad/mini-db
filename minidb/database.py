@@ -119,9 +119,7 @@ class Database:
         # create a copy of the first table
         table=copy.deepcopy(self.tables[tables[0]])
         for row in self.tables[tables[1]].rows.values():
-            key=row[0]
-            row.pop(0)
-            table.insert_row(key,row)
+            table.insert_row(row)
         # save concatenated table in database with appropriate name
         self.tables[output]=table
 
