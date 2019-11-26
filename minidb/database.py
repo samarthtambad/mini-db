@@ -146,9 +146,9 @@ class Database:
         t2=self.tables[tables[1]]
         
         # create new table with appropriate name and columns
-        t1_cols=[tables[0]+"_"+x for x in t1.columns]
-        t2_cols=[tables[1]+"_"+x for x in t2.columns]
-        table = Table(t1_cols+t2_cols)
+        t1_cols=[tables[0]+"_"+x for x in t1.col_names]
+        t2_cols=[tables[1]+"_"+x for x in t2.col_names]
+        table = Table(output,t1_cols+t2_cols)
         self.tables[output] = table
 
         # create projections for each table, create cross product of arrays
