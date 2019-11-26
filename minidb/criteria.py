@@ -66,7 +66,7 @@ class ArgParser:
         # has criteria in
         if self.command in self.types[self.Types.WITH_CRITERIA]:
             if (self.command=="join"):
-                a,b=re.split(comparator_pattern,criteria_str)
+                a,b=re.split(comparator_pattern,args)
                 t1=a.split(".")[0].strip()
                 t1_field=a.split(".")[1].strip()
                 t2=b.split(".")[0].strip()
@@ -74,7 +74,7 @@ class ArgParser:
                 in_table=[t1,t2]
             # else: #command is select
                 # do something
-                
+
 
             # parse for in_table, columns, criteria
             # criteria = self.Criteria("some criteria placeholder")
