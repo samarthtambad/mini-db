@@ -1,7 +1,7 @@
 
 from minidb.table_nparr import Table
 import copy
-
+import numpy as np
 
 class Database:
 
@@ -52,10 +52,11 @@ class Database:
                         continue
                     else:
                         try:
-                            # key, values = split[0], split[1:]
-                            # print(split)
-                            table.insert_row(split)
-                        except:
+                            new_row=np.array([split])
+                            # print(new_row)
+                            table.insert_row(new_row)
+                        except Exception as e:
+                            print(e)
                             continue
             table.print()
             self.tables[table_name] = table
