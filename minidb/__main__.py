@@ -1,6 +1,6 @@
 from minidb.database import Database as mdb
 from minidb.utils import Utils as utils
-from minidb.criteria import ArgParser
+from minidb.argparser import ArgParser
 
 """TODO, Remove before submitting
 Each operation will be on a single line. Each time you execute a line,
@@ -31,8 +31,7 @@ def start():
             continue
 
         elif cmd == "inputfromfile":
-            # arg_parser.get_args()
-            db.input_from_file(table_name, "data/sales1")
+            db.input_from_file(table_name, in_table)
 
         elif cmd == "outputtofile":
             db.output_to_file(table_name, "_tmp.txt")
@@ -61,7 +60,7 @@ def start():
         elif cmd == "join":
             # tables = get_tables(params, 2)
             # criteria = get_criteria(params)
-            # db.join(output,tables, criteria)
+            # db.join(output,in_table, criteria)
             pass
 
         elif cmd == "avggroup":
