@@ -37,14 +37,13 @@ def start():
             db.output_to_file(table_name, "_tmp.txt")
 
         elif cmd == "select":
-            db.select(table_name,criteria)
+            db.select(table_name,in_table[0],criteria)
             pass
 
         elif cmd == "project":
             # parse args
-            orig_table_name = "R"
             columns = ["saleid", "qty", "pricerange"]
-            db.project(table_name, orig_table_name, columns)
+            db.project(table_name, in_table[0], columns)
 
         elif cmd == "concat":
             # parse args

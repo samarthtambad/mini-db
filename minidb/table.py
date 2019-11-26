@@ -18,6 +18,20 @@ class Table:
     def __get_column_idx(self, col_name):
         return self.col_names[col_name]
 
+    def select(self,criteria):
+        print("__select")
+        for i in  range(criteria.num_conditions):
+            print(criteria.conditions[i])
+            # print(criteria.comparators[i])
+            col_idx=self.__get_column_idx(criteria.conditions[i][0])
+            # print(self.__get_column_idx(criteria.conditions[i][0]))
+            val=criteria.conditions[i][1]
+            for row_idx,row in self.rows.items():
+                # print(row)
+                # print(row.value())
+                if int(row[col_idx])>int(val):
+                    print(row)
+
     def __auto_increment(self):
         self.counter += 1
         return self.counter
