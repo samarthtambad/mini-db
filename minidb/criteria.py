@@ -72,9 +72,9 @@ class ArgParser:
                 t2=b.split(".")[0].strip()
                 t2_field=b.split(".")[1].strip()
                 in_table=[t1,t2]
-            else: #command is select
+            # else: #command is select
                 # do something
-                continue
+                
 
             # parse for in_table, columns, criteria
             # criteria = self.Criteria("some criteria placeholder")
