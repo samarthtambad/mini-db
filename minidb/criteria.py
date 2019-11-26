@@ -16,7 +16,7 @@ class ArgParser:
 
         def __init__(self, criteria):
             self.criteria = criteria
-            self.comparators = "[=<>!=≥≤]"
+            self.comparator_pattern = re.compile("=|!=|<|>|≥|≤")
             pass
 
     def __init__(self, cmd, args):
@@ -65,6 +65,17 @@ class ArgParser:
 
         # has criteria in
         if self.command in self.types[self.Types.WITH_CRITERIA]:
+            if (self.command=="join"):
+                a,b=re.split(comparator_pattern,criteria_str)
+                t1=a.split(".")[0].strip()
+                t1_field=a.split(".")[1].strip()
+                t2=b.split(".")[0].strip()
+                t2_field=b.split(".")[1].strip()
+                in_table=[t1,t2]
+            else: #command is select
+                # do something
+                continue
+
             # parse for in_table, columns, criteria
             # criteria = self.Criteria("some criteria placeholder")
             return in_table, columns, criteria
