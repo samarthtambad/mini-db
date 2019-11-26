@@ -72,6 +72,9 @@ class ArgParser:
         # has multiple arguments without criteria
         elif self.command in self.types[self.Types.MULTI_WITHOUT_CRITERIA]:
             # parse for in_table, columns list
+            if (self.command=="project"):
+                num_tables=1
+                in_table=utils.get_tables(self.args,num_tables)
             return in_table, columns, None
 
         # has criteria in

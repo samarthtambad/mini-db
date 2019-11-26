@@ -114,7 +114,7 @@ class Database:
         :param columns: columns to keep in the projection
         :return: success True/False
         """
-        # print("project()")
+        print("project()")
         if table_name not in self.tables:
             print("No table found")
             return False
