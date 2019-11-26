@@ -37,7 +37,7 @@ def start():
             db.output_to_file(table_name, "_tmp.txt")
 
         elif cmd == "select":
-            # db.select()
+            db.select(table_name,criteria)
             pass
 
         elif cmd == "project":
@@ -58,7 +58,7 @@ def start():
 
         elif cmd == "join":
             # criteria = get_criteria(params)
-            # db.join(output,in_table, criteria)
+            db.join(table_name,in_table, criteria)
             pass
 
         elif cmd == "avggroup":

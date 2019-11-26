@@ -19,7 +19,11 @@ class ArgParser:
         def __init__(self):
             # self.criteria = criteria
             self.comparator_pattern = re.compile("=|!=|<|>|≥|≤")
-            self.comparator=None
+            self.logic_pattern = re.compile("and|or")
+            self.comparators=None
+            self.logic_operators=None
+            self.num_conditions=0   # number of conditions
+            self.conditions=None  # conditions will be implemented as a list when present so that it is stored contiguously for faster access
             pass
 
     def __init__(self, cmd, args):
@@ -72,22 +76,29 @@ class ArgParser:
 
         # has criteria in
         if self.command in self.types[self.Types.WITH_CRITERIA]:
-            in_table = utils.get_tables(self.args, 2)
+            # parse for in_table, columns, criteria
 
             self.criteria=self.Criteria()
+            self.criteria.conditions=[] #initialize criteria conditions to an exmpty list
+            self.criteria.comparators=re.findall(self.criteria.comparator_pattern,self.args)
+            self.criteria.num_conditions=len(self.criteria.comparators)
+
             if (self.command=="join"):
-                a,b=re.split(self.criteria.comparator_pattern,self.args.split(",")[2])
-                t1=a.split(".")[0].strip()
-                t1_field=a.split(".")[1].strip()
-                t2=b.split(".")[0].strip()
-                t2_field=b.split(".")[1].strip()
+                num_tables=2
+            else: #command is select
+                num_tables=1
 
-            # else: #command is select
-                # do something
+            in_table = utils.get_tables(self.args, num_tables)
+            criteria_str = str(self.args.split(",")[num_tables])
+            
+            self.criteria.logic_operators=re.findall(self.criteria.logic_pattern,criteria_str)
+            # print(self.criteria.logic_operators)
+            conditions = re.split(self.criteria.logic_pattern,criteria_str)
+            
+            for i in range(0,self.criteria.num_conditions):
+                self.criteria.conditions.append(utils.parse_expression(self.criteria.comparator_pattern,str(conditions[i]),num_tables))
+            # print(self.criteria.conditions)
 
-
-            # parse for in_table, columns, criteria
-            # criteria = self.Criteria("some criteria placeholder")
             return in_table, columns, criteria
 
 
