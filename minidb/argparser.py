@@ -72,7 +72,7 @@ class ArgParser:
 
         # has criteria in
         if self.command in self.types[self.Types.WITH_CRITERIA]:
-            in_table = utils.get_tables(params, 2)
+            in_table = utils.get_tables(self.args, 2)
 
             self.criteria=self.Criteria()
             if (self.command=="join"):
