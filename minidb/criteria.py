@@ -14,8 +14,8 @@ class ArgParser:
     # TODO: What functions should this support?
     class Criteria:
 
-        def __init__(self, criteria):
-            self.criteria = criteria
+        def __init__(self):
+            # self.criteria = criteria
             self.comparator_pattern = re.compile("=|!=|<|>|≥|≤")
             pass
 
@@ -29,6 +29,7 @@ class ArgParser:
             self.Types.MULTI_WITHOUT_CRITERIA: ["project", "sumgroup", "avggroup"],
             self.Types.WITH_CRITERIA: ["select", "join"]
         }
+        self.criteria=None
 
     def get_criteria(self, txt):
         """parses text, returns Criteria object
@@ -65,8 +66,9 @@ class ArgParser:
 
         # has criteria in
         if self.command in self.types[self.Types.WITH_CRITERIA]:
+            self.criteria=self.Criteria()
             if (self.command=="join"):
-                a,b=re.split(comparator_pattern,args)
+                a,b=re.split(self.criteria.comparator_pattern,self.args.split(",")[2])
                 t1=a.split(".")[0].strip()
                 t1_field=a.split(".")[1].strip()
                 t2=b.split(".")[0].strip()

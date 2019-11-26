@@ -24,7 +24,7 @@ def start():
 
         # handle other commands after parsing
         table_name, cmd, args = utils.parse(txt)
-        # in_table, columns, criteria = ArgParser(cmd, args).get_args()
+        in_table, columns, criteria = ArgParser(cmd, args).get_args()
 
         # there were only comments in the input text
         if cmd is None:
