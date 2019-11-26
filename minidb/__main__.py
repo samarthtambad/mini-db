@@ -48,8 +48,7 @@ def start():
 
         elif cmd == "concat":
             # parse args
-            # tables = get_tables(params, 2)
-            # db.concat(tables)
+            db.concat(table_name,in_table)
             pass
 
         elif cmd == "sort":
@@ -58,7 +57,6 @@ def start():
             pass
 
         elif cmd == "join":
-            # tables = get_tables(params, 2)
             # criteria = get_criteria(params)
             # db.join(output,in_table, criteria)
             pass

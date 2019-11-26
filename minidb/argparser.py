@@ -1,5 +1,7 @@
 import re
 from enum import Enum
+from minidb.utils import Utils as utils
+
 
 
 class ArgParser:
@@ -51,6 +53,9 @@ class ArgParser:
 
         # has two arguments, no need to worry about criteria
         elif self.command in self.types[self.Types.TWO_ARGS]:
+            if (self.command=="concat"):
+                in_table=utils.get_tables(self.args,2)
+
             # parse for in_table, table2/column
             return in_table, columns, None
 
@@ -67,6 +72,8 @@ class ArgParser:
 
         # has criteria in
         if self.command in self.types[self.Types.WITH_CRITERIA]:
+            in_table = utils.get_tables(params, 2)
+
             self.criteria=self.Criteria()
             if (self.command=="join"):
                 a,b=re.split(self.criteria.comparator_pattern,self.args.split(",")[2])
@@ -74,7 +81,7 @@ class ArgParser:
                 t1_field=a.split(".")[1].strip()
                 t2=b.split(".")[0].strip()
                 t2_field=b.split(".")[1].strip()
-                in_table=[t1,t2]
+
             # else: #command is select
                 # do something
 
