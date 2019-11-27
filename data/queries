@@ -1,0 +1,3 @@
+T1 := inputfromfile(sales1)
+T2 := project(T1, saleid, qty, pricerange)
+T3 := movavg(T1, qty, 3)
