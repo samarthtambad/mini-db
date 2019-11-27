@@ -1,12 +1,13 @@
 import numpy as np
 import os
 
-"""changelog:
+"""
+Changelog:
 1. self.columns not being used. removed.
 2. changed self.size to self.num_rows. more readable.
 3. made __auto_increment as a way to update self.num_rows
 4. made get_length private. no need for this to be accessible outside 
-4. 
+5. adding movingavg() to table 
 
 To-do
 add sort as a method in table
@@ -17,10 +18,6 @@ Questions
 1. Do we need to add a surrogate key?
 
 """
-
-# print(self.rows.shape)
-# print(self.header.shape)
-# self.rows=np.concatenate((self.rows,np.array(self.header)),axis=0)
 
 
 class Table:
@@ -45,36 +42,6 @@ class Table:
     def __get_column_idx(self, col_name):
         return self.col_names[col_name]
 
-    def sort(self):
-        pass
-
-    def select(self, criteria):
-        print("inner select()")
-
-    def projection(self, name, columns):
-        # if given list of column names is beyond this table
-        if len(columns) > self.num_columns:
-            return None
-
-        idx = []
-        projected_table = Table(name, columns)
-
-        # create a list of indexes of given columns
-        for col in columns:
-            if col not in self.col_names:
-                print("Invalid command. Column not present in table")
-                return None
-            idx.append(self.__get_column_idx(col))
-
-        # insert a row, but only include columns with index in `idx`
-        for row in self.rows:
-            new_row = []
-            for i in idx:
-                new_row.append(row[i])
-            projected_table.insert_row(np.array([new_row]))
-
-        return projected_table
-            
     def insert_row(self, new_row):
         self.rows = np.concatenate((self.rows, new_row))
         self.__auto_increment()
@@ -104,3 +71,38 @@ class Table:
             print(name, end='', file=f)
         print("")
 
+    def projection(self, name, columns):
+        # if given list of column names is beyond this table
+        if len(columns) > self.num_columns:
+            return None
+
+        idx = []
+        projected_table = Table(name, columns)
+
+        # create a list of indexes of given columns
+        for col in columns:
+            if col not in self.col_names:
+                print("Invalid command. Column not present in table")
+                return None
+            idx.append(self.__get_column_idx(col))
+
+        # insert a row, but only include columns with index in `idx`
+        for row in self.rows:
+            new_row = []
+            for i in idx:
+                new_row.append(row[i])
+            projected_table.insert_row(np.array([new_row]))
+
+        return projected_table
+
+    def sort(self, column):
+        pass
+
+    def select(self, criteria):
+        print("inner select()")
+
+    def movavg(self, out_table_name, column, n):
+        new_table = Table(out_table_name, column)
+        weights = np.repeat(1.0, n) / n
+        avg_vec = np.convolve(self.rows[:, self.__get_column_idx(column)], weights, 'same')
+        return avg_vec

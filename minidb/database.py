@@ -3,28 +3,64 @@ from minidb.table_nparr import Table
 import copy
 import numpy as np
 
+
+"""
+changelog
+1. added function __save_table. makes code more readable.
+2. also added __get_table and __exists for same reason
+3. self.table not being used. removed.
+4. 
+
+Questions
+1. If table with table_name is already present in the map, what to do? Overwrite or throw error?
+2. 
+
+"""
+
+
 class Database:
 
     def __init__(self):
         self.tables = {}
-        self.table = None  # keeping temporarily for testing
 
-    """TODO, Remove before submitting
-    You will hand in clean and well structured source code in which each 
-    function has a header that says: 
-    (i) what the function deos, 
-    (ii) what its inputs are and what they mean 
-    (iii) what the outputs are and mean 
-    (iv) any side effects to globals.
-    """
-
-    # print out tables currently present in the database
     def show_tables(self):
+        """print out tables currently present in the database
+        :return: None
+        """
         if len(self.tables) == 0:
             print("No tables")
         else:
             for table in self.tables:
                 print(table)
+
+    def __exists(self, table_name):
+        """ check if table exists in database
+        :param table_name: name of the table
+        :return: True / False
+        """
+        if table_name in self.tables:
+            return True
+        return False
+
+    def __save_table(self, table_name, table):
+        """save table with table_name into table map
+        :param table_name: name of the table
+        :param table: reference to Table object
+        :return: None
+        """
+        if table_name in self.tables:
+            print("Table already present. Overwriting...")
+        self.tables[table_name] = table
+
+    def __get_table(self, table_name):
+        """ get Table object mapped with name table_name
+        :param table_name: name of the table
+        :return: Table / None
+        """
+        if table_name not in self.tables:
+            print("Table", table_name, "not present in database")
+            return None
+        return self.tables[table_name]
 
     def input_from_file(self, table_name, file):
         """ Import data from given vertical bar delimited `file`
@@ -59,8 +95,7 @@ class Database:
                             print(e)
                             continue
             table.print()
-            self.tables[table_name] = table
-            self.table = table
+            self.__save_table(table_name, table)
             return True
         except OSError as e:
             print(e)
@@ -76,7 +111,7 @@ class Database:
         if table_name not in self.tables:
             print("No table found")
             return False
-        table = self.tables[table_name]
+        table = self.__get_table(table_name)
         with open(file, "a") as f:
             table.print(f)
         return True
@@ -190,7 +225,7 @@ class Database:
         """
         print("sumgroup()")
 
-    def movavg(self, table, column, n):
+    def movavg(self, out_table_name, in_table, column, n):
         """ perform `n` item moving average over `column` of `table'
         :param table: name of the table
         :param column: name of the column
@@ -198,6 +233,9 @@ class Database:
         :return: None
         """
         print("movavg()")
+        self.tables[in_table].movavg(out_table_name, column, n)
+        self.tables[output] = table
+
 
     def movsum(self, table, column, n):
         """ perform `n` item moving sum over `column` of `table'
