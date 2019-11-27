@@ -1,44 +1,64 @@
 import numpy as np
 import os
 
+"""changelog:
+1. self.columns not being used. removed.
+2. changed self.size to self.num_rows. more readable.
+3. made __auto_increment as a way to update self.num_rows
+4. made get_length private. no need for this to be accessible outside 
+4. 
+
+To-do
+add sort as a method in table
+add Hash and Btree as a method in table
+add indexes as attribute in table
+
+Questions
+1. Do we need to add a surrogate key?
+
+"""
+
+# print(self.rows.shape)
+# print(self.header.shape)
+# self.rows=np.concatenate((self.rows,np.array(self.header)),axis=0)
+
 
 class Table:
+
     def __init__(self, name, columns):
-        self.name=name
-        self.columns = columns
-        self.num_columns=len(columns)
+        self.name = name
+        self.num_columns = len(columns)
+        self.num_rows = 0
+        self.header = np.array([columns])
+        self.rows = np.empty([0, self.num_columns])
         self.col_names = {}
-        self.rows = np.empty([0,self.num_columns])
-        # print(self.rows.shape)
-        self.header=np.array([columns])
-        # print(self.header.shape)
-        # self.rows=np.concatenate((self.rows,np.array(self.header)),axis=0)
         for idx, col in enumerate(columns):
             self.col_names[col] = idx
-        self.size=0
 
-
-    def get_length(self):
+    def __get_length(self):
         return len(self.rows)
 
     def __auto_increment(self):
-        self.counter += 1
-        return self.counter
+        self.num_rows += 1
+        return self.num_rows
 
     def __get_column_idx(self, col_name):
         return self.col_names[col_name]
-        return
 
-    def select(self,criteria):
+    def sort(self):
+        pass
+
+    def select(self, criteria):
         print("inner select()")
 
-
-    def projection(self,name, columns):
+    def projection(self, name, columns):
         # if given list of column names is beyond this table
         if len(columns) > self.num_columns:
             return None
+
         idx = []
         projected_table = Table(name, columns)
+
         # create a list of indexes of given columns
         for col in columns:
             if col not in self.col_names:
@@ -54,46 +74,33 @@ class Table:
             projected_table.insert_row(np.array([new_row]))
 
         return projected_table
-        return
             
     def insert_row(self, new_row):
-        # new_row=np.empty()
-        # for field in data.split("|"):
-        #     new_row=np.append(append(field))
-
         self.rows = np.concatenate((self.rows, new_row))
-        self.size+=1
-        
-    def print(self):
-        # print(self.columns)
-        for i in range(0, self.size):
-            print(self.rows[i])
+        self.__auto_increment()
 
+    def print(self, f=None):
+        """ print contents of the table
+        :param f: file to print to. Prints to stdout if None
+        :return: None
+        """
+        self.print_columns(f)
+        # print table rows (separated by |)
+        for i in range(0, self.num_rows):
+            for idx, value in enumerate(self.rows[i]):
+                if idx != 0:
+                    print(" | ", end='', file=f)
+                print(value, end='', file=f)
+            print("")
 
+    def print_columns(self, f=None):
+        """ print column names (separated by |)
+        :param f: file to print to. Prints to stdout if None
+        :return: None
+        """
+        for idx, name in enumerate(self.col_names):
+            if idx != 0:
+                print(" | ", end='', file=f)
+            print(name, end='', file=f)
+        print("")
 
-
-# class Row:
-#     def __init__(self,data):
-#         self.data = data
-    
-#     def __str__(self):
-#         row_str = ""
-#         for field in self.data:
-#             row_str += field + "|"
-#         return row_str[:-1]
-
-
-
-
-#             def create_table_from_file(self, filename):
-#         with open(filename) as fp:
-#             row = fp.readline()  # this will be the header
-#             while row:
-#                 # new_row = Row()
-#                 new_row=np.empty()
-#                 for field in row.split("|"):
-#                     # new_row.data.append(field)
-#                     new_row=np.append(append(field))
-#                 print(new_row)
-#                 self.insert_row(new_row)
-#                 row = fp.readline()

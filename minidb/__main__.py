@@ -7,6 +7,14 @@ Each operation will be on a single line. Each time you execute a line,
 you should print the time it took to execute.
 """
 
+data_path = "data/"
+
+
+"""
+Issues:
+1. ArgParser returns columns = [] for 'project' command.
+
+"""
 
 def start():
     db = mdb()
@@ -31,7 +39,8 @@ def start():
             continue
 
         elif cmd == "inputfromfile":
-            db.input_from_file(table_name, in_table)
+            # print(table_name, cmd, in_table)
+            db.input_from_file(table_name, data_path + in_table)
 
         elif cmd == "outputtofile":
             db.output_to_file(table_name, "_tmp.txt")
@@ -43,6 +52,7 @@ def start():
         elif cmd == "project":
             # parse args
             columns = ["saleid", "qty", "pricerange"]
+            # print(table_name, cmd, in_table[0], columns)
             db.project(table_name, in_table[0], columns)
 
         elif cmd == "concat":
