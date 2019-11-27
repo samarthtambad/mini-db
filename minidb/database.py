@@ -2,6 +2,7 @@
 from minidb.table_nparr import Table
 import copy
 import numpy as np
+from minidb.argparser import ArgParser
 
 
 """
@@ -178,7 +179,7 @@ class Database:
         table2 = self.__get_table(tables[1])
         table = copy.deepcopy(table1)
         for row in table2.rows[1:]:
-            table.insert_row(row.data)
+            table.insert_row([row])
         # save concatenated table in database with appropriate name
         self.__save_table(out_table_name, table)
         table.print()
@@ -204,13 +205,26 @@ class Database:
         # print("join()")
         t1 = self.__get_table(tables[0])
         t2 = self.__get_table(tables[1])
-        
+
         # create new table with appropriate name and columns
         t1_cols = [tables[0] + "_" + x for x in t1.col_names]
         t2_cols = [tables[1] + "_" + x for x in t2.col_names]
         table = Table(out_table_name, t1_cols + t2_cols)
+
+        temp=Table("cartesian_product", t1_cols + t2_cols)
+        for t1_row in t1.rows:
+            for t2_row in t2.rows:
+                new_row=np.append(t1_row,t2_row)
+                temp.insert_row([new_row])
+        # temp.print()
+        criteria.join_to_select()
+        data=temp.select_join(criteria)
+        table.rows=data
+        table.num_rows=len(data)
+
         # rows need to be added
         self.__save_table(out_table_name, table)
+        table.print()
 
         # create projections for each table, create cross product of arrays
 

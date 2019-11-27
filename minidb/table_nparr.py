@@ -108,6 +108,28 @@ class Table:
     def sort(self, column):
         pass
 
+    def select_join(self,criteria):
+        for i in range(0,criteria.num_conditions):
+            idx1 = self.__get_column_idx(criteria.conditions[i][0])
+            idx2 = self.__get_column_idx(criteria.conditions[i][1])
+            if (idx1 is None):
+                print("column %s is not present in table %s" %(criteria.conditions[i][0],self.name))
+                return False
+            if (idx2 is None):
+                print("column %s is not present in table %s" %(criteria.conditions[i][1],self.name))
+                return False
+
+            comparator = OPERATORS[criteria.comparators[i]]
+            c_new=comparator(self.rows[:,idx1],self.rows[:,idx2])
+
+            if (i-1<0):
+                c=c_new
+            else:
+                logic_operator=OPERATORS[criteria.logic_operators[i-1]]
+                c=logic_operator(c_new,c)
+
+            return self.rows[np.where(c)]
+
     def select(self, criteria):
         # perform select. select subset of rows and return resulting table
         for i in range(0,criteria.num_conditions):
