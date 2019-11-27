@@ -135,7 +135,13 @@ class Database:
             print("Table %s does not exist" % in_table_name)
             return False
 
-        out_table = self.__get_table(in_table_name).select(criteria)
+        in_table=self.__get_table(in_table_name)
+
+        out_table = Table(out_table_name,in_table.col_names.keys())
+        data=in_table.select(criteria)
+        out_table.rows=data
+        out_table.num_rows=len(data)
+        out_table.print()
 
         # create new table with appropriate name
         self.__save_table(out_table_name, out_table)
