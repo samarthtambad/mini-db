@@ -5,15 +5,21 @@ import numpy as np
 
 
 """
-changelog
+Changelog
 1. added function __save_table. makes code more readable.
-2. also added __get_table and __exists for same reason
+2. also added __get_table and __exists for same reason. We 
+   won't be using self.tables directly anymore
 3. self.table not being used. removed.
 4. 
 
+Notes
+1. Let's not use Table() anywhere else except input_from_file. Because for each of the other 
+   commands, the table needs to return its subset which is better handled in Table itself.
+2. movesum and moveavg still have unhandled problems
+
 Questions
 1. If table with table_name is already present in the map, what to do? Overwrite or throw error?
-2. 
+2. For concat, where are we checking schema (two schemas must be the same)?
 
 """
 
@@ -60,7 +66,8 @@ class Database:
         if table_name not in self.tables:
             print("Table", table_name, "not present in database")
             return None
-        return self.tables[table_name]
+        table: Table = self.tables[table_name]
+        return table
 
     def input_from_file(self, table_name, file):
         """ Import data from given vertical bar delimited `file`
@@ -88,7 +95,7 @@ class Database:
                         continue
                     else:
                         try:
-                            new_row=np.array([split])
+                            new_row = np.array([split])
                             # print(new_row)
                             table.insert_row(new_row)
                         except Exception as e:
@@ -108,7 +115,7 @@ class Database:
         :return: success True/False
         """
         # print("output_to_file()")
-        if table_name not in self.tables:
+        if not self.__exists(table_name):
             print("No table found")
             return False
         table = self.__get_table(table_name)
@@ -116,94 +123,88 @@ class Database:
             table.print(f)
         return True
 
-    def select(self, output, in_table, criteria):
+    def select(self, out_table_name, in_table_name, criteria):
         """ Select all columns from `table` satisfying the given `criteria`.
         Prints the result to standard output.
         :param table: name of the table to output
         :param criteria: condition(s) that each selected row must satisfy
         :return: None
         """
-        print("select()")
-        # check to make sure table to be selected from exists
-        if (in_table in self.tables):
-            table=Table(output, self.tables[in_table].col_names)
-            self.tables[in_table].select(criteria)
-
-            # create new table with appropriate name  
-            self.tables[output]=table
-            return True
-        
-        else:
-            print("Table %s does not exist" % in_table)
+        # print("select()")
+        if not self.__exists(in_table_name):
+            print("Table %s does not exist" % in_table_name)
             return False
 
-        # for row in self.tables[in_table]:
+        out_table = self.__get_table(in_table_name).select(criteria)
 
-        
-    
-    # I have modified this function to create another table. That makes more
-    # sense as we could also do operations on it.
-    def project(self, projected_table_name, table_name, columns):
+        # create new table with appropriate name
+        self.__save_table(out_table_name, out_table)
+        return True
+
+    def project(self, projected_table_name, in_table_name, columns):
         """ select a subset of columns from a table
         :param projected_table_name: name of the projected table
-        :param table_name: name of the table from which to select columns
+        :param in_table_name: name of the table from which to select columns
         :param columns: columns to keep in the projection
         :return: success True/False
         """
-        print("project()")
-        if table_name not in self.tables:
+        # print("project()")
+        if not self.__exists(in_table_name):
             print("No table found")
             return False
+
         columns = [s.strip() for s in columns]
-        projection: Table = self.tables[table_name].projection(projected_table_name, columns)
+        projection: Table = self.tables[in_table_name].projection(projected_table_name, columns)
         if projection is None:
             return False
-        self.tables[projected_table_name] = projection
+        self.__save_table(projected_table_name, projection)
         projection.print()
         return True
     
-    def concat(self, output, tables):  # TODO: ensure schemas are the same
+    def concat(self, out_table_name, tables):  # TODO: ensure schemas are the same
         """ concatenate tables (with the same schema)
         :param tables: list of tables to be concatenated
         :return: None
         """
-        print("concat()")
-
+        # print("concat()")
         # create a copy of the first table
-        table=copy.deepcopy(self.tables[tables[0]])
-        for row in self.tables[tables[1]].rows[1:]:
+        table1 = self.__get_table(tables[0])
+        table2 = self.__get_table(tables[1])
+        table = copy.deepcopy(table1)
+        for row in table2.rows[1:]:
             table.insert_row(row.data)
         # save concatenated table in database with appropriate name
-        self.tables[output]=table
+        self.__save_table(out_table_name, table)
         table.print()
 
-    def sort(self, output, table, columns):
+    def sort(self, out_table_name, table, columns):
         """ sort `table` by each column in `columns` in the given order
-        :param table: name of the table
+        :param out_table_name: name of the resulting table
         :param columns: name of the columns to sort by (in the given order)
         :return: None
         """
         print("sort()")
-
         table = None
-        self.tables[output] = table
+        self.__save_table(out_table_name, table)
 
-    def join(self, output, tables, criteria):
+    def join(self, out_table_name, tables, criteria):
         """ select all columns from each of the `tables'.
         Filter rows by ones that satisfy the `criteria`
-        :param tables: names of the tables
+        :param out_table_name: name of the resulting table
+        :param tables: list of tables to join
         :param criteria: condition(s) that each selected row must satisfy
         :return: None
         """
-        print("join()")
-        t1=self.tables[tables[0]]
-        t2=self.tables[tables[1]]
+        # print("join()")
+        t1 = self.__get_table(tables[0])
+        t2 = self.__get_table(tables[1])
         
         # create new table with appropriate name and columns
-        t1_cols=[tables[0]+"_"+x for x in t1.col_names]
-        t2_cols=[tables[1]+"_"+x for x in t2.col_names]
-        table = Table(output,t1_cols+t2_cols)
-        self.tables[output] = table
+        t1_cols = [tables[0] + "_" + x for x in t1.col_names]
+        t2_cols = [tables[1] + "_" + x for x in t2.col_names]
+        table = Table(out_table_name, t1_cols + t2_cols)
+        # rows need to be added
+        self.__save_table(out_table_name, table)
 
         # create projections for each table, create cross product of arrays
 
@@ -225,27 +226,41 @@ class Database:
         """
         print("sumgroup()")
 
-    def movavg(self, out_table_name, in_table, column, n):
+    def movavg(self, out_table_name, in_table_name, column, n):
         """ perform `n` item moving average over `column` of `table'
-        :param table: name of the table
+        :param out_table_name: name of the resulting table
+        :param in_table_name: name of the input table
         :param column: name of the column
         :param n: number of items over which to take moving average
         :return: None
         """
-        print("movavg()")
-        self.tables[in_table].movavg(out_table_name, column, n)
-        self.tables[output] = table
+        # print("movavg()")
+        if not self.__exists(in_table_name):
+            print("No table found")
+            return False
+        in_table = self.__get_table(in_table_name)
+        out_table = in_table.movavg(out_table_name, column, n)
+        self.__save_table(out_table_name, out_table)
+        return out_table
 
-
-    def movsum(self, table, column, n):
+    def movsum(self, out_table_name, in_table_name, column, n):
         """ perform `n` item moving sum over `column` of `table'
-        :param table: name of the table
+        :param out_table_name: name of the resulting table
+        :param in_table_name: name of the input table
         :param column: name of the column
         :param n: number of items over which to take moving sum
         :return: None
         """
-        print("movsum()")
-    
+        # print("movsum()")
+        if not self.__exists(in_table_name):
+            print("No table found")
+            return False
+        in_table = self.__get_table(in_table_name)
+        out_table = in_table.movsum(out_table_name, column, n)
+        self.__save_table(out_table_name, out_table)
+        return out_table
+
+
     def avg(self, table, column):
         """ select avg(`column`) from `table`
         :param table: name of the table

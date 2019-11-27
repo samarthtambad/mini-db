@@ -98,11 +98,24 @@ class Table:
     def sort(self, column):
         pass
 
-    def select(self, criteria):
+    def select(self, out_table_name, criteria):
+        out_table = Table(out_table_name, self.col_names.keys())
+        # perform select. select subset of rows and return resulting table
         print("inner select()")
+        return out_table
 
     def movavg(self, out_table_name, column, n):
-        new_table = Table(out_table_name, column)
+        result_table = Table(out_table_name, column)
         weights = np.repeat(1.0, n) / n
         avg_vec = np.convolve(self.rows[:, self.__get_column_idx(column)], weights, 'same')
-        return avg_vec
+        for num in avg_vec:
+            result_table.insert_row(num)
+        return result_table
+
+    def movsum(self, out_table_name, column, n):
+        result_table = Table(out_table_name, column)
+        weights = np.repeat(1.0, n)
+        avg_vec = np.convolve(self.rows[:, self.__get_column_idx(column)], weights, 'same')
+        for num in avg_vec:
+            result_table.insert_row(num)
+        return result_table

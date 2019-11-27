@@ -79,11 +79,19 @@ def start():
             pass
 
         elif cmd == "movavg":
-            # db.movavg()
+            in_table = "R"
+            column = "qty"
+            n = 3
+            print(table_name, cmd, in_table, column, n)
+            db.movavg(table_name, in_table, column, n)
             pass
 
         elif cmd == "movsum":
-            # db.movsum()
+            in_table = "R"
+            column = "qty"
+            n = 3
+            print(table_name, cmd, in_table, column, n)
+            db.movsum(table_name, in_table, column, n)
             pass
 
         elif cmd == "avg":
