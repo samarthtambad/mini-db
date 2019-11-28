@@ -49,20 +49,20 @@ class Table:
 
     def __is_col_int(self,idx):
         try:
-            int(self.rows[idx][0])
+            int(self.rows[0][idx])
             return True
         except ValueError:
             return False
 
     def __is_col_float(self,idx):
         try:
-            float(self.rows[idx][0])
+            float(self.rows[0][idx])
             return True
         except ValueError:
             return False
 
     def __get_col_with_dtype(self,idx):
-        if self.__is_col_int(idx):
+        if (self.__is_col_int(idx)):
             return self.rows[:,idx].astype(int)
         elif self.__is_col_float(idx):
             return self.rows[:,idx].astype(float)
