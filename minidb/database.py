@@ -197,6 +197,7 @@ class Database:
 
         in_table=self.__get_table(in_table_name)
         out_table = Table(out_table_name,in_table.col_names.keys())
+        data=in_table.sort(criteria)
         
         self.__save_table(out_table_name, out_table)
 

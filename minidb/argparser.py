@@ -41,7 +41,7 @@ class ArgParser:
             self.Types.ONE_ARGS: ["inputfromfile"],
             self.Types.TWO_ARGS: ["avg", "concat", "outputtofile", "Btree", "Hash"],
             self.Types.THREE_ARGS: ["movsum", "movavg"],
-            self.Types.MULTI_WITHOUT_CRITERIA: ["project", "sumgroup", "avggroup"],
+            self.Types.MULTI_WITHOUT_CRITERIA: ["project", "sumgroup", "avggroup","sort"],
             self.Types.WITH_CRITERIA: ["select", "join"]
         }
         self.criteria=None
