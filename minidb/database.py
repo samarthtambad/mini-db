@@ -229,7 +229,7 @@ class Database:
         data=temp.select_join(criteria)
         table.rows=data
         table.num_rows=len(data)
-        out_table.num_rows=len(data)
+        table.num_rows=len(data)
         # rows need to be added
         self.__save_table(out_table_name, table)
         table.print()
