@@ -113,7 +113,8 @@ class Table:
 
         return projected_table
 
-    def sort(self, column):
+    def sort(self, criteria):
+        # sortedArr = arr2D[arr2D[:,columnIndex].argsort()]
         pass
 
     def select_join(self, criteria):
