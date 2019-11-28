@@ -192,7 +192,7 @@ class Database:
         """
         print("sort()")
         if not self.__exists(in_table_name):
-            print("Table % not found", %in_table_name)
+            print("Table % not found" % in_table_name)
             return False
 
         in_table=self.__get_table(in_table_name)
