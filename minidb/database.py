@@ -184,15 +184,21 @@ class Database:
         self.__save_table(out_table_name, table)
         table.print()
 
-    def sort(self, out_table_name, table, columns):
+    def sort(self, out_table_name, in_table_name, columns):
         """ sort `table` by each column in `columns` in the given order
         :param out_table_name: name of the resulting table
         :param columns: name of the columns to sort by (in the given order)
         :return: None
         """
         print("sort()")
-        table = None
-        self.__save_table(out_table_name, table)
+        if not self.__exists(in_table_name):
+            print("Table % not found" % in_table_name)
+            return False
+
+        in_table=self.__get_table(in_table_name)
+        out_table = Table(out_table_name,in_table.col_names.keys())
+        
+        self.__save_table(out_table_name, out_table)
 
     def join(self, out_table_name, tables, criteria):
         """ select all columns from each of the `tables'.
