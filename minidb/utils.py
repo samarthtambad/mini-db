@@ -24,6 +24,14 @@ class Utils:
         return tokenized_expr
 
     @staticmethod
+    def get_columns(params,num_tables):
+        columns=[]
+        columns_=params.split("(")[1]
+        for i in range(num_tables,len(columns_.split(","))):
+            columns.append(columns_.split(",")[i].strip().replace(")", ""))
+        return columns
+
+    @staticmethod
     def get_tables(params, num_tables):
         tables = []
         tables_ = params.split("(")[1]

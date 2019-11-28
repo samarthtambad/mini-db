@@ -190,14 +190,16 @@ class Database:
         :param columns: name of the columns to sort by (in the given order)
         :return: None
         """
-        print("sort()")
         if not self.__exists(in_table_name):
-            print("Table % not found" % in_table_name)
+            print("Table %s not found" % in_table_name)
             return False
 
         in_table=self.__get_table(in_table_name)
         out_table = Table(out_table_name,in_table.col_names.keys())
-        
+        data=in_table.sort(columns)
+        out_table.rows=data
+        out_table.num_rows=len(data)
+        out_table.print()
         self.__save_table(out_table_name, out_table)
 
     def join(self, out_table_name, tables, criteria):
@@ -227,7 +229,7 @@ class Database:
         data=temp.select_join(criteria)
         table.rows=data
         table.num_rows=len(data)
-
+        table.num_rows=len(data)
         # rows need to be added
         self.__save_table(out_table_name, table)
         table.print()

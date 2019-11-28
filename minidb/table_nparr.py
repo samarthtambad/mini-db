@@ -47,6 +47,28 @@ class Table:
         for idx, col in enumerate(columns):
             self.col_names[col] = idx
 
+    def __is_col_int(self,idx):
+        try:
+            int(self.rows[idx][0])
+            return True
+        except ValueError:
+            return False
+
+    def __is_col_float(self,idx):
+        try:
+            float(self.rows[idx][0])
+            return True
+        except ValueError:
+            return False
+
+    def __get_col_with_dtype(self,idx):
+        if self.__is_col_int(idx):
+            return self.rows[:,idx].astype(int)
+        elif self.__is_col_float(idx):
+            return self.rows[:,idx].astype(float)
+        else: #return as string
+            return self.rows[:,idx]
+
     def __get_length(self):
         return len(self.rows)
 
@@ -59,6 +81,9 @@ class Table:
             return self.col_names[col_name]
         else:
             return None
+
+    def get_dimensions(self):
+        return self.rows.shape
 
     def insert_row(self, new_row):
         self.rows = np.concatenate((self.rows, new_row))
@@ -113,9 +138,20 @@ class Table:
 
         return projected_table
 
-    def sort(self, criteria):
-        # sortedArr = arr2D[arr2D[:,columnIndex].argsort()]
-        pass
+    def sort(self, columns):
+        idx=[]
+        for col in columns:
+            if col not in self.col_names:
+                print("Invalid command. Column not present in table")
+                return None
+            else:
+                i=self.__get_column_idx(col)
+                idx.insert(0,self.__get_col_with_dtype(i))
+        
+        print(idx)
+        order = np.lexsort(idx)
+        sorted_rows=self.rows[order]
+        return sorted_rows
 
     def select_join(self, criteria):
         for i in range(0, criteria.num_conditions):

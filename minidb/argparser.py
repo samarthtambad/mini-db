@@ -41,7 +41,7 @@ class ArgParser:
             self.Types.ONE_ARGS: ["inputfromfile"],
             self.Types.TWO_ARGS: ["avg", "concat", "outputtofile", "Btree", "Hash"],
             self.Types.THREE_ARGS: ["movsum", "movavg"],
-            self.Types.MULTI_WITHOUT_CRITERIA: ["project", "sumgroup", "avggroup"],
+            self.Types.MULTI_WITHOUT_CRITERIA: ["project", "sumgroup", "avggroup","sort"],
             self.Types.WITH_CRITERIA: ["select", "join"]
         }
         self.criteria=None
@@ -83,7 +83,13 @@ class ArgParser:
             if (self.command=="project"):
                 num_tables=1
                 in_table=utils.get_tables(self.args,num_tables)
+            elif (self.command=="sort"):
+                num_tables=1
+                in_table=utils.get_tables(self.args,num_tables)
+                columns=utils.get_columns(self.args,num_tables)
+
             return in_table, columns, None
+
 
         # has criteria in
         if self.command in self.types[self.Types.WITH_CRITERIA]:
