@@ -198,7 +198,7 @@ class Database:
         in_table=self.__get_table(in_table_name)
         out_table = Table(out_table_name,in_table.col_names.keys())
         
-        self.__save_table(out_table_name, table)
+        self.__save_table(out_table_name, out_table)
 
     def join(self, out_table_name, tables, criteria):
         """ select all columns from each of the `tables'.
