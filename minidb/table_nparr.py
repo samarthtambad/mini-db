@@ -107,8 +107,7 @@ class Table:
         :param f: file to print to. Prints to stdout if None
         :return: None
         """
-        print(self.rows)
-        print(self.rows[0][0], self.rows[0][1], self.rows[1][0])
+        # print header
         self.print_columns(f)
         # print table rows (separated by |)
         for i in range(0, self.num_rows):
@@ -153,7 +152,8 @@ class Table:
 
         return projected_table
 
-    def sort(self, columns):
+    def sort(self, result_table_name,columns):
+        result_table=Table(result_table_name,self.col_names)
         idx = []
         for col in columns:
             if col not in self.col_names:
@@ -163,10 +163,11 @@ class Table:
                 i = self.__get_column_idx(col)
                 idx.insert(0, self.__get_col_with_dtype(i))
         
-        print(idx)
         order = np.lexsort(idx)
         sorted_rows = self.rows[order]
-        return sorted_rows
+        result_table.rows=sorted_rows
+        result_table.num_rows=len(sorted_rows)
+        return result_table
 
     def select_join(self, criteria):
         for i in range(0, criteria.num_conditions):
@@ -213,6 +214,15 @@ class Table:
                 c = logic_operator(c_new, c)
         
         return self.rows[np.where(c)]
+
+    def avg(self,out_table_name,column):
+        # will average have multiple columns?
+        result_table=Table(out_table_name,column)
+        idx = self.__get_column_idx(column[0])
+        avg = np.mean(self.rows[:,idx].astype(float))
+        result_table.insert_row([[avg]])
+        return result_table
+
 
     def movavg(self, out_table_name, column, n):
         result_table = Table(out_table_name, column)

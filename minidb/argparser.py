@@ -66,7 +66,12 @@ class ArgParser:
         # has two arguments, no need to worry about criteria
         elif self.command in self.types[self.Types.TWO_ARGS]:
             if (self.command=="concat"):
-                in_table=utils.get_tables(self.args,2)
+                num_tables=2
+                in_table=utils.get_tables(self.args,num_tables)
+            elif (self.command=="avg"):
+                num_tables=1
+                in_table=utils.get_tables(self.args,num_tables)
+                columns=utils.get_columns(self.args,num_tables)
 
             # parse for in_table, table2/column
             return in_table, columns, None
