@@ -204,10 +204,7 @@ class Database:
             return False
 
         in_table=self.__get_table(in_table_name)
-        out_table = Table(out_table_name,in_table.col_names.keys())
-        data=in_table.sort(columns)
-        out_table.rows=data
-        out_table.num_rows=len(data)
+        out_table=in_table.sort(out_table_name,columns)
         out_table.print()
         self.__save_table(out_table_name, out_table)
 
@@ -245,23 +242,33 @@ class Database:
 
         # create projections for each table, create cross product of arrays
 
-    def avggroup(self, table, avg_column, other_columns):
+    def avggroup(self, out_table_name, in_table_name, avg_column, groupby_columns):
         """ select avg(`sum_column`), `other_columns` from table
         :param table: name of the table
         :param avg_column: name of column over which avg is taken
         :param other_columns: names of other columns
         :return: None
         """
-        print("avggroup()")
+        if not self.__exists(in_table_name):
+            print("Table %s not found" % in_table_name)
+            return False
+        in_table = self.__get_table(in_table_name)
+        out_table=in_table.avggroup(out_table_name,avg_column,groupby_columns)
+        out_table.print()
 
-    def sumgroup(self, table, sum_column, other_columns):
+    def sumgroup(self, out_table_name, in_table_name, sum_column, groupby_columns):
         """ select sum(`sum_column`), `other_columns` from table
         :param table: name of the table
         :param sum_column: name of column over which sum is taken
         :param other_columns: names of other columns
         :return: None
         """
-        print("sumgroup()")
+        if not self.__exists(in_table_name):
+            print("Table %s not found" % in_table_name)
+            return False
+        in_table = self.__get_table(in_table_name)
+        out_table=in_table.sumgroup(out_table_name,sum_column,groupby_columns)
+        out_table.print()
 
     def movavg(self, out_table_name, in_table_name, column, n):
         """ perform `n` item moving average over `column` of `table'
@@ -297,13 +304,19 @@ class Database:
         self.__save_table(out_table_name, out_table)
         return out_table
 
-    def avg(self, table, column):
+    def avg(self, out_table_name, in_table_name, column):
         """ select avg(`column`) from `table`
         :param table: name of the table
         :param column: name of the column
         :return: None
         """
-        print("avg()")
+        if not self.__exists(in_table_name):
+            print("Table %s not found" % in_table_name)
+            return False
+        in_table = self.__get_table(in_table_name)
+        out_table=in_table.avg(out_table_name,column)
+        self.__save_table(out_table_name, out_table)
+        out_table.print()
 
     def Btree(self, table_name, column):
         """ create a Btree index on `table` based on `column`

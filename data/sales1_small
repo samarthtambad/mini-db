@@ -1,8 +1,8 @@
 saleid|itemid|customerid|storeid|time|qty|pricerange
 36|14|2|38|49|15|moderate
-784|90|707|97|46|31|moderate
-801|117|2|43|81|14|outrageous
-905|79|119|81|67|44|outrageous
-227|68|2|66|67|42|supercheap 
+784|90|707|97|46|10|moderate
+801|117|2|43|81|1|outrageous
+905|14|38|81|67|5|moderate
+227|68|2|66|67|2|supercheap 
 951|102|116|45|35|1|outrageous
-492|100|2|7|67|39|outrageous
+492|100|2|7|67|3|outrageous

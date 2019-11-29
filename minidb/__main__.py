@@ -60,23 +60,21 @@ def start():
             db.project(table_name, in_table[0], columns)
 
         elif cmd == "concat":
-            # parse args
             db.concat(table_name, in_table)
 
         elif cmd == "sort":
             db.sort(table_name, in_table[0], columns)
 
         elif cmd == "join":
-            # criteria = get_criteria(params)
             db.join(table_name, in_table, criteria)
             pass
 
         elif cmd == "avggroup":
-            # db.avggroup()
+            db.avggroup(table_name,in_table[0],columns[0],columns[1:])
             pass
 
         elif cmd == "sumgroup":
-            # db.sumgroup()
+            db.sumgroup(table_name,in_table[0],columns[0],columns[1:])
             pass
 
         elif cmd == "movavg":
@@ -96,7 +94,7 @@ def start():
             pass
 
         elif cmd == "avg":
-            # db.avg()
+            db.avg(table_name,in_table[0],columns)
             pass
 
         elif cmd == "Btree":
