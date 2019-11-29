@@ -250,7 +250,7 @@ class Database:
         :return: None
         """
         if not self.__exists(in_table_name):
-            print("Table %s not found" % table)
+            print("Table %s not found" % in_table_name)
             return False
         in_table = self.__get_table(in_table_name)
         out_table=in_table.avggroup(out_table_name,avg_column,groupby_columns)
@@ -264,7 +264,7 @@ class Database:
         :return: None
         """
         if not self.__exists(in_table_name):
-            print("Table %s not found" % table)
+            print("Table %s not found" % in_table_name)
             return False
         in_table = self.__get_table(in_table_name)
         out_table=in_table.sumgroup(out_table_name,sum_column,groupby_columns)
