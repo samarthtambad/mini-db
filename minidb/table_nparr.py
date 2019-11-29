@@ -1,6 +1,8 @@
+from minidb.index import HashIndex, BtreeIndex
 import numpy as np
 import os
 import operator
+
 
 """
 Changelog:
@@ -9,6 +11,12 @@ Changelog:
 3. made __auto_increment as a way to update self.num_rows
 4. made get_length private. no need for this to be accessible outside 
 5. adding movingavg() to table 
+
+new:
+6. created self.index, a dict that holds index for each column (if added).
+[Will each column have only a max of 1 index? Or should self.indexes hold a list of indexes?]
+
+
 
 To-do
 add sort as a method in table
@@ -35,12 +43,14 @@ NUMERIC = {
 }
 
 
+# noinspection PyPep8Naming
 class Table:
 
     def __init__(self, name, columns):
         self.name = name
         self.num_columns = len(columns)
         self.num_rows = 0
+        self.index = {}
         self.header = np.array([columns])
         self.rows = np.empty([0, self.num_columns])
         self.col_names = {}
@@ -94,6 +104,8 @@ class Table:
         :param f: file to print to. Prints to stdout if None
         :return: None
         """
+        print(self.rows)
+        print(self.rows[0][0], self.rows[0][1], self.rows[1][0])
         self.print_columns(f)
         # print table rows (separated by |)
         for i in range(0, self.num_rows):
@@ -214,3 +226,11 @@ class Table:
         for num in avg_vec:
             result_table.insert_row(num)
         return result_table
+
+    def Btree(self, column):
+        index = BtreeIndex(self, self.__get_column_idx(column))
+        self.index[column] = index
+
+    def Hash(self, column):
+        index = HashIndex(self, self.__get_column_idx(column))
+        self.index[column] = index
