@@ -92,6 +92,11 @@ class ArgParser:
                 num_tables=1
                 in_table=utils.get_tables(self.args,num_tables)
                 columns=utils.get_columns(self.args,num_tables)
+            elif (self.command=="sumgroup" or self.command=="avggroup"):
+                num_tables=1
+                in_table=utils.get_tables(self.args,num_tables)
+                # first column will be what is summed or grouped
+                columns=utils.get_columns(self.args, num_tables)
 
             return in_table, columns, None
 

@@ -70,11 +70,11 @@ def start():
             pass
 
         elif cmd == "avggroup":
-            # db.avggroup()
+            db.avggroup(table_name,in_table[0],columns[0],columns[1:])
             pass
 
         elif cmd == "sumgroup":
-            # db.sumgroup()
+            db.sumgroup(table_name,in_table[0],columns[0],columns[1:])
             pass
 
         elif cmd == "movavg":
