@@ -1,4 +1,5 @@
-from minidb.index import HashIndex, BtreeIndex
+from minidb.index import Index
+from BTrees.OOBTree import OOBTree
 import numpy as np
 import os
 import operator
@@ -15,13 +16,13 @@ Changelog:
 new:
 6. created self.index, a dict that holds index for each column (if added).
 [Will each column have only a max of 1 index? Or should self.indexes hold a list of indexes?]
+7. added btree_index() and hash_index() for creating indexes of each type respectively
 
 
 
 To-do
-add sort as a method in table
-add Hash and Btree as a method in table
-add indexes as attribute in table
+1. using index (if present) for each operation.
+
 
 We must detect the type of the data and store in that format. Because the data must be
 in float64 format to perform movavg
@@ -32,6 +33,8 @@ Questions
 """
 
 # should this be put in a "constants" class or in the utils class?
+# sam: If these are the only constants we have and they are used here only, then it is
+#      not necessary to create new class
 OPERATORS = {
     "<": operator.lt, ">": operator.gt, "=": operator.eq, "!=": operator.ne,
     "≥":   operator.ge, "≤": operator.le, "and": operator.and_, "or": operator.or_
@@ -57,27 +60,27 @@ class Table:
         for idx, col in enumerate(columns):
             self.col_names[col] = idx
 
-    def __is_col_int(self,idx):
+    def __is_col_int(self, idx):
         try:
             int(self.rows[0][idx])
             return True
         except ValueError:
             return False
 
-    def __is_col_float(self,idx):
+    def __is_col_float(self, idx):
         try:
             float(self.rows[0][idx])
             return True
         except ValueError:
             return False
 
-    def __get_col_with_dtype(self,idx):
-        if (self.__is_col_int(idx)):
-            return self.rows[:,idx].astype(int)
+    def __get_col_with_dtype(self, idx):
+        if self.__is_col_int(idx):
+            return self.rows[:, idx].astype(int)
         elif self.__is_col_float(idx):
-            return self.rows[:,idx].astype(float)
-        else: #return as string
-            return self.rows[:,idx]
+            return self.rows[:, idx].astype(float)
+        else:  # return as string
+            return self.rows[:, idx]
 
     def __get_length(self):
         return len(self.rows)
@@ -151,18 +154,18 @@ class Table:
         return projected_table
 
     def sort(self, columns):
-        idx=[]
+        idx = []
         for col in columns:
             if col not in self.col_names:
                 print("Invalid command. Column not present in table")
                 return None
             else:
-                i=self.__get_column_idx(col)
-                idx.insert(0,self.__get_col_with_dtype(i))
+                i = self.__get_column_idx(col)
+                idx.insert(0, self.__get_col_with_dtype(i))
         
         print(idx)
         order = np.lexsort(idx)
-        sorted_rows=self.rows[order]
+        sorted_rows = self.rows[order]
         return sorted_rows
 
     def select_join(self, criteria):
@@ -191,14 +194,14 @@ class Table:
         # perform select. select subset of rows and return resulting table
         for i in range(0, criteria.num_conditions):
             idx = self.__get_column_idx(criteria.conditions[i][0])
-            if (idx is None):
-                print("column %s is not present in table %s" %(criteria.conditions[i][0],self.name))
+            if idx is None:
+                print("column %s is not present in table %s" % (criteria.conditions[i][0], self.name))
                 return False
             
             comparator = OPERATORS[criteria.comparators[i]]
             val = criteria.conditions[i][1]
 
-            if (NUMERIC[comparator]):
+            if NUMERIC[comparator]:
                 c_new = comparator(self.rows[:, idx].astype(int), int(val))
             else:
                 c_new = comparator(self.rows[:, idx], val)
@@ -227,10 +230,18 @@ class Table:
             result_table.insert_row(num)
         return result_table
 
-    def Btree(self, column):
-        index = BtreeIndex(self, self.__get_column_idx(column))
+    def btree_index(self, column):
+        index = Index(self, self.__get_column_idx(column), "Btree")
+        index.print()
         self.index[column] = index
 
-    def Hash(self, column):
-        index = HashIndex(self, self.__get_column_idx(column))
+    def hash_index(self, column):
+        index = Index(self, self.__get_column_idx(column), "Hash")
+        index.print()
         self.index[column] = index
+
+    def index_list(self):
+        print("INDEX LIST")
+        print("COLUMN \t TYPE")
+        for key, idx in self.index.items():
+            print("%s \t %s", key, idx.type)

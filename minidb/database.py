@@ -288,7 +288,6 @@ class Database:
         self.__save_table(out_table_name, out_table)
         return out_table
 
-
     def avg(self, table, column):
         """ select avg(`column`) from `table`
         :param table: name of the table
@@ -297,20 +296,22 @@ class Database:
         """
         print("avg()")
 
-    def btree(self, table, column):
+    def Btree(self, table_name, column):
         """ create a Btree index on `table` based on `column`
         Note: all indexes will be based on 1 column
-        :param table: name of the table
+        :param table_name: name of the table
         :param column: name of the column
         :return: None
         """
-        print("btree()")
+        self.__get_table(table_name).btree_index(column)
+        self.__get_table(table_name).index_list()
 
-    def hash(self, table, column):
+    def Hash(self, table_name, column):
         """ create a Hash index on `table` based on `column`
         Note: all indexes will be based on 1 column
-        :param table: name of the table
+        :param table_name: name of the table
         :param column: name of the column
         :return: None
         """
-        print("hash()")
+        self.__get_table(table_name).hash_index(column)
+        self.__get_table(table_name).index_list()

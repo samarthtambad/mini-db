@@ -46,7 +46,7 @@ def start():
             db.output_to_file(table_name, "_tmp.txt")
 
         elif cmd == "select":
-            db.select(table_name,in_table[0],criteria)
+            db.select(table_name, in_table[0], criteria)
             pass
 
         elif cmd == "project":
@@ -57,14 +57,14 @@ def start():
 
         elif cmd == "concat":
             # parse args
-            db.concat(table_name,in_table)
+            db.concat(table_name, in_table)
 
         elif cmd == "sort":
-            db.sort(table_name,in_table[0],columns)
+            db.sort(table_name, in_table[0],columns)
 
         elif cmd == "join":
             # criteria = get_criteria(params)
-            db.join(table_name,in_table, criteria)
+            db.join(table_name, in_table, criteria)
             pass
 
         elif cmd == "avggroup":
@@ -96,12 +96,12 @@ def start():
             pass
 
         elif cmd == "Btree":
-            # db.btree()
-            pass
+            in_table = "T1"
+            db.Btree(in_table, column)
 
         elif cmd == "Hash":
-            # db.hash()
-            pass
+            in_table = "T1"
+            db.Hash(in_table, column)
 
         else:  # default
             print("Wrong command. Use help to find out the correct usage")
