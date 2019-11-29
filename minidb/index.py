@@ -21,7 +21,7 @@ class Index:
 
     def print(self, f=None):
         for i in self.index.keys():
-            print("%10s -> %s" % (i, self.index[i]), file=f)
+            print("%-10s -> %s" % (i, self.index[i]), file=f)
 
 
 # class HashIndex:

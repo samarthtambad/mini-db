@@ -40,6 +40,15 @@ class Database:
             for table in self.tables:
                 print(table)
 
+    def show_index(self):
+        if len(self.tables) == 0:
+            print("No tables")
+        else:
+            print("%-15s" % "INDEX LIST")
+            print("%-15s %-15s %-15s" % ("TABLE", "COLUMN", "TYPE"))
+            for table_name in self.tables:
+                self.__get_table(table_name).index_list()
+
     def __exists(self, table_name):
         """ check if table exists in database
         :param table_name: name of the table
@@ -304,7 +313,7 @@ class Database:
         :return: None
         """
         self.__get_table(table_name).btree_index(column)
-        self.__get_table(table_name).index_list()
+        # self.__get_table(table_name).index_list()
 
     def Hash(self, table_name, column):
         """ create a Hash index on `table` based on `column`
@@ -314,4 +323,4 @@ class Database:
         :return: None
         """
         self.__get_table(table_name).hash_index(column)
-        self.__get_table(table_name).index_list()
+        # self.__get_table(table_name).index_list()

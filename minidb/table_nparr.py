@@ -241,7 +241,5 @@ class Table:
         self.index[column] = index
 
     def index_list(self):
-        print("INDEX LIST")
-        print("COLUMN \t TYPE")
         for key, idx in self.index.items():
-            print("%s \t %s", key, idx.type)
+            print("%-15s %-15s %-15s" % (self.name, key, idx.type))

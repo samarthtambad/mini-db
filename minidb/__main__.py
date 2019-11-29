@@ -13,7 +13,7 @@ data_path = "data/"
 """
 Issues:
 1. ArgParser returns columns = [] for 'project' command.
-
+2. ArgParser in_table is always None
 """
 
 def start():
@@ -28,6 +28,10 @@ def start():
 
         elif txt == "show_tables":
             db.show_tables()
+            continue
+
+        elif txt == "show_index":
+            db.show_index()
             continue
 
         # handle other commands after parsing
@@ -60,7 +64,7 @@ def start():
             db.concat(table_name, in_table)
 
         elif cmd == "sort":
-            db.sort(table_name, in_table[0],columns)
+            db.sort(table_name, in_table[0], columns)
 
         elif cmd == "join":
             # criteria = get_criteria(params)
@@ -97,10 +101,12 @@ def start():
 
         elif cmd == "Btree":
             in_table = "T1"
+            column = "qty"
             db.Btree(in_table, column)
 
         elif cmd == "Hash":
             in_table = "T1"
+            column = "qty"
             db.Hash(in_table, column)
 
         else:  # default
