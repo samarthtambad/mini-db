@@ -19,16 +19,8 @@ new:
 7. added btree_index() and hash_index() for creating indexes of each type respectively
 
 
-
 To-do
 1. using index (if present) for each operation.
-
-
-We must detect the type of the data and store in that format. Because the data must be
-in float64 format to perform movavg
-
-Questions
-1. Do we need to add a surrogate key?
 
 """
 
@@ -259,18 +251,27 @@ class Table:
 
     def movavg(self, out_table_name, column, n):
         result_table = Table(out_table_name, column)
-        weights = np.repeat(1.0, n) / n
-        avg_vec = np.convolve(self.rows[:, self.__get_column_idx(column)], weights, 'same')
+        weights = np.ones(n)
+        c = self.rows[:, self.__get_column_idx(column)].astype(float)
+        c = np.concatenate((np.zeros(n - 1), c), axis=None)
+        o = np.concatenate((np.zeros(n - 1), np.ones(len(c))))
+        sum_vec = np.convolve(c, weights, 'valid')
+        div_vec = np.convolve(o, weights, 'valid')
+        avg_vec = [x/y for x, y in zip(sum_vec, div_vec)]
+        # print(weights, c, o, sum_vec, div_vec, avg_vec)
         for num in avg_vec:
-            result_table.insert_row(num)
+            result_table.insert_row([num])
         return result_table
 
     def movsum(self, out_table_name, column, n):
         result_table = Table(out_table_name, column)
-        weights = np.repeat(1.0, n)
-        avg_vec = np.convolve(self.rows[:, self.__get_column_idx(column)], weights, 'same')
+        weights = np.ones(n)
+        c = self.rows[:, self.__get_column_idx(column)].astype(float)
+        c = np.concatenate((np.zeros(n - 1), c), axis=None)
+        avg_vec = np.convolve(c, weights, 'valid')
+        # print(avg_vec)
         for num in avg_vec:
-            result_table.insert_row(num)
+            result_table.insert_row([num])
         return result_table
 
     def btree_index(self, column):

@@ -86,7 +86,7 @@ def start():
             pass
 
         elif cmd == "movsum":
-            in_table = "R"
+            in_table = "T1"
             column = "qty"
             n = 3
             print(table_name, cmd, in_table, column, n)
