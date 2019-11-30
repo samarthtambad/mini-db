@@ -1,28 +1,6 @@
-
-from minidb.table_nparr import Table
 import copy
 import numpy as np
-from minidb.argparser import ArgParser
-
-
-"""
-Changelog
-1. added function __save_table. makes code more readable.
-2. also added __get_table and __exists for same reason. We 
-   won't be using self.tables directly anymore
-3. self.table not being used. removed.
-4. 
-
-Notes
-1. Let's not use Table() anywhere else except input_from_file. Because for each of the other 
-   commands, the table needs to return its subset which is better handled in Table itself.
-2. movesum and moveavg still have unhandled problems
-
-Questions
-1. If table with table_name is already present in the map, what to do? Overwrite or throw error?
-2. For concat, where are we checking schema (two schemas must be the same)?
-
-"""
+from minidb.table_nparr import Table
 
 
 class Database:
@@ -89,12 +67,11 @@ class Database:
         :param file: path to the input file.
         :return: success True/False
         """
-        # print("input_from_file()")
         # TODO: Handle possible exceptions, return False
         # TODO: What to do if table already exists?
         table = None
         first = True
-        rows=[]
+        rows = []
         try:
             with open(file, "r") as f:
                 for line in f:
@@ -111,8 +88,8 @@ class Database:
                         except Exception as e:
                             print(e)
                             continue
-            table.rows=np.array(rows)
-            table.num_rows=len(rows)
+            table.rows = np.array(rows)
+            table.num_rows = len(rows)
             table.print(num_rows=5)
             self.__save_table(table_name, table)
             return True
@@ -128,10 +105,9 @@ class Database:
         :param criteria: condition(s) that each selected row must satisfy
         :return: None
         """
-        # print("join()")
         t1 = self.__get_table(tables[0])
         t2 = self.__get_table(tables[1])
-        if (t1 is None or t2 is None):
+        if t1 is None or t2 is None:
             return False
 
         # r1 = np.array()
@@ -146,31 +122,30 @@ class Database:
         t2_cols = [tables[1] + "_" + x for x in t2.col_names]
         table = Table(out_table_name, t1_cols + t2_cols)
 
-
         a = np.arange(t1.num_rows)
         b = np.arange(t2.num_rows)
-        mg=np.meshgrid(a,b)
+        mg = np.meshgrid(a,b)
         print("created meshgrid")
         print(mg)
 
-        temp=Table("cartesian_product", t1_cols + t2_cols)
-        rows=[]
+        temp = Table("cartesian_product", t1_cols + t2_cols)
+        rows = []
         for t1_row in t1.rows:
             for t2_row in t2.rows:
-                new_row=["test"]
+                new_row = ["test"]
                 # new_row=t1_row.tolist() + t2_row.tolist()
                 # new_row=np.append(t1_row,t2_row)
                 rows.append(new_row)
                 # temp.insert_row([new_row])
         print(len(rows))
         # temp.print()
-        temp.rows=np.array(rows)
-        temp.num_rows=len(rows)
+        temp.rows = np.array(rows)
+        temp.num_rows = len(rows)
         criteria.join_to_select()
-        data=temp.select_join(criteria)
-        table.rows=data
-        table.num_rows=len(data)
-        table.num_rows=len(data)
+        data = temp.select_join(criteria)
+        table.rows = data
+        table.num_rows = len(data)
+        table.num_rows = len(data)
         # rows need to be added
         self.__save_table(out_table_name, table)
         table.print()
@@ -181,7 +156,6 @@ class Database:
         :param file: path to the output file where output must be written.
         :return: success True/False
         """
-        # print("output_to_file()")
         if not self.__exists(table_name):
             print("No table found")
             return False
@@ -193,21 +167,21 @@ class Database:
     def select(self, out_table_name, in_table_name, criteria):
         """ Select all columns from `table` satisfying the given `criteria`.
         Prints the result to standard output.
-        :param table: name of the table to output
+        :param out_table_name: name of the output table
+        :param in_table_name: name of the input table
         :param criteria: condition(s) that each selected row must satisfy
         :return: None
         """
-        # print("select()")
         if not self.__exists(in_table_name):
             print("Table %s does not exist" % in_table_name)
             return False
 
-        in_table=self.__get_table(in_table_name)
+        in_table = self.__get_table(in_table_name)
 
-        out_table = Table(out_table_name,in_table.col_names.keys())
-        data=in_table.select(criteria)
-        out_table.rows=data
-        out_table.num_rows=len(data)
+        out_table = Table(out_table_name, in_table.col_names.keys())
+        data = in_table.select(criteria)
+        out_table.rows = data
+        out_table.num_rows = len(data)
         out_table.print()
 
         # create new table with appropriate name
@@ -221,7 +195,6 @@ class Database:
         :param columns: columns to keep in the projection
         :return: success True/False
         """
-        # print("project()")
         if not self.__exists(in_table_name):
             print("No table found")
             return False
@@ -236,10 +209,10 @@ class Database:
     
     def concat(self, out_table_name, tables):  # TODO: ensure schemas are the same
         """ concatenate tables (with the same schema)
+        :param out_table_name: name of the output table
         :param tables: list of tables to be concatenated
         :return: None
         """
-        # print("concat()")
         # create a copy of the first table
         table1 = self.__get_table(tables[0])
         table2 = self.__get_table(tables[1])
@@ -252,46 +225,47 @@ class Database:
 
     def sort(self, out_table_name, in_table_name, columns):
         """ sort `table` by each column in `columns` in the given order
-        :param out_table_name: name of the resulting table
+        :param out_table_name: name of the output table
+        :param in_table_name: name of the input table
         :param columns: name of the columns to sort by (in the given order)
         :return: None
         """
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
             return False
-
-        in_table=self.__get_table(in_table_name)
-        out_table=in_table.sort(out_table_name,columns)
+        in_table = self.__get_table(in_table_name)
+        out_table = in_table.sort(out_table_name, columns)
         out_table.print()
         self.__save_table(out_table_name, out_table)
 
-
     def avggroup(self, out_table_name, in_table_name, avg_column, groupby_columns):
         """ select avg(`sum_column`), `other_columns` from table
-        :param table: name of the table
+        :param out_table_name: name of the output table
+        :param in_table_name: name of the input table
         :param avg_column: name of column over which avg is taken
-        :param other_columns: names of other columns
+        :param groupby_columns: names of columns to group by
         :return: None
         """
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
             return False
         in_table = self.__get_table(in_table_name)
-        out_table=in_table.avggroup(out_table_name,avg_column,groupby_columns)
+        out_table = in_table.avggroup(out_table_name, avg_column, groupby_columns)
         out_table.print()
 
     def sumgroup(self, out_table_name, in_table_name, sum_column, groupby_columns):
         """ select sum(`sum_column`), `other_columns` from table
-        :param table: name of the table
+        :param out_table_name: name of the output table
+        :param in_table_name: name of the input table
         :param sum_column: name of column over which sum is taken
-        :param other_columns: names of other columns
+        :param groupby_columns: names of columns to group by
         :return: None
         """
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
             return False
         in_table = self.__get_table(in_table_name)
-        out_table=in_table.sumgroup(out_table_name,sum_column,groupby_columns)
+        out_table = in_table.sumgroup(out_table_name, sum_column, groupby_columns)
         out_table.print()
 
     def movavg(self, out_table_name, in_table_name, column, n):
@@ -302,7 +276,6 @@ class Database:
         :param n: number of items over which to take moving average
         :return: None
         """
-        # print("movavg()")
         if not self.__exists(in_table_name):
             print("No table found")
             return False
@@ -320,7 +293,6 @@ class Database:
         :param n: number of items over which to take moving sum
         :return: None
         """
-        # print("movsum()")
         if not self.__exists(in_table_name):
             print("No table found")
             return False
@@ -331,15 +303,16 @@ class Database:
 
     def avg(self, out_table_name, in_table_name, column):
         """ select avg(`column`) from `table`
-        :param table: name of the table
-        :param column: name of the column
+        :param out_table_name: name of the output table
+        :param in_table_name: name of the input table
+        :param column: name of the column to average over
         :return: None
         """
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
             return False
         in_table = self.__get_table(in_table_name)
-        out_table=in_table.avg(out_table_name,column)
+        out_table = in_table.avg(out_table_name,column)
         self.__save_table(out_table_name, out_table)
         out_table.print()
 
@@ -347,18 +320,16 @@ class Database:
         """ create a Btree index on `table` based on `column`
         Note: all indexes will be based on 1 column
         :param table_name: name of the table
-        :param column: name of the column
+        :param column: name of the column to index
         :return: None
         """
         self.__get_table(table_name).btree_index(column)
-        # self.__get_table(table_name).index_list()
 
     def Hash(self, table_name, column):
         """ create a Hash index on `table` based on `column`
         Note: all indexes will be based on 1 column
         :param table_name: name of the table
-        :param column: name of the column
+        :param column: name of the column to index
         :return: None
         """
         self.__get_table(table_name).hash_index(column)
-        # self.__get_table(table_name).index_list()

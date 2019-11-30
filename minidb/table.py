@@ -1,7 +1,5 @@
 from BTrees.OOBTree import OOBTree
 
-# TODO: discuss whether this implementation is efficient enough. Else, how to optimize? Or is it better to go with np.array?
-
 
 class Table:
 

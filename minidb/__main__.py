@@ -1,30 +1,18 @@
+import time
+from minidb.argparser import ArgParser
 from minidb.database import Database as mdb
 from minidb.utils import Utils as utils
-from minidb.argparser import ArgParser
-
-import time
-
-"""TODO, Remove before submitting
-Each operation will be on a single line. Each time you execute a line,
-you should print the time it took to execute.
-"""
 
 data_path = "data/"
 
-
-"""
-Issues:
-1. ArgParser returns columns = [] for 'project' command.
-2. ArgParser in_table is always None
-"""
 
 def start():
     db = mdb()
 
     while True:
-        txt = input("\n\nminidb>> ")
+        txt = input("\nminidb>> ")
 
-        start = time.time()
+        start_time = time.time()
 
         # handle special commands which don't require further parsing
         if txt == "exit":
@@ -58,8 +46,6 @@ def start():
             pass
 
         elif cmd == "project":
-            # parse args
-            # print(table_name, cmd, in_table[0], columns)
             db.project(table_name, in_table[0], columns)
 
         elif cmd == "concat":
@@ -70,45 +56,35 @@ def start():
 
         elif cmd == "join":
             db.join(table_name, in_table, criteria)
-            pass
 
         elif cmd == "avggroup":
-            db.avggroup(table_name,in_table[0],columns[0],columns[1:])
-            pass
+            db.avggroup(table_name, in_table[0], columns[0], columns[1:])
 
         elif cmd == "sumgroup":
-            db.sumgroup(table_name,in_table[0],columns[0],columns[1:])
-            pass
+            db.sumgroup(table_name, in_table[0], columns[0], columns[1:])
 
         elif cmd == "movavg":
             n = int(criteria)
-            # print(table_name, cmd, in_table[0], columns, n)
             db.movavg(table_name, in_table[0], columns, n)
-            pass
 
         elif cmd == "movsum":
             n = int(criteria)
-            # print(table_name, cmd, in_table, column, n)
             db.movsum(table_name, in_table[0], columns, n)
-            pass
 
         elif cmd == "avg":
-            db.avg(table_name,in_table[0],columns)
-            pass
+            db.avg(table_name, in_table[0], columns)
 
         elif cmd == "Btree":
-            # print(in_table[0], columns[0])
             db.Btree(in_table[0], columns[0])
 
         elif cmd == "Hash":
-            # print(in_table[0], columns[0])
             db.Hash(in_table[0], columns[0])
 
         else:  # default
             print("Wrong command. Use help to find out the correct usage")
 
-        end = time.time()
-        print("\nTime taken: %0.5f s" % (end - start))
+        end_time = time.time()
+        print("\nTime taken: %0.5f s" % (end_time - start_time))
 
 
 if __name__ == "__main__":

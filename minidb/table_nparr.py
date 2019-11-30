@@ -1,32 +1,7 @@
-from minidb.index import Index
-from BTrees.OOBTree import OOBTree
-import numpy as np
-import os
 import operator
+import numpy as np
+from minidb.index import Index
 
-
-"""
-Changelog:
-1. self.columns not being used. removed.
-2. changed self.size to self.num_rows. more readable.
-3. made __auto_increment as a way to update self.num_rows
-4. made get_length private. no need for this to be accessible outside 
-5. adding movingavg() to table 
-
-new:
-6. created self.index, a dict that holds index for each column (if added).
-[Will each column have only a max of 1 index? Or should self.indexes hold a list of indexes?]
-7. added btree_index() and hash_index() for creating indexes of each type respectively
-
-
-To-do
-1. using index (if present) for each operation.
-
-"""
-
-# should this be put in a "constants" class or in the utils class?
-# sam: If these are the only constants we have and they are used here only, then it is
-#      not necessary to create new class
 OPERATORS = {
     "<": operator.lt, ">": operator.gt, "=": operator.eq, "!=": operator.ne,
     "≥":   operator.ge, "≤": operator.le, "and": operator.and_, "or": operator.or_
@@ -67,9 +42,9 @@ class Table:
             return False
 
     def __get_col_with_dtype(self, idx):
-        if (self.__is_col_int(idx)):
+        if self.__is_col_int(idx):
             return self.rows[:, idx].astype(int)
-        elif (self.__is_col_float(idx)):
+        elif self.__is_col_float(idx):
             return self.rows[:, idx].astype(float)
         else:  # return as string
             return self.rows[:, idx]
@@ -79,7 +54,7 @@ class Table:
 
     def __auto_increment(self):
         self.num_rows += 1
-        if (self.num_rows%20==0):
+        if self.num_rows % 20 == 0:
             print(self.num_rows)
         return self.num_rows
 
@@ -103,10 +78,10 @@ class Table:
         """
         # print header
         self.print_columns(f)
-        if ("num_rows" in kwargs):
-            num_rows=kwargs["num_rows"]
+        if "num_rows" in kwargs:
+            num_rows = kwargs["num_rows"]
         else:
-            num_rows=self.num_rows
+            num_rows = self.num_rows
         # print table rows (separated by |)
         for i in range(0, num_rows):
             for idx, value in enumerate(self.rows[i]):
@@ -150,8 +125,8 @@ class Table:
 
         return projected_table
 
-    def sort(self, result_table_name,columns):
-        result_table=Table(result_table_name,self.col_names)
+    def sort(self, result_table_name, columns):
+        result_table = Table(result_table_name, self.col_names)
         idx = []
         for col in columns:
             if col not in self.col_names:
@@ -163,8 +138,8 @@ class Table:
         
         order = np.lexsort(idx)
         sorted_rows = self.rows[order]
-        result_table.rows=sorted_rows
-        result_table.num_rows=len(sorted_rows)
+        result_table.rows = sorted_rows
+        result_table.num_rows = len(sorted_rows)
         return result_table
 
     def select_join(self, criteria):
@@ -214,44 +189,44 @@ class Table:
         
         return self.rows[np.where(c)]
 
-    def avg(self,out_table_name,column):
+    def avg(self,out_table_name, column):
         # will average have multiple columns?
-        result_table=Table(out_table_name,column)
+        result_table = Table(out_table_name, column)
         idx = self.__get_column_idx(column[0])
-        avg = np.mean(self.rows[:,idx].astype(float))
+        avg = np.mean(self.rows[:, idx].astype(float))
         result_table.insert_row([[avg]])
         return result_table
 
-    def group(self,columns):
-        projection = self.projection("projection",columns)
-        keys,indices=np.unique(projection.rows,axis=0,return_inverse=True)
+    def group(self, columns):
+        projection = self.projection("projection", columns)
+        keys, indices = np.unique(projection.rows, axis=0, return_inverse=True)
         # print(keys)
         groups = [[] for i in range(len(keys))]
-        for i,k in enumerate(indices):
+        for i, k in enumerate(indices):
             groups[k].append(self.rows[i])
         groups = [np.array(x) for x in groups]
-        return keys,groups
+        return keys, groups
 
-    def avggroup(self,out_table_name,avg_column,groupby_columns):
-        result_table=Table(out_table_name,[avg_column]+groupby_columns)
-        avg_idx=self.__get_column_idx(avg_column)
-        keys,groups=self.group(groupby_columns)
+    def avggroup(self, out_table_name, avg_column, groupby_columns):
+        result_table = Table(out_table_name, [avg_column] + groupby_columns)
+        avg_idx = self.__get_column_idx(avg_column)
+        keys, groups = self.group(groupby_columns)
         for i in range(0,len(groups)):
-            s=np.mean(groups[i][:,avg_idx].astype(float))
-            new_row=np.insert(keys[i],0,s)
+            s = np.mean(groups[i][:, avg_idx].astype(float))
+            new_row = np.insert(keys[i], 0, s)
             result_table.insert_row([new_row])
         return result_table
 
-    def sumgroup(self,out_table_name,sum_column,groupby_columns):
-        result_table=Table(out_table_name,["sum_"+sum_column]+groupby_columns)
-        sum_idx=self.__get_column_idx(sum_column)
-        keys,groups=self.group(groupby_columns)
-        for i in range(0,len(groups)):
-            if (self.__is_col_int(sum_idx)):
-                s = np.sum(groups[i][:,sum_idx].astype(int))
+    def sumgroup(self, out_table_name, sum_column, groupby_columns):
+        result_table = Table(out_table_name, ["sum_" + sum_column] + groupby_columns)
+        sum_idx = self.__get_column_idx(sum_column)
+        keys, groups = self.group(groupby_columns)
+        for i in range(0, len(groups)):
+            if self.__is_col_int(sum_idx):
+                s = np.sum(groups[i][:, sum_idx].astype(int))
             else:
-                s = np.sum(groups[i][:,sum_idx].astype(float))
-            new_row = np.insert(keys[i],0,s)
+                s = np.sum(groups[i][:, sum_idx].astype(float))
+            new_row = np.insert(keys[i], 0, s)
             result_table.insert_row([new_row])
         return result_table
 
@@ -265,8 +240,8 @@ class Table:
         div_vec = np.convolve(o, weights, 'valid')
         avg_vec = [x/y for x, y in zip(sum_vec, div_vec)]
         # print(weights, c, o, sum_vec, div_vec, avg_vec)
-        for i in range(0,len(avg_vec)):
-            new_row=np.insert(self.rows[i],len(self.rows[i]),avg_vec[i])
+        for i in range(0, len(avg_vec)):
+            new_row = np.insert(self.rows[i], len(self.rows[i]), avg_vec[i])
             result_table.insert_row([new_row])
         return result_table
 
@@ -277,8 +252,8 @@ class Table:
         c = np.concatenate((np.zeros(n - 1), c), axis=None)
         sum_vec = np.convolve(c, weights, 'valid')
         # print(avg_vec)
-        for i in range(0,len(sum_vec)):
-            new_row=np.insert(self.rows[i],len(self.rows[i]),sum_vec[i])
+        for i in range(0, len(sum_vec)):
+            new_row = np.insert(self.rows[i], len(self.rows[i]), sum_vec[i])
             result_table.insert_row([new_row])
         return result_table
 

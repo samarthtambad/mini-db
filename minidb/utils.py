@@ -8,26 +8,26 @@ class Utils:
         pass
 
     @staticmethod
-    def parse_expression(pattern,params,num_tables):
-        tokenized_expr=[]
-        a,b=re.split(pattern,params)
-        if (num_tables>1):
-            t1=a.split(".")[0].replace("(","").replace(")","").strip()
-            t1_field=a.split(".")[1].strip()
-            t2=b.split(".")[0].strip()
-            t2_field=b.split(".")[1].replace("(","").replace(")","").strip()
-            tokenized_expr=[t1,t1_field,t2,t2_field]
+    def parse_expression(pattern, params, num_tables):
+        tokenized_expr = []
+        a, b = re.split(pattern, params)
+        if num_tables > 1:
+            t1 = a.split(".")[0].replace("(", "").replace(")", "").strip()
+            t1_field = a.split(".")[1].strip()
+            t2 = b.split(".")[0].strip()
+            t2_field = b.split(".")[1].replace("(", "").replace(")", "").strip()
+            tokenized_expr = [t1, t1_field, t2, t2_field]
         else:
-            t1_field=a.replace("(","").replace(")","")
-            t2_field=b.replace("(","").replace(")","")
-            tokenized_expr=[t1_field,t2_field]
+            t1_field = a.replace("(", "").replace(")", "")
+            t2_field = b.replace("(", "").replace(")", "")
+            tokenized_expr = [t1_field, t2_field]
         return tokenized_expr
 
     @staticmethod
-    def get_columns(params,num_tables):
-        columns=[]
-        columns_=params.split("(")[1]
-        for i in range(num_tables,len(columns_.split(","))):
+    def get_columns(params, num_tables):
+        columns = []
+        columns_ = params.split("(")[1]
+        for i in range(num_tables, len(columns_.split(","))):
             columns.append(columns_.split(",")[i].strip().replace(")", ""))
         return columns
 
@@ -57,25 +57,3 @@ class Utils:
 
         # print(table_name, cmd, args)
         return table_name, cmd, args
-
-    # def parse_instr(txt):
-    #     # first catch special commands
-    #     if txt == "exit":
-    #         return None, "exit", None
-    #     elif txt == "show tables":
-    #         return None, "show tables", None
-    #     else:
-    #         try:
-    #             txt = re.split("//", txt)[0]
-    #             output, instr = re.split("(:=)", txt)[0].strip(), re.split("(:=)", txt)[2]
-    #             cmd = instr.split("(")[0]
-    #             params = instr[len(cmd):]
-    #             return output.strip(), cmd.strip(), params.strip()
-    #         except:
-    #             return "incorrect", None, None
-
-    # def get_criteria(params):
-    #     criteria = []
-    #     re.split(",", params)[2]
-    #     # split on and,or to get list of commands
-    #     # TODO: loop through criteria using regexp and create new criteria objects for each string between "(" ")"
