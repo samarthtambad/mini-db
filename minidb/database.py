@@ -94,6 +94,7 @@ class Database:
         # TODO: What to do if table already exists?
         table = None
         first = True
+        rows=[]
         try:
             with open(file, "r") as f:
                 for line in f:
@@ -105,18 +106,74 @@ class Database:
                         continue
                     else:
                         try:
-                            new_row = np.array([split])
-                            # print(new_row)
-                            table.insert_row(new_row)
+                            new_row = np.array(split)
+                            rows.append(new_row)
                         except Exception as e:
                             print(e)
                             continue
-            table.print()
+            table.rows=np.array(rows)
+            table.num_rows=len(rows)
+            table.print(num_rows=5)
             self.__save_table(table_name, table)
             return True
         except OSError as e:
             print(e)
             return False
+
+    def join(self, out_table_name, tables, criteria):
+        """ select all columns from each of the `tables'.
+        Filter rows by ones that satisfy the `criteria`
+        :param out_table_name: name of the resulting table
+        :param tables: list of tables to join
+        :param criteria: condition(s) that each selected row must satisfy
+        :return: None
+        """
+        # print("join()")
+        t1 = self.__get_table(tables[0])
+        t2 = self.__get_table(tables[1])
+        if (t1 is None or t2 is None):
+            return False
+
+        # r1 = np.array()
+
+        # mg=np.meshgrid(t1.rows,t2.rows)
+        # print("created meshgrid")
+        # print(mg)
+        # print(np.array(np.meshgrid(t1.rows,t2.rows)))
+
+        # create new table with appropriate name and columns
+        t1_cols = [tables[0] + "_" + x for x in t1.col_names]
+        t2_cols = [tables[1] + "_" + x for x in t2.col_names]
+        table = Table(out_table_name, t1_cols + t2_cols)
+
+
+        a = np.arange(t1.num_rows)
+        b = np.arange(t2.num_rows)
+        mg=np.meshgrid(a,b)
+        print("created meshgrid")
+        print(mg)
+
+        temp=Table("cartesian_product", t1_cols + t2_cols)
+        rows=[]
+        for t1_row in t1.rows:
+            for t2_row in t2.rows:
+                new_row=["test"]
+                # new_row=t1_row.tolist() + t2_row.tolist()
+                # new_row=np.append(t1_row,t2_row)
+                rows.append(new_row)
+                # temp.insert_row([new_row])
+        print(len(rows))
+        # temp.print()
+        temp.rows=np.array(rows)
+        temp.num_rows=len(rows)
+        criteria.join_to_select()
+        data=temp.select_join(criteria)
+        table.rows=data
+        table.num_rows=len(data)
+        table.num_rows=len(data)
+        # rows need to be added
+        self.__save_table(out_table_name, table)
+        table.print()
 
     def output_to_file(self, table_name, file):
         """ Output contents of `table` (with vertical bar separators) into `file`.
@@ -208,39 +265,6 @@ class Database:
         out_table.print()
         self.__save_table(out_table_name, out_table)
 
-    def join(self, out_table_name, tables, criteria):
-        """ select all columns from each of the `tables'.
-        Filter rows by ones that satisfy the `criteria`
-        :param out_table_name: name of the resulting table
-        :param tables: list of tables to join
-        :param criteria: condition(s) that each selected row must satisfy
-        :return: None
-        """
-        # print("join()")
-        t1 = self.__get_table(tables[0])
-        t2 = self.__get_table(tables[1])
-
-        # create new table with appropriate name and columns
-        t1_cols = [tables[0] + "_" + x for x in t1.col_names]
-        t2_cols = [tables[1] + "_" + x for x in t2.col_names]
-        table = Table(out_table_name, t1_cols + t2_cols)
-
-        temp=Table("cartesian_product", t1_cols + t2_cols)
-        for t1_row in t1.rows:
-            for t2_row in t2.rows:
-                new_row=np.append(t1_row,t2_row)
-                temp.insert_row([new_row])
-        # temp.print()
-        criteria.join_to_select()
-        data=temp.select_join(criteria)
-        table.rows=data
-        table.num_rows=len(data)
-        table.num_rows=len(data)
-        # rows need to be added
-        self.__save_table(out_table_name, table)
-        table.print()
-
-        # create projections for each table, create cross product of arrays
 
     def avggroup(self, out_table_name, in_table_name, avg_column, groupby_columns):
         """ select avg(`sum_column`), `other_columns` from table
@@ -285,6 +309,7 @@ class Database:
         in_table = self.__get_table(in_table_name)
         out_table = in_table.movavg(out_table_name, column, n)
         self.__save_table(out_table_name, out_table)
+        out_table.print()
         return out_table
 
     def movsum(self, out_table_name, in_table_name, column, n):

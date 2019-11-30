@@ -55,7 +55,6 @@ def start():
 
         elif cmd == "project":
             # parse args
-            columns = ["saleid", "qty", "pricerange"]
             # print(table_name, cmd, in_table[0], columns)
             db.project(table_name, in_table[0], columns)
 
@@ -78,19 +77,15 @@ def start():
             pass
 
         elif cmd == "movavg":
-            in_table = "T1"
-            column = "qty"
-            n = 3
-            print(table_name, cmd, in_table, column, n)
-            db.movavg(table_name, in_table, column, n)
+            n = int(criteria)
+            # print(table_name, cmd, in_table[0], columns, n)
+            db.movavg(table_name, in_table[0], columns, n)
             pass
 
         elif cmd == "movsum":
-            in_table = "T1"
-            column = "qty"
-            n = 3
-            print(table_name, cmd, in_table, column, n)
-            db.movsum(table_name, in_table, column, n)
+            n = int(criteria)
+            # print(table_name, cmd, in_table, column, n)
+            db.movsum(table_name, in_table[0], columns, n)
             pass
 
         elif cmd == "avg":
