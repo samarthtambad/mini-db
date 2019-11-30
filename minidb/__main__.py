@@ -93,14 +93,12 @@ def start():
             pass
 
         elif cmd == "Btree":
-            in_table = "T1"
-            column = "qty"
-            db.Btree(in_table, column)
+            # print(in_table[0], columns[0])
+            db.Btree(in_table[0], columns[0])
 
         elif cmd == "Hash":
-            in_table = "T1"
-            column = "qty"
-            db.Hash(in_table, column)
+            # print(in_table[0], columns[0])
+            db.Hash(in_table[0], columns[0])
 
         else:  # default
             print("Wrong command. Use help to find out the correct usage")

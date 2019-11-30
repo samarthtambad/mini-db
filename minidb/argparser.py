@@ -3,6 +3,11 @@ from enum import Enum
 from minidb.utils import Utils as utils
 
 
+"""
+If this is the only place get_tables/get_columns is being used, it could be a method of ArgParser itself. 
+That way utils need not be imported.
+"""
+
 
 class ArgParser:
 
@@ -68,7 +73,7 @@ class ArgParser:
             if (self.command=="concat"):
                 num_tables=2
                 in_table=utils.get_tables(self.args,num_tables)
-            elif (self.command=="avg"):
+            else:                                         # replaced elif self.command=="avg": to support Btree and Hash
                 num_tables=1
                 in_table=utils.get_tables(self.args,num_tables)
                 columns=utils.get_columns(self.args,num_tables)
