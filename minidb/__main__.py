@@ -2,6 +2,8 @@ from minidb.database import Database as mdb
 from minidb.utils import Utils as utils
 from minidb.argparser import ArgParser
 
+import time
+
 """TODO, Remove before submitting
 Each operation will be on a single line. Each time you execute a line,
 you should print the time it took to execute.
@@ -21,6 +23,8 @@ def start():
 
     while True:
         txt = input("\n\nminidb>> ")
+
+        start = time.time()
 
         # handle special commands which don't require further parsing
         if txt == "exit":
@@ -43,7 +47,7 @@ def start():
             continue
 
         elif cmd == "inputfromfile":
-            # print(table_name, cmd, in_table)
+            print(table_name, cmd, in_table)
             db.input_from_file(table_name, data_path + in_table)
 
         elif cmd == "outputtofile":
@@ -102,6 +106,9 @@ def start():
 
         else:  # default
             print("Wrong command. Use help to find out the correct usage")
+
+        end = time.time()
+        print("\nTime taken: %0.5f s" % (end - start))
 
 
 if __name__ == "__main__":

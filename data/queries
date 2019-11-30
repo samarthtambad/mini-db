@@ -1,5 +1,5 @@
-T1 := inputfromfile(sales1_small)
-T2 := inputfromfile(sales1_small)
+T1 := inputfromfile(sales1)
+T2 := inputfromfile(sales2)
 T2 := project(T1, saleid, qty, pricerange)
 T3 := movavg(T1, qty, 3)
 T3 := movsum(T1, qty, 3)
