@@ -90,6 +90,7 @@ class Database:
                             continue
             table.rows = np.array(rows)
             table.num_rows = len(rows)
+            table.set_dtypes()
             table.print(num_rows=5)
             self.__save_table(table_name, table)
             return True
@@ -200,6 +201,7 @@ class Database:
             return False
 
         columns = [s.strip() for s in columns]
+        print(columns)
         projection: Table = self.tables[in_table_name].projection(projected_table_name, columns)
         if projection is None:
             return False
