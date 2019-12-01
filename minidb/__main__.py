@@ -35,7 +35,6 @@ def start():
             continue
 
         elif cmd == "inputfromfile":
-            print(table_name, cmd, in_table)
             db.input_from_file(table_name, data_path + in_table)
 
         elif cmd == "outputtofile":

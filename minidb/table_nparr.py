@@ -24,6 +24,7 @@ class Table:
         self.header = np.array([columns])
         self.rows = np.empty([0, self.num_columns])
         self.col_names = {}
+        self.col_dtypes = {}
         for idx, col in enumerate(columns):
             self.col_names[col] = idx
 
@@ -64,12 +65,33 @@ class Table:
         else:
             return None
 
+    def __get_max_col_width(self):
+        col_width=1;
+        for col_idx,dtype in self.col_dtypes.items():
+            if (dtype):
+                w = len(max(self.rows[:,col_idx], key=len))
+                if col_width<w:
+                    col_width=w
+        return col_width+2
+
     def get_dimensions(self):
         return self.rows.shape
+
+    def set_dtypes(self):
+        for col in list(self.col_names.keys()):
+            idx=self.__get_column_idx(col)
+            if (self.__is_col_int(idx)):
+                self.col_dtypes[idx]=1
+            elif (self.__is_col_float(idx)):
+                # set to 0 so condition can be checked as a bool
+                self.col_dtypes[idx]=0
+            else:
+                self.col_dtypes[idx]=2
 
     def insert_row(self, new_row):
         self.rows = np.concatenate((self.rows, new_row))
         self.__auto_increment()
+
 
     def print(self, f=None, *args,**kwargs):
         """ print contents of the table
@@ -90,7 +112,7 @@ class Table:
                 print(value, end='', file=f)
             print("")
 
-    def print_columns(self, f=None):
+    def print_columns(self,col_width, f=None):
         """ print column names (separated by |)
         :param f: file to print to. Prints to stdout if None
         :return: None
@@ -99,6 +121,37 @@ class Table:
             if idx != 0:
                 print(" | ", end='', file=f)
             print(name, end='', file=f)
+        print("")
+
+    def print_formatted(self, f=None, *args,**kwargs):
+        """ print contents of the table
+        :param f: file to print to. Prints to stdout if None
+        :return: None
+        """
+        col_width=self.__get_max_col_width()
+        # print header
+        self.print_columns_formatted(col_width,f)
+        if "num_rows" in kwargs:
+            num_rows = kwargs["num_rows"]
+        else:
+            num_rows = self.num_rows
+        # print table rows (separated by |)
+        for i in range(0, num_rows):
+            for idx, value in enumerate(self.rows[i]):
+                if idx != 0:
+                    print("", end='', file=f)
+                print(str(value).ljust(col_width), end='', file=f)
+            print("")
+
+    def print_columns_formatted(self,col_width, f=None):
+        """ print column names (separated by |)
+        :param f: file to print to. Prints to stdout if None
+        :return: None
+        """
+        for idx, name in enumerate(self.col_names):
+            if idx != 0:
+                print("", end='', file=f)
+            print(name.ljust(col_width), end='', file=f)
         print("")
 
     def projection(self, name, columns):
@@ -194,6 +247,7 @@ class Table:
         result_table = Table(out_table_name, column)
         idx = self.__get_column_idx(column[0])
         avg = np.mean(self.rows[:, idx].astype(float))
+        avg="{:.4f}".format(avg)
         result_table.insert_row([[avg]])
         return result_table
 
