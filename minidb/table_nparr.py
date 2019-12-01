@@ -260,7 +260,7 @@ class Table:
         return keys, groups
 
     def avggroup(self, out_table_name, avg_column, groupby_columns):
-        result_table = Table(out_table_name, [avg_column] + groupby_columns)
+        result_table = Table(out_table_name, ["avg_"+avg_column] + groupby_columns)
         avg_idx = self.__get_column_idx(avg_column)
         keys, groups = self.group(groupby_columns)
         for i in range(0,len(groups)):
