@@ -55,8 +55,6 @@ class Table:
 
     def __auto_increment(self):
         self.num_rows += 1
-        if self.num_rows % 20 == 0:
-            print(self.num_rows)
         return self.num_rows
 
     def __get_column_idx(self, col_name):
@@ -244,8 +242,8 @@ class Table:
 
     def avg(self,out_table_name, column):
         # will average have multiple columns?
-        result_table = Table(out_table_name, column)
-        idx = self.__get_column_idx(column[0])
+        result_table = Table(out_table_name, ["avg_"+column])
+        idx = self.__get_column_idx(column)
         avg = np.mean(self.rows[:, idx].astype(float))
         avg="{:.4f}".format(avg)
         result_table.insert_row([[avg]])
@@ -267,7 +265,7 @@ class Table:
         keys, groups = self.group(groupby_columns)
         for i in range(0,len(groups)):
             s = np.mean(groups[i][:, avg_idx].astype(float))
-            new_row = np.insert(keys[i], 0, s)
+            new_row = np.insert(keys[i], 0, "{:.4f}".format(s))
             result_table.insert_row([new_row])
         return result_table
 

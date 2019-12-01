@@ -313,6 +313,7 @@ class Database:
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
             return False
+
         in_table = self.__get_table(in_table_name)
         out_table = in_table.avg(out_table_name,column)
         self.__save_table(out_table_name, out_table)
