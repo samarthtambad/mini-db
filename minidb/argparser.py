@@ -36,7 +36,7 @@ class ArgParser:
         self.command = cmd
         self.args = args
         self.types = {
-            self.Types.ONE_ARGS: ["inputfromfile"],
+            self.Types.ONE_ARGS: ["inputfromfile","count"],
             self.Types.TWO_ARGS: ["avg", "concat", "outputtofile", "Btree", "Hash"],
             self.Types.THREE_ARGS: ["movsum", "movavg"],
             self.Types.MULTI_WITHOUT_CRITERIA: ["project", "sumgroup", "avggroup","sort"],

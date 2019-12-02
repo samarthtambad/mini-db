@@ -83,8 +83,7 @@ class Database:
                         continue
                     else:
                         try:
-                            new_row = np.array(split)
-                            rows.append(new_row)
+                            rows.append(split)
                         except Exception as e:
                             print(e)
                             continue
@@ -302,6 +301,17 @@ class Database:
         out_table = in_table.movsum(out_table_name, column, n)
         self.__save_table(out_table_name, out_table)
         return out_table
+
+    def count(self, out_table_name, in_table_name):
+        if (not self.__exists(in_table_name)):
+            print("Table %s not found" % in_table_name)
+            return False
+
+        in_table = self.__get_table(in_table_name)
+        out_table=in_table.count(out_table_name)
+        self.__save_table(out_table_name, out_table)
+        out_table.print()
+
 
     def avg(self, out_table_name, in_table_name, column):
         """ select avg(`column`) from `table`
