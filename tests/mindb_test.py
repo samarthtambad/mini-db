@@ -51,7 +51,7 @@ def test(get_db):
 
 
 # tests for detecting parsing errors
-def test_parsing(get_parser):
+def test_parsing(get_parser,get_argparser):
     utils = get_parser
     parser = get_argparser
     parse_assert(utils, "// parser handling comments test", None, None, None)
