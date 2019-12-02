@@ -249,6 +249,15 @@ class Table:
         result_table.insert_row([[avg]])
         return result_table
 
+    def sum(self,out_table_name, column):
+        # will average have multiple columns?
+        result_table = Table(out_table_name, ["sum_"+column])
+        idx = self.__get_column_idx(column)
+        s = np.sum(self.rows[:, idx].astype(float))
+        s="{:.4f}".format(s)
+        result_table.insert_row([[s]])
+        return result_table
+
     def count(self, out_table_name):
         result_table=Table(out_table_name, ["count"])
         result_table.insert_row([[self.__get_length()]])

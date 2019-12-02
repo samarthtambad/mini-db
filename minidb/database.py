@@ -329,6 +329,23 @@ class Database:
         self.__save_table(out_table_name, out_table)
         out_table.print()
 
+
+    def sum(self, out_table_name, in_table_name, column):
+        """ select avg(`column`) from `table`
+        :param out_table_name: name of the output table
+        :param in_table_name: name of the input table
+        :param column: name of the column to average over
+        :return: None
+        """
+        if not self.__exists(in_table_name):
+            print("Table %s not found" % in_table_name)
+            return False
+
+        in_table = self.__get_table(in_table_name)
+        out_table = in_table.sum(out_table_name,column)
+        self.__save_table(out_table_name, out_table)
+        out_table.print()
+
     def Btree(self, table_name, column):
         """ create a Btree index on `table` based on `column`
         Note: all indexes will be based on 1 column
