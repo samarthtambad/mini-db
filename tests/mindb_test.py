@@ -29,7 +29,7 @@ def parse_assert(utils, txt, table_name, cmd, args):
     assert parsed_cmd == cmd, "Error parsing command"
     assert parsed_args == args, "Error parsing arguments"
 
-def parse_criteria(parser, cmd, args, correct_result):
+def criteria_assert(parser, cmd, args, correct_result):
     in_table, columns, criteria = ArgParser(cmd, args).get_args()
     assert criteria.conditions == correct_result
 
