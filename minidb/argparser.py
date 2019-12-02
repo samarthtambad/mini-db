@@ -18,19 +18,22 @@ class ArgParser:
         def __init__(self):
             # self.criteria = criteria
             self.comparator_pattern = re.compile("=|!=|<|>|≥|≤")
+            self.arithops_pattern ="[*/+\-\^]"
+
             self.logic_pattern = re.compile("and|or")
             self.comparators = None
             self.logic_operators = None
             self.num_conditions = 0   # number of conditions
             self.conditions = None  # conditions will be implemented as a list when present so that it is stored contiguously for faster access
+            
+            self.arithops=[]
+            self.constants=[]
 
-        def join_to_select(self):
-            select_conditions = []
-            for i in range(0, self.num_conditions):
-                c1 = self.conditions[i][0] + "_" + self.conditions[i][1]
-                c2 = self.conditions[i][2] + "_" + self.conditions[i][3]
-                select_conditions.append([c1, c2])
-            self.conditions = select_conditions
+
+        def get_arithops(self, criteria_str):
+            # return True
+            return re.findall(self.arithops_pattern,criteria_str)
+
 
     def __init__(self, cmd, args):
         self.command = cmd
@@ -106,11 +109,6 @@ class ArgParser:
         if self.command in self.types[self.Types.WITH_CRITERIA]:
             # parse for in_table, columns, criteria
 
-            criteria = self.Criteria()
-            criteria.conditions = [] #initialize criteria conditions to an exmpty list
-            criteria.comparators = re.findall(criteria.comparator_pattern, self.args)
-            criteria.num_conditions = len(criteria.comparators)
-
             if self.command == "join":
                 num_tables = 2
             else:  # command is select
@@ -118,13 +116,77 @@ class ArgParser:
 
             in_table = utils.get_tables(self.args, num_tables)
             criteria_str = str(self.args.split(",")[num_tables])
+
+            criteria = self.Criteria()
+            # check if there are arithmetic operations
+
+
+            criteria.conditions = [] #initialize criteria conditions to an empty list
             
+            # get comparators
+            criteria.comparators = re.findall(criteria.comparator_pattern, self.args)
+            # get number of criteria
+            criteria.num_conditions = len(criteria.comparators)
+            conditions = re.split(criteria.logic_pattern, criteria_str)
+
+            # get logic operators
             criteria.logic_operators = re.findall(criteria.logic_pattern, criteria_str)
             # print(self.criteria.logic_operators)
-            conditions = re.split(criteria.logic_pattern, criteria_str)
+
             
             for i in range(0, criteria.num_conditions):
-                criteria.conditions.append(utils.parse_expression(criteria.comparator_pattern, str(conditions[i]), num_tables))
+                arithops=criteria.get_arithops(str(conditions[i]))
+                if len(arithops)>0:
+                    arithop=arithops[0]
+                else:
+                    arithop=None
+                
+                criteria.arithops.append(arithop)
+                ex = self.parse_expression(criteria.comparator_pattern,arithop,str(conditions[i]), num_tables,i,criteria)
+                criteria.conditions.append(ex)
             # print(self.criteria.conditions)
 
             return in_table, columns, criteria
+
+    def is_numeric(self, x):
+        try:
+            float(x)
+            return True
+        except ValueError:
+            return False
+
+    def parse_expression(self,comparator_pattern, arithop, params, num_tables,i,criteria):
+        tokenized_expr = []
+        left, right = re.split(comparator_pattern, params.replace(")","").replace("(",""))
+
+        if num_tables > 1:
+            return self.parse_join_expression(left,right,arithop,i,criteria)
+
+        # command is select
+        else:
+            return self.parse_select_expression(left,right,arithop,i,criteria)
+
+    def parse_select_expression(self,left,right,arithop,i,criteria):
+        # determine if contant is on left or right side of comparator
+        if self.is_numeric(left):
+            constant = left
+            field = right
+            # flip comparator
+            criteria.comparators[i]=utils.REVERSE_COMPARATOR[criteria.comparators[i]]
+        else:
+            constant = right
+            field=left
+
+        if (arithop is not None):
+            fields = field.split(arithop)
+            tokenized_expr = [fields[0],constant,fields[1]]
+        else:
+            tokenized_expr=[field,constant]
+        return tokenized_expr
+
+    def parse_join_expression(self,left,right):
+        t1 = left.split(".")[0].replace("(", "").replace(")", "").strip()
+        t1_field = left.split(".")[1].strip()
+        t2 = right.split(".")[0].strip()
+        t2_field = right.split(".")[1].replace("(", "").replace(")", "").strip()
+        tokenized_expr = [t1, t1_field, t2, t2_field]

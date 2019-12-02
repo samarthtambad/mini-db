@@ -181,7 +181,7 @@ class Database:
         data = in_table.select(criteria)
         out_table.rows = data
         out_table.num_rows = len(data)
-        out_table.print()
+        out_table.print_formatted()
 
         # create new table with appropriate name
         self.__save_table(out_table_name, out_table)

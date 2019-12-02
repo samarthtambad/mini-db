@@ -1,27 +1,24 @@
 import re
+import operator
+
+
+OPERATORS = {
+"<": operator.lt, ">": operator.gt, "=": operator.eq, "!=": operator.ne,
+"≥":   operator.ge, "≤": operator.le, "and": operator.and_, "or": operator.or_, "*":operator.mul, "+":operator.add,
+"/":operator.truediv,"-":operator.sub
+}
 
 
 # a class for all static helper functions
 class Utils:
 
+    REVERSE_COMPARATOR = {
+    "<":">", "=":"=", "!=":"!=", ">":"<","≥":"≤","≥":"≤"
+    }
+
+
     def __init__(self):
         pass
-
-    @staticmethod
-    def parse_expression(pattern, params, num_tables):
-        tokenized_expr = []
-        a, b = re.split(pattern, params)
-        if num_tables > 1:
-            t1 = a.split(".")[0].replace("(", "").replace(")", "").strip()
-            t1_field = a.split(".")[1].strip()
-            t2 = b.split(".")[0].strip()
-            t2_field = b.split(".")[1].replace("(", "").replace(")", "").strip()
-            tokenized_expr = [t1, t1_field, t2, t2_field]
-        else:
-            t1_field = a.replace("(", "").replace(")", "")
-            t2_field = b.replace("(", "").replace(")", "")
-            tokenized_expr = [t1_field, t2_field]
-        return tokenized_expr
 
     @staticmethod
     def get_columns(params, num_tables):
