@@ -88,11 +88,11 @@ class Database:
                         except Exception as e:
                             print(e)
                             continue
-            table.rows = np.array(rows)
-            table.num_rows = len(rows)
-            table.set_dtypes()
-            table.print(num_rows=5)
-            self.__save_table(table_name, table)
+            # table.rows = np.array(rows)
+            # table.num_rows = len(rows)
+            # table.set_dtypes()
+            # table.print(num_rows=5)
+            # self.__save_table(table_name, table)
             return True
         except OSError as e:
             print(e)
@@ -111,45 +111,81 @@ class Database:
         if t1 is None or t2 is None:
             return False
 
-        # r1 = np.array()
+        table1, col1, table2, col2 = criteria.conditions[0]
+        idx1 = t1.col_names[col1]   # get index of column in table
+        # idx2 = t2.col_names[col2]
 
-        # mg=np.meshgrid(t1.rows,t2.rows)
-        # print("created meshgrid")
-        # print(mg)
-        # print(np.array(np.meshgrid(t1.rows,t2.rows)))
+        # if index not present in t1 for col1, create it
+        if col1 not in t1.index:
+            t1.btree_index(col1)
+        t1_idx = t1.index[col1]
 
-        # create new table with appropriate name and columns
+        # if index not present in t2 for col2, create it
+        if col2 not in t2.index:
+            t2.btree_index(col2)
+        t2_idx = t2.index[col2]
+
+        rows = []
         t1_cols = [tables[0] + "_" + x for x in t1.col_names]
         t2_cols = [tables[1] + "_" + x for x in t2.col_names]
-        table = Table(out_table_name, t1_cols + t2_cols)
+        res = Table(out_table_name, t1_cols + t2_cols)
+        for row1 in t1.rows:
+            val1 = row1[idx1]
+            pos = t2_idx.get_pos(val1)
+            if pos is None:
+                continue
+            for r, c in pos:
+                print(row1, t2.rows[r])
+                # rows.append(t1.rows[r] + t2.rows[r])
+        # res.insert_row(rows)
+        res.print()
 
-        a = np.arange(t1.num_rows)
-        b = np.arange(t2.num_rows)
-        mg = np.meshgrid(a,b)
-        print("created meshgrid")
-        print(mg)
+        # create index for 1 row on table 2
 
-        temp = Table("cartesian_product", t1_cols + t2_cols)
-        rows = []
-        for t1_row in t1.rows:
-            for t2_row in t2.rows:
-                new_row = ["test"]
-                # new_row=t1_row.tolist() + t2_row.tolist()
-                # new_row=np.append(t1_row,t2_row)
-                rows.append(new_row)
-                # temp.insert_row([new_row])
-        print(len(rows))
-        # temp.print()
-        temp.rows = np.array(rows)
-        temp.num_rows = len(rows)
-        criteria.join_to_select()
-        data = temp.select_join(criteria)
-        table.rows = data
-        table.num_rows = len(data)
-        table.num_rows = len(data)
-        # rows need to be added
-        self.__save_table(out_table_name, table)
-        table.print()
+        # t1 = self.__get_table(tables[0])
+        # t2 = self.__get_table(tables[1])
+        # if t1 is None or t2 is None:
+        #     return False
+        #
+        # # r1 = np.array()
+        #
+        # # mg=np.meshgrid(t1.rows,t2.rows)
+        # # print("created meshgrid")
+        # # print(mg)
+        # # print(np.array(np.meshgrid(t1.rows,t2.rows)))
+        #
+        # # create new table with appropriate name and columns
+        # t1_cols = [tables[0] + "_" + x for x in t1.col_names]
+        # t2_cols = [tables[1] + "_" + x for x in t2.col_names]
+        # table = Table(out_table_name, t1_cols + t2_cols)
+        #
+        # a = np.arange(t1.num_rows)
+        # b = np.arange(t2.num_rows)
+        # mg = np.meshgrid(a,b)
+        # print("created meshgrid")
+        # print(mg)
+        #
+        # temp = Table("cartesian_product", t1_cols + t2_cols)
+        # rows = []
+        # for t1_row in t1.rows:
+        #     for t2_row in t2.rows:
+        #         new_row = ["test"]
+        #         # new_row=t1_row.tolist() + t2_row.tolist()
+        #         # new_row=np.append(t1_row,t2_row)
+        #         rows.append(new_row)
+        #         # temp.insert_row([new_row])
+        # print(len(rows))
+        # # temp.print()
+        # temp.rows = np.array(rows)
+        # temp.num_rows = len(rows)
+        # criteria.join_to_select()
+        # data = temp.select_join(criteria)
+        # table.rows = data
+        # table.num_rows = len(data)
+        # table.num_rows = len(data)
+        # # rows need to be added
+        # self.__save_table(out_table_name, table)
+        # table.print()
 
     def output_to_file(self, table_name, file):
         """ Output contents of `table` (with vertical bar separators) into `file`.

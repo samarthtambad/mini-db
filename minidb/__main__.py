@@ -54,6 +54,7 @@ def start():
             db.sort(table_name, in_table[0], columns)
 
         elif cmd == "join":
+            print(in_table, columns, criteria.conditions, criteria.comparators)
             db.join(table_name, in_table, criteria)
 
         elif cmd == "avggroup":

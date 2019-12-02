@@ -6,3 +6,5 @@ T3 := movsum(T1, qty, 3)
 
 Hash(T1,qty)
 Btree(T1, qty)
+
+T4 := join(T1, T2, T1.customerid = T2.C)
