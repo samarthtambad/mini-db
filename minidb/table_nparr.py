@@ -216,7 +216,7 @@ class Table:
             if i - 1 < 0:
                 c = c_new
             else:
-                logic_operator = OPERATORS[criteria.logic_operators[i-1]]
+                logic_operator = utils.OPERATORS[criteria.logic_operators[i-1]]
                 c = logic_operator(c_new, c)
             
                 
