@@ -1,11 +1,8 @@
 import operator
 import numpy as np
 from minidb.index import Index
+from minidb import utils
 
-OPERATORS = {
-    "<": operator.lt, ">": operator.gt, "=": operator.eq, "!=": operator.ne,
-    "≥":   operator.ge, "≤": operator.le, "and": operator.and_, "or": operator.or_
-}
 
 NUMERIC = {
     operator.lt: True, operator.gt: True, operator.eq: False, operator.ne: False,
@@ -126,6 +123,8 @@ class Table:
         :param f: file to print to. Prints to stdout if None
         :return: None
         """
+        if (self.num_rows>0):
+            self.set_dtypes()
         col_width=self.__get_max_col_width()
         # print header
         self.print_columns_formatted(col_width,f)
@@ -193,29 +192,6 @@ class Table:
         result_table.num_rows = len(sorted_rows)
         return result_table
 
-    def select_join(self, criteria):
-        print("select_join")
-        for i in range(0, criteria.num_conditions):
-            idx1 = self.__get_column_idx(criteria.conditions[i][0])
-            idx2 = self.__get_column_idx(criteria.conditions[i][1])
-            if idx1 is None:
-                print("column %s is not present in table %s" % (criteria.conditions[i][0], self.name))
-                return False
-            if idx2 is None:
-                print("column %s is not present in table %s" % (criteria.conditions[i][1], self.name))
-                return False
-
-            comparator = OPERATORS[criteria.comparators[i]]
-            c_new = comparator(self.rows[:, idx1], self.rows[:, idx2])
-
-            if i - 1 < 0:
-                c = c_new
-            else:
-                logic_operator = OPERATORS[criteria.logic_operators[i-1]]
-                c = logic_operator(c_new, c)
-
-            return self.rows[np.where(c)]
-
     def select(self, criteria):
         # perform select. select subset of rows and return resulting table
         for i in range(0, criteria.num_conditions):
@@ -223,20 +199,31 @@ class Table:
             if idx is None:
                 print("column %s is not present in table %s" % (criteria.conditions[i][0], self.name))
                 return False
-            
-            comparator = OPERATORS[criteria.comparators[i]]
+
+            # get comparator (>, =, !=, etc.)
+            comparator = utils.OPERATORS[criteria.comparators[i]]
+            # get value on right side of comparator
             val = criteria.conditions[i][1]
 
-            if NUMERIC[comparator]:
-                c_new = comparator(self.rows[:, idx].astype(int), int(val))
+            print(criteria.arithops)
+
+            if (criteria.arithops[i] is None):
+                if NUMERIC[comparator]:
+                    c_new = comparator(self.rows[:, idx].astype(float), int(val))
+                else:
+                    c_new = comparator(self.rows[:, idx], val)
             else:
-                c_new = comparator(self.rows[:, idx], val)
+                arithop=utils.OPERATORS[criteria.arithops[i]]
+                arithm = arithop(self.rows[:,idx].astype(float),float(criteria.conditions[i][2]))
+                c_new=comparator(arithm, float(val))
 
             if i - 1 < 0:
                 c = c_new
             else:
                 logic_operator = OPERATORS[criteria.logic_operators[i-1]]
                 c = logic_operator(c_new, c)
+            
+                
         
         return self.rows[np.where(c)]
 
