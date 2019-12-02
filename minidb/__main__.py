@@ -34,6 +34,9 @@ def start():
         if cmd is None:
             continue
 
+        elif cmd=="count":
+            db.count(table_name, in_table)
+
         elif cmd == "inputfromfile":
             db.input_from_file(table_name, data_path + in_table)
 

@@ -249,6 +249,11 @@ class Table:
         result_table.insert_row([[avg]])
         return result_table
 
+    def count(self, out_table_name):
+        result_table=Table(out_table_name, ["count"])
+        result_table.insert_row([[self.__get_length()]])
+        return result_table
+
     def group(self, columns):
         projection = self.projection("projection", columns)
         keys, indices = np.unique(projection.rows, axis=0, return_inverse=True)
