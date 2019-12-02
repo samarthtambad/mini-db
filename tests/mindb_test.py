@@ -15,7 +15,7 @@ def get_db():
 def get_argparser():
     from minidb.utils import Utils
     from minidb.argparser import ArgParser
-    return Utils
+    return ArgParser
 
 @pytest.fixture
 def get_parser():
