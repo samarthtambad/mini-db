@@ -35,13 +35,13 @@ def start():
             continue
 
         elif cmd=="count":
-            db.count(table_name, in_table)
+            db.count(table_name, in_table[0])
 
         elif cmd == "inputfromfile":
             db.input_from_file(table_name, data_path + in_table)
 
         elif cmd == "outputtofile":
-            db.output_to_file(table_name, "_tmp.txt")
+            db.output_to_file(in_table[0], columns[0])
 
         elif cmd == "select":
             db.select(table_name, in_table[0], criteria)

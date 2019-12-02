@@ -156,10 +156,9 @@ class Database:
         :param file: path to the output file where output must be written.
         :return: success True/False
         """
-        if not self.__exists(table_name):
-            print("No table found")
-            return False
         table = self.__get_table(table_name)
+        if table is None:
+            return False
         with open(file, "a") as f:
             table.print(f)
         return True
@@ -283,7 +282,7 @@ class Database:
         in_table = self.__get_table(in_table_name)
         out_table = in_table.movavg(out_table_name, column, n)
         self.__save_table(out_table_name, out_table)
-        out_table.print()
+        out_table.print(num_rows=5)
         return out_table
 
     def movsum(self, out_table_name, in_table_name, column, n):
@@ -300,6 +299,7 @@ class Database:
         in_table = self.__get_table(in_table_name)
         out_table = in_table.movsum(out_table_name, column, n)
         self.__save_table(out_table_name, out_table)
+        out_table.print(num_rows=5)
         return out_table
 
     def count(self, out_table_name, in_table_name):

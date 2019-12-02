@@ -26,7 +26,7 @@ class ArgParser:
 
         def join_to_select(self):
             select_conditions = []
-            for i in range(0,self.num_conditions):
+            for i in range(0, self.num_conditions):
                 c1 = self.conditions[i][0] + "_" + self.conditions[i][1]
                 c2 = self.conditions[i][2] + "_" + self.conditions[i][3]
                 select_conditions.append([c1, c2])
