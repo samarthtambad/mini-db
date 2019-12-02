@@ -76,6 +76,9 @@ def start():
         elif cmd == "avg":
             db.avg(table_name, in_table[0], columns[0])
 
+        elif cmd=="sum":
+            db.sum(table_name, in_table[0], columns[0])
+
         elif cmd == "Btree":
             db.Btree(in_table[0], columns[0])
 
