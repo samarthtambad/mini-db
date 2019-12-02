@@ -29,9 +29,11 @@ class ArgParser:
             self.arithops=[]
             self.constants=[]
 
+
         def get_arithops(self, criteria_str):
             # return True
             return re.findall(self.arithops_pattern,criteria_str)
+
 
     def __init__(self, cmd, args):
         self.command = cmd

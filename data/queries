@@ -6,3 +6,9 @@ T3 := movsum(T1, qty, 3)
 
 Hash(T1,qty)
 Btree(T1, qty)
+
+
+T2 := movavg(T1, Q, 3)
+T3 := movsum(T1, Q, 3)
+
+outputtofile(T1, T1)

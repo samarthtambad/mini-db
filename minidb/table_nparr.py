@@ -87,27 +87,23 @@ class Table:
         self.rows = np.concatenate((self.rows, new_row))
         self.__auto_increment()
 
-
-    def print(self, f=None, *args,**kwargs):
+    def print(self, f=None, num_rows=None):
         """ print contents of the table
         :param f: file to print to. Prints to stdout if None
+        :param num_rows: num of rows to print
         :return: None
         """
-        # print header
         self.print_columns(f)
-        if "num_rows" in kwargs:
-            num_rows = kwargs["num_rows"]
-        else:
+        if num_rows is None:
             num_rows = self.num_rows
-        # print table rows (separated by |)
         for i in range(0, num_rows):
             for idx, value in enumerate(self.rows[i]):
                 if idx != 0:
                     print(" | ", end='', file=f)
                 print(value, end='', file=f)
-            print("")
+            print("", file=f)
 
-    def print_columns(self,col_width, f=None):
+    def print_columns(self, f=None):
         """ print column names (separated by |)
         :param f: file to print to. Prints to stdout if None
         :return: None
@@ -116,7 +112,7 @@ class Table:
             if idx != 0:
                 print(" | ", end='', file=f)
             print(name, end='', file=f)
-        print("")
+        print("", file=f)
 
     def print_formatted(self, f=None, *args,**kwargs):
         """ print contents of the table
@@ -292,10 +288,10 @@ class Table:
         sum_vec = np.convolve(c, weights, 'valid')
         div_vec = np.convolve(o, weights, 'valid')
         avg_vec = [x/y for x, y in zip(sum_vec, div_vec)]
-        # print(weights, c, o, sum_vec, div_vec, avg_vec)
-        for i in range(0, len(avg_vec)):
-            new_row = np.insert(self.rows[i], len(self.rows[i]), avg_vec[i])
-            result_table.insert_row([new_row])
+
+        avg_vec = np.vstack(avg_vec)
+        result_table.rows = np.array(avg_vec)
+        result_table.num_rows = len(avg_vec)
         return result_table
 
     def movsum(self, out_table_name, column, n):
@@ -304,10 +300,10 @@ class Table:
         c = self.rows[:, self.__get_column_idx(column)].astype(float)
         c = np.concatenate((np.zeros(n - 1), c), axis=None)
         sum_vec = np.convolve(c, weights, 'valid')
-        # print(avg_vec)
-        for i in range(0, len(sum_vec)):
-            new_row = np.insert(self.rows[i], len(self.rows[i]), sum_vec[i])
-            result_table.insert_row([new_row])
+
+        sum_vec = np.vstack(sum_vec)
+        result_table.rows = np.array(sum_vec)
+        result_table.num_rows = len(sum_vec)
         return result_table
 
     def btree_index(self, column):
