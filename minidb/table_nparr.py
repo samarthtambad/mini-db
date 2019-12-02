@@ -75,21 +75,15 @@ class Table:
     def get_dimensions(self):
         return self.rows.shape
 
-    def set_dtypes(self):
-        for col in list(self.col_names.keys()):
-            idx=self.__get_column_idx(col)
-            if (self.__is_col_int(idx)):
-                self.col_dtypes[idx]=1
-            elif (self.__is_col_float(idx)):
-                # set to 0 so condition can be checked as a bool
-                self.col_dtypes[idx]=0
-            else:
-                self.col_dtypes[idx]=2
-
     def insert_row(self, new_row):
         self.rows = np.concatenate((self.rows, new_row))
         self.__auto_increment()
 
+    def get_value(self, row_number, col_name):
+        return self.rows[row_number][self.__get_column_idx(col_name)]
+
+    def get_row(self,row_number):
+        return self.rows[row_number]
 
     def print(self, f=None, *args,**kwargs):
         """ print contents of the table
@@ -121,11 +115,28 @@ class Table:
             print(name, end='', file=f)
         print("")
 
+    def set_dtypes(self):
+        for col in list(self.col_names.keys()):
+            idx=self.__get_column_idx(col)
+            if (self.__is_col_int(idx)):
+                self.col_dtypes[idx]=1
+            elif (self.__is_col_float(idx)):
+                # set to 0 so condition can be checked as a bool
+                self.col_dtypes[idx]=0
+            else:
+                self.col_dtypes[idx]=2
+
     def print_formatted(self, f=None, *args,**kwargs):
         """ print contents of the table
         :param f: file to print to. Prints to stdout if None
         :return: None
         """
+        if (self.num_rows==0):
+            col_width=10
+            self.print_columns_formatted(col_width,f)
+            return
+
+        self.set_dtypes()
         col_width=self.__get_max_col_width()
         # print header
         self.print_columns_formatted(col_width,f)
@@ -177,7 +188,7 @@ class Table:
         return projected_table
 
     def sort(self, result_table_name, columns):
-        result_table = Table(result_table_name, self.col_names)
+
         idx = []
         for col in columns:
             if col not in self.col_names:
@@ -189,32 +200,15 @@ class Table:
         
         order = np.lexsort(idx)
         sorted_rows = self.rows[order]
-        result_table.rows = sorted_rows
-        result_table.num_rows = len(sorted_rows)
-        return result_table
 
-    def select_join(self, criteria):
-        print("select_join")
-        for i in range(0, criteria.num_conditions):
-            idx1 = self.__get_column_idx(criteria.conditions[i][0])
-            idx2 = self.__get_column_idx(criteria.conditions[i][1])
-            if idx1 is None:
-                print("column %s is not present in table %s" % (criteria.conditions[i][0], self.name))
-                return False
-            if idx2 is None:
-                print("column %s is not present in table %s" % (criteria.conditions[i][1], self.name))
-                return False
-
-            comparator = OPERATORS[criteria.comparators[i]]
-            c_new = comparator(self.rows[:, idx1], self.rows[:, idx2])
-
-            if i - 1 < 0:
-                c = c_new
-            else:
-                logic_operator = OPERATORS[criteria.logic_operators[i-1]]
-                c = logic_operator(c_new, c)
-
-            return self.rows[np.where(c)]
+        # only return a Table object if result_table_name is specified
+        if (result_table_name is not None):
+            result_table = Table(result_table_name, self.col_names)
+            result_table.rows = sorted_rows
+            result_table.num_rows = len(sorted_rows)
+            return result_table
+        else:
+            return sorted_rows
 
     def select(self, criteria):
         # perform select. select subset of rows and return resulting table
