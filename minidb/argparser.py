@@ -64,8 +64,8 @@ class ArgParser:
             conditions = re.split(self.logic_pattern, self.criteria_str)
             for i in range(0, self.num_conditions):
                 arithop=self.get_arithop(str(conditions[i]))
-                self.arithops.append(arithop)
                 expr = self.parse_expression(arithop, str(conditions[i]), i)
+            
             if (self.query_type=="join"):
                 self.conditions = self.eq_conditions + self.ne_conditions
                 self.arithops = self.eq_arithops + self.ne_arithops
@@ -84,6 +84,7 @@ class ArgParser:
             print("parse_select_expression")
             left, right = re.split(self.comparator_pattern, condition)
             comparator = re.findall(self.comparator_pattern, condition)[0]
+            self.arithops.append(arithop)
 
             # determine if contant is on left or right side of comparator
             if utils.is_numeric(left):
@@ -106,20 +107,56 @@ class ArgParser:
         def parse_join_expression(self, condition, i):
             left, right = re.split(self.comparator_pattern, condition)
 
-            t1 = utils.remove_parentheses(left.split(".")[0]).strip()
-            t1_field = left.split(".")[1].strip()
-            t2 = right.split(".")[0].strip()
-            t2_field=utils.remove_parentheses(right.split(".")[1]).strip()
+            # process left side of comparator
+            t1_arithop = self.get_arithop(left)
+            # check for arithmetic operators
+            if (t1_arithop is None):
+                t1 = utils.remove_parentheses(left.split(".")[0]).strip()
+                t1_field = left.split(".")[1].strip()
+                t1_constant=None
+            else:
+                left1,right1 = left.split(t1_arithop)
+                if (utils.is_numeric(left1)):
+                    t1_constant=utils.remove_parentheses(left1).strip()
+                    t1_ = utils.remove_parentheses(right1).strip()
+                    t1=t1_.split(".")[0]
+                    t1_field=t1_.split(".")[1]
+                else:
+                    t1_constant=utils.remove_parentheses(right1).strip()
+                    t1_ = utils.remove_parentheses(left1).strip()
+                    t1=t1_.split(".")[0]
+                    t1_field=t1_.split(".")[1]
+
+            # process right side of comparator
+            t2_arithop = self.get_arithop(right)
+            if (t2_arithop is None):
+                t2 = right.split(".")[0].strip()
+                t2_field=utils.remove_parentheses(right.split(".")[1]).strip()
+                t2_constant=None
+            else:
+                left2,right2 = right.split(t2_arithop)
+                if (utils.is_numeric(left1)):
+                    t2_constant = utils.remove_parentheses(left1).strip()
+                    t2_ = utils.remove_parentheses(right1).strip()
+                    t2=t2_.split(".")[0]
+                    t2_field = t2.split(".")[1]
+                else:
+                    t2_constant=utils.remove_parentheses(right2).strip()
+                    t2_=utils.remove_parentheses(left2).strip()
+                    t2 = t2_.split(".")[0]
+                    t2_field = t2_.split(".")[1]
 
             tokenized_expr = [t1, t1_field, t2, t2_field]
             if "=" in condition and "!=" not in condition:
                 self.eq_conditions.append(tokenized_expr)
                 self.eq_comparators.append("=")
+                self.eq_arithops.append([[t1_arithop,t2_arithop]])
+                self.eq_constants.append((t1_constant,t2_constant))
             else:
                 self.ne_conditions.append(tokenized_expr)
                 self.ne_comparators.append(re.findall(self.comparator_pattern, condition)[0])
-
-
+                self.ne_arithops.append([[t1_arithop,t2_arithop]])
+                self.ne_constants.append((t1_constant,t2_constant))
 
     def __init__(self, cmd, args):
         self.command = cmd

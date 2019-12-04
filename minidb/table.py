@@ -324,6 +324,11 @@ class Table:
         index.print()
         self.index[column] = index
 
+    def apply_hash_transformation(self, column, constant, arithop_):
+        arithop=utils.OPERATORS[arithop_]
+        new_index = dict(arithop(float(key), float(constant)) for (key, value) in self.index.items())
+        self.index[column ] = new_index
+
     def index_list(self):
         for key, idx in self.index.items():
             print("%-15s %-15s %-15s" % (self.name, key, idx.type))
