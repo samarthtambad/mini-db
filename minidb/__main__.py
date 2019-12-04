@@ -2,7 +2,7 @@ import time
 from minidb.argparser import ArgParser
 from minidb.database import Database as mdb
 from minidb.utils import Utils as utils
-
+import traceback 
 data_path = "data/"
 
 
@@ -10,6 +10,7 @@ def start():
     db = mdb()
 
     while True:
+        # try: 
         txt = input("\nminidb>> ")
 
         start_time = time.time()
@@ -25,7 +26,7 @@ def start():
         elif txt == "show_index":
             db.show_index()
             continue
-
+    
         # handle other commands after parsing
         table_name, cmd, args = utils.parse(txt)
         in_table, columns, criteria = ArgParser(cmd, args).get_args()
@@ -35,7 +36,7 @@ def start():
             continue
 
         elif cmd=="count":
-            db.count(table_name, in_table[0])
+            db.count(table_name, in_table)
 
         elif cmd == "inputfromfile":
             db.input_from_file(table_name, data_path + in_table)
@@ -44,7 +45,8 @@ def start():
             db.output_to_file(in_table[0], columns[0])
 
         elif cmd == "select":
-            db.select(table_name, in_table[0], criteria)
+            # print(criteria.conditions)
+            db.select(table_name, in_table, criteria)
             pass
 
         elif cmd == "project":
@@ -57,6 +59,12 @@ def start():
             db.sort(table_name, in_table[0], columns)
 
         elif cmd == "join":
+            # print("conditions from main")
+            # print(criteria.conditions)
+            # print("equijoin conditions from main")
+            # print(criteria.equijoin_conditions)
+            # print("comparators from main")
+            # print(criteria.comparators)
             db.join(table_name, in_table, criteria)
 
         elif cmd == "avggroup":
@@ -90,6 +98,10 @@ def start():
 
         end_time = time.time()
         print("\nTime taken: %0.5f s" % (end_time - start_time))
+
+        # except Exception as e:
+        #     print(e)
+    
 
 
 if __name__ == "__main__":

@@ -59,4 +59,11 @@ outputtofile(Q5, Q5) // This should output the table Q5 into a file
 
 // with the same name and with vertical bar separators
 outputtofile(T, T) // This should output the table T
+
+
+<---- more tests --->
+A:=select(R, itemid=7)
+A1:=select(R,7=itemid)
+
+
 ```

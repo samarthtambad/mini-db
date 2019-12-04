@@ -8,14 +8,24 @@ class Index:
         self.type = idx_type
         if idx_type == "Hash":
             self.index = {}
+            for i, row in enumerate(table.rows):
+                if (row[col_idx] in self.index.keys()):
+                    self.index[row[col_idx]].append((i, col_idx))
+                else:
+                    self.index[row[col_idx]] = [(i, col_idx)]
         else:
             self.index = OOBTree()
 
-        for i, row in enumerate(table.rows):
-            self.index[row[col_idx]] = (i, col_idx)
+            for i, row in enumerate(table.rows):
+                self.index[row[col_idx]] = (i, col_idx)
+
+        table.index[col_idx]=idx_type
 
     def get_pos(self, key):
-        return self.index[key]
+        if key in self.index.keys():
+            return self.index[key]
+        else:
+            return None
 
     def print(self, f=None):
         for i in self.index.keys():
