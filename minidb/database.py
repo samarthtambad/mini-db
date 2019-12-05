@@ -90,7 +90,8 @@ class Database:
                             continue
             table.rows = np.array(rows)
             table.num_rows = len(rows)
-            table.set_dtypes()
+            if (table.num_rows>0):
+                table.set_dtypes()
             table.print(num_rows=5)
             self.__save_table(table_name, table)
             return True
@@ -106,7 +107,6 @@ class Database:
         :param criteria: condition(s) that each selected row must satisfy
         :return: None
         """
-
         t1 = self.__get_table(tables[0])
         t2 = self.__get_table(tables[1])
         if t1 is None or t2 is None:
@@ -120,9 +120,9 @@ class Database:
         join = Join(t1, t2, criteria)
         data=join.do_join()
         table.set_data(data)
-        table.set_dtypes()
         self.__save_table(out_table_name, table)
         table.print()
+        print("%d rows returned" % len(data))
 
     def output_to_file(self, table_name, file):
         """ Output contents of `table` (with vertical bar separators) into `file`.
@@ -155,9 +155,8 @@ class Database:
         data = in_table.select(criteria)
         out_table.rows = data
         out_table.num_rows = len(data)
-
         out_table.print_formatted()
-
+        print("%d rows returned" % len(data))
         # create new table with appropriate name
         self.__save_table(out_table_name, out_table)
         return True
@@ -258,7 +257,7 @@ class Database:
         in_table = self.__get_table(in_table_name)
         out_table = in_table.movavg(out_table_name, column, n)
         self.__save_table(out_table_name, out_table)
-        out_table.print(num_rows=5)
+        out_table.print()
         return out_table
 
     def movsum(self, out_table_name, in_table_name, column, n):
