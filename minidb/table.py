@@ -32,12 +32,12 @@ class Table:
         except ValueError:
             return False
 
-    def is_col_int(self,col_name):
-        if col_name in self.col_names.keys():
-            idx = self.col_names[col_name]
-            return self.__is_col_int(idx)
-        else:
-            return False
+    # def is_col_int(self,col_name):
+    #     if col_name in self.col_names.keys():
+    #         idx = self.col_names[col_name]
+    #         return self.__is_col_int(idx)
+    #     else:
+    #         return False
 
     def __is_col_float(self, idx):
         try:
@@ -88,8 +88,8 @@ class Table:
         out_table.num_columns = self.num_columns
         return out_table
 
-    def get_dimensions(self):
-        return self.rows.shape
+    # def get_dimensions(self):
+    #     return self.rows.shape
 
     def set_data(self,rows):
         self.rows=np.array(rows)

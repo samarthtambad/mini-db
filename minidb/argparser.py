@@ -64,7 +64,9 @@ class ArgParser:
             conditions = re.split(self.logic_pattern, self.criteria_str)
             for i in range(0, self.num_conditions):
                 arithop=self.get_arithop(str(conditions[i]))
-                expr = self.parse_expression(arithop, str(conditions[i]), i)
+                # expr = self.parse_expression(arithop, str(conditions[i]), i)
+                self.parse_expression(arithop, str(conditions[i]), i)
+
             
             if (self.query_type=="join"):
                 self.conditions = self.eq_conditions + self.ne_conditions

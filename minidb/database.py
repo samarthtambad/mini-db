@@ -211,6 +211,7 @@ class Database:
         in_table = self.__get_table(in_table_name)
         out_table = in_table.sort(out_table_name, columns)
         out_table.print()
+        print("%d rows returned" % len(out_table.rows))
         self.__save_table(out_table_name, out_table)
 
     def avggroup(self, out_table_name, in_table_name, avg_column, groupby_columns):
@@ -226,6 +227,7 @@ class Database:
             return False
         in_table = self.__get_table(in_table_name)
         out_table = in_table.avggroup(out_table_name, avg_column, groupby_columns)
+        print("%d rows returned" % len(out_table.rows))
         out_table.print()
 
     def sumgroup(self, out_table_name, in_table_name, sum_column, groupby_columns):
@@ -242,6 +244,8 @@ class Database:
         in_table = self.__get_table(in_table_name)
         out_table = in_table.sumgroup(out_table_name, sum_column, groupby_columns)
         out_table.print()
+        print("%d rows returned" % len(out_table.rows))
+        self.__save_table(out_table_name, out_table)
 
     def movavg(self, out_table_name, in_table_name, column, n):
         """ perform `n` item moving average over `column` of `table'
@@ -256,9 +260,8 @@ class Database:
             return False
         in_table = self.__get_table(in_table_name)
         out_table = in_table.movavg(out_table_name, column, n)
-        self.__save_table(out_table_name, out_table)
         out_table.print()
-        return out_table
+        self.__save_table(out_table_name, out_table)
 
     def movsum(self, out_table_name, in_table_name, column, n):
         """ perform `n` item moving sum over `column` of `table'

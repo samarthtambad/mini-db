@@ -2,7 +2,6 @@ import time
 from minidb.argparser import ArgParser
 from minidb.database import Database as mdb
 from minidb.utils import Utils as utils
-import traceback 
 data_path = "data/"
 
 
