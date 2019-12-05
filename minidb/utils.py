@@ -33,6 +33,22 @@ class Utils:
         pass
 
     @staticmethod
+    def is_int(x):
+        try:
+            int(x)
+            return True
+        except ValueError:
+            return False
+
+    @staticmethod
+    def is_float(x):
+        try:
+            float(x)
+            return True
+        except ValueError:
+            return False
+
+    @staticmethod
     def is_numeric(x):
         try:
             float(x)

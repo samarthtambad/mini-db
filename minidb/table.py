@@ -11,7 +11,7 @@ class Table:
         self.name = name
         self.num_columns = len(columns)
         self.num_rows = 0
-        self.index = {}
+        self.indexes = {}
         self.header = np.array([columns])
         self.rows = np.empty([0, self.num_columns])
         self.col_names = {}
@@ -19,11 +19,24 @@ class Table:
         for idx, col in enumerate(columns):
             self.col_names[col] = idx
 
+    def is_col_numeric(self,idx):
+        if (self.__is_col_int(idx) or self.__is_col_float(idx)):
+            return True
+        else:
+            return False
+
     def __is_col_int(self, idx):
         try:
             int(self.rows[0][idx])
             return True
         except ValueError:
+            return False
+
+    def is_col_int(self,col_name):
+        if col_name in self.col_names.keys():
+            idx = self.col_names[col_name]
+            return self.__is_col_int(idx)
+        else:
             return False
 
     def __is_col_float(self, idx):
@@ -68,7 +81,7 @@ class Table:
         out_table = Table(out_table_name,self.col_names.keys())
         out_table.rows = self.rows
         out_table.num_rows = self.num_rows
-        out_table.index = self.index
+        out_table.indexes = self.indexes
         out_table.header = self.header
         out_table.col_names = self.col_names
         out_table.col_dtypes = self.col_dtypes
@@ -81,6 +94,8 @@ class Table:
     def set_data(self,rows):
         self.rows=np.array(rows)
         self.num_rows=len(rows)
+        if (self.num_rows>0):
+            self.set_dtypes
 
     def set_dtypes(self):
         for col in list(self.col_names.keys()):
@@ -211,8 +226,6 @@ class Table:
             # get value on right side of comparator
             val = criteria.conditions[i][1]
 
-            print(criteria.arithops)
-
             if (criteria.arithops[i] is None):
                 if utils.NUMERIC[comparator]:
                     c_new = comparator(self.rows[:, idx].astype(float), int(val))
@@ -298,7 +311,8 @@ class Table:
         avg_vec = [x/y for x, y in zip(sum_vec, div_vec)]
 
         avg_vec = np.vstack(avg_vec)
-        result_table.rows = np.array(avg_vec)
+        new_rows = np.hstack((self.rows,avg_vec))
+        result_table.rows = new_rows
         result_table.num_rows = len(avg_vec)
         return result_table
 
@@ -310,25 +324,26 @@ class Table:
         sum_vec = np.convolve(c, weights, 'valid')
 
         sum_vec = np.vstack(sum_vec)
-        result_table.rows = np.array(sum_vec)
+        new_rows = np.hstack((self.rows,sum_vec))
+        result_table.rows = new_rows
         result_table.num_rows = len(sum_vec)
         return result_table
 
     def btree_index(self, column):
         index = Index(self, self.__get_column_idx(column), "Btree")
         index.print()
-        self.index[column] = index
+        self.indexes[column] = index
 
     def hash_index(self, column):
         index = Index(self, self.__get_column_idx(column), "Hash")
-        index.print()
-        self.index[column] = index
+        # index.print()
+        self.indexes[column] = index
 
     def apply_hash_transformation(self, column, constant, arithop_):
         arithop=utils.OPERATORS[arithop_]
-        new_index = dict(arithop(float(key), float(constant)) for (key, value) in self.index.items())
-        self.index[column ] = new_index
+        transformed_index = Index(self, self.__get_column_idx(column), "Hash_Transform", (arithop,constant))        
+        self.indexes[column + "_tr"] = transformed_index
 
     def index_list(self):
-        for key, idx in self.index.items():
+        for key, idx in self.indexes.items():
             print("%-15s %-15s %-15s" % (self.name, key, idx.type))

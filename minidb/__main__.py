@@ -45,7 +45,6 @@ def start():
             db.output_to_file(in_table[0], columns[0])
 
         elif cmd == "select":
-            # print(criteria.conditions)
             db.select(table_name, in_table, criteria)
             pass
 
@@ -59,12 +58,6 @@ def start():
             db.sort(table_name, in_table[0], columns)
 
         elif cmd == "join":
-            # print("conditions from main")
-            # print(criteria.conditions)
-            # print("equijoin conditions from main")
-            # print(criteria.equijoin_conditions)
-            # print("comparators from main")
-            # print(criteria.comparators)
             db.join(table_name, in_table, criteria)
 
         elif cmd == "avggroup":

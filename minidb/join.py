@@ -18,7 +18,6 @@ class Join:
 	def do_join(self):
 		# decide which join to use
 		# use merge join if there is one condition, the condition is equality, and there are no duplicates
-		print(self.criteria.arithops)
 
 		if (len(self.criteria.eq_conditions)==1 and len(self.criteria.conditions)==1):
 			self.out_rows=self.indexjoin_single(self.criteria.conditions[0]);
@@ -38,13 +37,17 @@ class Join:
 			idx1 = t1.col_names[col1]   # get index of column in table
 
 			t2 = self.tables[table2_name]
-			if col2 not in t2.index:
+			if col2 not in t2.indexes:
 				t2.hash_index(col2)
-			t2_idx = t2.index[col2]
+			t2_idx = t2.indexes[col2]
 
 			new_rows = []
 			for i, row1 in enumerate(t1.rows):
 				val1 = row1[idx1]
+				try:
+					val1=float(val1)
+				except:
+					val1=val1
 				pos = t2_idx.get_pos(val1)
 				if pos is None:
 					continue
@@ -57,30 +60,50 @@ class Join:
 			return self.indexjoin_single_arithop(condition)
 
 	def indexjoin_single_arithop(self, condition):
+		del_index=False
 		table1_name, col1, table2_name, col2 = condition
 		t1 = self.tables[table1_name]
 		idx1 = t1.col_names[col1]
 
 		t2 = self.tables[table2_name]
-		if col2 not in t2.index:
+		if (self.criteria.arithops[0][1] is not None):	
+			# create new index on transformed keys
+			del_index = True #delete transformed index after we are done using it
+			t2.apply_hash_transformation(col2, self.criteria.constants[0][1], self.criteria.arithops[0][1])
+			t2_idx = t2.indexes[col2+"_tr"]
+		elif col2 not in t2.indexes:
 			t2.hash_index(col2)
-			if (self.criteria.arithops[0][1] is not None):
-				print()
-				t2.apply_hash_transformation(col2, self.criteria.constants[0][1], self.criteria.arithops[0][1])
-		t2_idx = t2.index[col2]
+			t2_idx = t2.indexes[col2]
+		else:
+			t2_idx = t2.indexes[col2]
 
+		t2_idx.print()
+		print()
+		
 		new_rows = []
 		for i, row1 in enumerate(t1.rows):
 			val1 = row1[idx1]
+
 			if (self.criteria.arithops[0][0] is not None):
-				val1 = arithop(float(val), float(self.criteria.arithops[0][0]))
+				arithop = self.criteria.arithops[0][0]
+				val1 = utils.OPERATORS[arithop](float(val1), float(self.criteria.constants[0][0]))
+			else:
+				try:
+					val1=float(val1)
+				except:
+					val1=val1
+
+			print(val1)
 			pos = t2_idx.get_pos(val1)
-			if pos is None:
+
+			if pos is None:																
 				continue
 			else:
 				for p in pos:
 					new_row = np.concatenate([row1,t2.rows[p[0]]])
 					new_rows.append(new_row)
+		if (del_index):
+			del t2.indexes[col2+"_tr"]
 		return new_rows
 
 	def indexjoin_multiple(self, condition):
@@ -91,14 +114,18 @@ class Join:
 		idx1 = t1.col_names[col1]   # get index of column in table
 
 		t2 = self.tables[table2_name]
-		if col2 not in t2.index:
+		if col2 not in t2.indexes:
 			t2.hash_index(col2)
-		t2_idx = t2.index[col2]
+		t2_idx = t2.indexes[col2]
 
 		new_rows = []
 
 		for i, row1 in enumerate(t1.rows):
 			val1 = row1[idx1]
+			try:
+				val1=float(val1)
+			except:
+				val1=val1
 			pos = t2_idx.get_pos(val1)
 
 			if pos is None:

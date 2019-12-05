@@ -81,7 +81,6 @@ class ArgParser:
                 self.parse_select_expression(condition, arithop, i)
 
         def parse_select_expression(self, condition, arithop, i):
-            print("parse_select_expression")
             left, right = re.split(self.comparator_pattern, condition)
             comparator = re.findall(self.comparator_pattern, condition)[0]
             self.arithops.append(arithop)
@@ -135,7 +134,7 @@ class ArgParser:
                 t2_constant=None
             else:
                 left2,right2 = right.split(t2_arithop)
-                if (utils.is_numeric(left1)):
+                if (utils.is_numeric(left2)):
                     t2_constant = utils.remove_parentheses(left1).strip()
                     t2_ = utils.remove_parentheses(right1).strip()
                     t2=t2_.split(".")[0]
@@ -150,13 +149,13 @@ class ArgParser:
             if "=" in condition and "!=" not in condition:
                 self.eq_conditions.append(tokenized_expr)
                 self.eq_comparators.append("=")
-                self.eq_arithops.append([[t1_arithop,t2_arithop]])
-                self.eq_constants.append((t1_constant,t2_constant))
+                self.eq_arithops.append([t1_arithop,t2_arithop])
+                self.eq_constants.append([t1_constant,t2_constant])
             else:
                 self.ne_conditions.append(tokenized_expr)
                 self.ne_comparators.append(re.findall(self.comparator_pattern, condition)[0])
-                self.ne_arithops.append([[t1_arithop,t2_arithop]])
-                self.ne_constants.append((t1_constant,t2_constant))
+                self.ne_arithops.append([t1_arithop,t2_arithop])
+                self.ne_constants.append([t1_constant,t2_constant])
 
     def __init__(self, cmd, args):
         self.command = cmd
