@@ -21,10 +21,12 @@ class Join:
 		# decide which join to use
 		# use merge join if there is one condition, the condition is equality, and there are no duplicates
 
-		if (len(self.criteria.eq_conditions)==1 and len(self.criteria.conditions)==1):
+		if (len(self.criteria.eq_conditions)==1 and len(self.criteria.conditions)==1): #add arithops and (self.criteria.arithops[0][0] is None)
 			self.out_rows=self.indexjoin_single(self.criteria.conditions[0]);
+
 		elif (len(self.criteria.eq_conditions)==0):
 			self.out_rows=self.nestedloopjoin()
+		
 		else:
 			self.out_rows=self.indexjoin_multiple(self.criteria.conditions[0])
 
