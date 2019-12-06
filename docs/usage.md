@@ -63,6 +63,7 @@ outputtofile(Q5, Q5) // This should output the table Q5 into a file
 outputtofile(T, T) // This should output the table T
 
 
+
 <---- more tests --->
 A:=inputfromfile(sales1)
 A:=inputfromfile(sales1_small)
@@ -90,7 +91,12 @@ E3:=join(A,B,(A.saleid=B.saleid) and (A.qty≤B.Q))
 E3:=join(A,B,(A.qty≤B.Q) and (A.saleid=B.saleid))
 
 
-E3:=join(A,B,(A.qty>B.Q))
+E3:=join(A,B,(2*A.qty=B.Q))
+E3:=join(A,B,(A.qty*2=B.Q))
+
+E3:=join(A,B,(A.qty=3*B.Q))
+E3:=join(A,B,(A.qty=B.Q*3))
+
 E4:=join(A,B,(B.Q<A.qty))
 E3:=join(A,B,(A.qty<B.Q))
 
