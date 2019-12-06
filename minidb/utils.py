@@ -1,40 +1,64 @@
 import re
 import operator
 
-
-OPERATORS = {
-"<": operator.lt, ">": operator.gt, "=": operator.eq, "!=": operator.ne,
-"≥":   operator.ge, "≤": operator.le, "and": operator.and_, "or": operator.or_, "*":operator.mul, "+":operator.add,
-"/":operator.truediv,"-":operator.sub
-}
-
-
 # a class for all static helper functions
 class Utils:
 
-    REVERSE_COMPARATOR = {
-    "<":">", "=":"=", "!=":"!=", ">":"<","≥":"≤","≥":"≤"
+    # lookups
+    OPERATORS = {
+    "<": operator.lt, ">": operator.gt, "=": operator.eq, "!=": operator.ne,
+    "≥":   operator.ge, "≤": operator.le, "and": operator.and_, "or": operator.or_, "*":operator.mul, "+":operator.add,
+    "/":operator.truediv,"-":operator.sub
     }
 
+    NUMERIC = {
+        operator.lt: True, operator.gt: True, operator.eq: False, operator.ne: False,
+        operator.ge: True, operator.le: True, operator.and_: False, operator.or_: False
+    }
+
+    REVERSE_COMPARATOR = {
+        "<":">",
+        "=":"=",
+        "!=":"!=",
+        ">":"<",
+        "≥":"≤",
+        "≤":"≥"
+    }
+
+    # COMPARATOR_VALUES = {
+    # "<":">", "=":"1", "!=":"!=", ">":"<","≥":"≤","≥":"≤"
+    # }
 
     def __init__(self):
         pass
 
-    @staticmethod
-    def get_columns(params, num_tables):
-        columns = []
-        columns_ = params.split("(")[1]
-        for i in range(num_tables, len(columns_.split(","))):
-            columns.append(columns_.split(",")[i].strip().replace(")", ""))
-        return columns
+    # @staticmethod
+    # def is_int(x):
+    #     try:
+    #         int(x)
+    #         return True
+    #     except ValueError:
+    #         return False
+
+    # @staticmethod
+    # def is_float(x):
+    #     try:
+    #         float(x)
+    #         return True
+    #     except ValueError:
+    #         return False
 
     @staticmethod
-    def get_tables(params, num_tables):
-        tables = []
-        tables_ = params.split("(")[1]
-        for i in range(0, num_tables):
-            tables.append(tables_.split(",")[i].strip().replace(")", ""))
-        return tables
+    def is_numeric(x):
+        try:
+            float(x)
+            return True
+        except ValueError:
+            return False
+
+    @staticmethod
+    def remove_parentheses(params):
+        return params.replace(")","").replace("(","")
 
     @staticmethod
     def parse(txt):

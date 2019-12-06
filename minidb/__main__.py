@@ -2,7 +2,6 @@ import time
 from minidb.argparser import ArgParser
 from minidb.database import Database as mdb
 from minidb.utils import Utils as utils
-
 data_path = "data/"
 
 
@@ -10,6 +9,7 @@ def start():
     db = mdb()
 
     while True:
+        # try: 
         txt = input("\nminidb>> ")
 
         start_time = time.time()
@@ -25,7 +25,7 @@ def start():
         elif txt == "show_index":
             db.show_index()
             continue
-
+    
         # handle other commands after parsing
         table_name, cmd, args = utils.parse(txt)
         in_table, columns, criteria = ArgParser(cmd, args).get_args()
@@ -35,7 +35,7 @@ def start():
             continue
 
         elif cmd=="count":
-            db.count(table_name, in_table[0])
+            db.count(table_name, in_table)
 
         elif cmd == "inputfromfile":
             db.input_from_file(table_name, data_path + in_table)
@@ -44,7 +44,7 @@ def start():
             db.output_to_file(in_table[0], columns[0])
 
         elif cmd == "select":
-            db.select(table_name, in_table[0], criteria)
+            db.select(table_name, in_table, criteria)
             pass
 
         elif cmd == "project":
@@ -64,6 +64,9 @@ def start():
 
         elif cmd == "sumgroup":
             db.sumgroup(table_name, in_table[0], columns[0], columns[1:])
+
+        elif cmd == "countgroup":
+            db.countgroup(table_name, in_table[0], columns[0], columns[1:])
 
         elif cmd == "movavg":
             n = int(criteria)
@@ -90,6 +93,10 @@ def start():
 
         end_time = time.time()
         print("\nTime taken: %0.5f s" % (end_time - start_time))
+
+        # except Exception as e:
+        #     print(e)
+    
 
 
 if __name__ == "__main__":

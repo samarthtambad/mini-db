@@ -1,6 +1,7 @@
 import copy
 import numpy as np
-from minidb.table_nparr import Table
+from minidb.table import Table
+from minidb.join import Join
 
 
 class Database:
@@ -89,7 +90,8 @@ class Database:
                             continue
             table.rows = np.array(rows)
             table.num_rows = len(rows)
-            table.set_dtypes()
+            if (table.num_rows>0):
+                table.set_dtypes()
             table.print(num_rows=5)
             self.__save_table(table_name, table)
             return True
@@ -110,45 +112,17 @@ class Database:
         if t1 is None or t2 is None:
             return False
 
-        # r1 = np.array()
-
-        # mg=np.meshgrid(t1.rows,t2.rows)
-        # print("created meshgrid")
-        # print(mg)
-        # print(np.array(np.meshgrid(t1.rows,t2.rows)))
-
         # create new table with appropriate name and columns
         t1_cols = [tables[0] + "_" + x for x in t1.col_names]
         t2_cols = [tables[1] + "_" + x for x in t2.col_names]
         table = Table(out_table_name, t1_cols + t2_cols)
 
-        a = np.arange(t1.num_rows)
-        b = np.arange(t2.num_rows)
-        mg = np.meshgrid(a,b)
-        print("created meshgrid")
-        print(mg)
-
-        temp = Table("cartesian_product", t1_cols + t2_cols)
-        rows = []
-        for t1_row in t1.rows:
-            for t2_row in t2.rows:
-                new_row = ["test"]
-                # new_row=t1_row.tolist() + t2_row.tolist()
-                # new_row=np.append(t1_row,t2_row)
-                rows.append(new_row)
-                # temp.insert_row([new_row])
-        print(len(rows))
-        # temp.print()
-        temp.rows = np.array(rows)
-        temp.num_rows = len(rows)
-        criteria.join_to_select()
-        data = temp.select_join(criteria)
-        table.rows = data
-        table.num_rows = len(data)
-        table.num_rows = len(data)
-        # rows need to be added
+        join = Join(t1, t2, criteria)
+        data=join.do_join()
+        table.set_data(data)
         self.__save_table(out_table_name, table)
         table.print()
+        print("%d rows returned" % len(data))
 
     def output_to_file(self, table_name, file):
         """ Output contents of `table` (with vertical bar separators) into `file`.
@@ -182,7 +156,7 @@ class Database:
         out_table.rows = data
         out_table.num_rows = len(data)
         out_table.print_formatted()
-
+        print("%d rows returned" % len(data))
         # create new table with appropriate name
         self.__save_table(out_table_name, out_table)
         return True
@@ -216,7 +190,8 @@ class Database:
         # create a copy of the first table
         table1 = self.__get_table(tables[0])
         table2 = self.__get_table(tables[1])
-        table = copy.deepcopy(table1)
+        # table = copy.deepcopy(table1)
+        table = table1.copy(out_table_name)
         for row in table2.rows[1:]:
             table.insert_row([row])
         # save concatenated table in database with appropriate name
@@ -236,6 +211,7 @@ class Database:
         in_table = self.__get_table(in_table_name)
         out_table = in_table.sort(out_table_name, columns)
         out_table.print()
+        print("%d rows returned" % len(out_table.rows))
         self.__save_table(out_table_name, out_table)
 
     def avggroup(self, out_table_name, in_table_name, avg_column, groupby_columns):
@@ -251,6 +227,7 @@ class Database:
             return False
         in_table = self.__get_table(in_table_name)
         out_table = in_table.avggroup(out_table_name, avg_column, groupby_columns)
+        print("%d rows returned" % len(out_table.rows))
         out_table.print()
 
     def sumgroup(self, out_table_name, in_table_name, sum_column, groupby_columns):
@@ -267,6 +244,25 @@ class Database:
         in_table = self.__get_table(in_table_name)
         out_table = in_table.sumgroup(out_table_name, sum_column, groupby_columns)
         out_table.print()
+        print("%d rows returned" % len(out_table.rows))
+        self.__save_table(out_table_name, out_table)
+    
+    def countgroup(self, out_table_name, in_table_name, sum_column, groupby_columns):
+        """ select sum(`sum_column`), `other_columns` from table
+        :param out_table_name: name of the output table
+        :param in_table_name: name of the input table
+        :param sum_column: name of column over which sum is taken
+        :param groupby_columns: names of columns to group by
+        :return: None
+        """
+        if not self.__exists(in_table_name):
+            print("Table %s not found" % in_table_name)
+            return False
+        in_table = self.__get_table(in_table_name)
+        out_table = in_table.countgroup(out_table_name, sum_column, groupby_columns)
+        out_table.print()
+        print("%d rows returned" % len(out_table.rows))
+        self.__save_table(out_table_name, out_table)
 
     def movavg(self, out_table_name, in_table_name, column, n):
         """ perform `n` item moving average over `column` of `table'
@@ -281,9 +277,8 @@ class Database:
             return False
         in_table = self.__get_table(in_table_name)
         out_table = in_table.movavg(out_table_name, column, n)
+        out_table.print()
         self.__save_table(out_table_name, out_table)
-        out_table.print(num_rows=5)
-        return out_table
 
     def movsum(self, out_table_name, in_table_name, column, n):
         """ perform `n` item moving sum over `column` of `table'

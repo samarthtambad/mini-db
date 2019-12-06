@@ -11,6 +11,11 @@ def get_db():
     db = Database()
     return db
 
+@pytest.fixture
+def get_argparser():
+    from minidb.utils import Utils
+    from minidb.argparser import ArgParser
+    return ArgParser
 
 @pytest.fixture
 def get_parser():
@@ -24,6 +29,9 @@ def parse_assert(utils, txt, table_name, cmd, args):
     assert parsed_cmd == cmd, "Error parsing command"
     assert parsed_args == args, "Error parsing arguments"
 
+def criteria_assert(parser, cmd, args, correct_result):
+    in_table, columns, criteria = parser(cmd, args).get_args()
+    assert criteria.conditions == correct_result
 
 def test(get_db):
     db = get_db
@@ -43,8 +51,9 @@ def test(get_db):
 
 
 # tests for detecting parsing errors
-def test_parsing(get_parser):
+def test_parsing(get_parser,get_argparser):
     utils = get_parser
+    parser = get_argparser
     parse_assert(utils, "// parser handling comments test", None, None, None)
     parse_assert(utils, "R := inputfromfile(sales1) // import vertical bar delimited foo, first line",
                  "R", "inputfromfile", "(sales1)")
@@ -62,3 +71,6 @@ def test_parsing(get_parser):
                  "T1", "join", "(R1,S,(R1.qty>S.Q)and(R1.saleid=S.saleid))")
     parse_assert(utils, "outputtofile(Q5, Q5)", None, "outputtofile", "(Q5,Q5)")
     parse_assert(utils, "Hash(R,itemid)", None, "Hash", "(R,itemid)")
+
+    parse_assert(utils, "R1:= select(t1, (time > 50))", "R1", "select", "(t1,(time>50))")
+    # criteria_assert(parser, "select", "(t1,(time>50))", ["time","50"])
