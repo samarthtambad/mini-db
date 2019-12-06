@@ -246,6 +246,23 @@ class Database:
         out_table.print()
         print("%d rows returned" % len(out_table.rows))
         self.__save_table(out_table_name, out_table)
+    
+    def countgroup(self, out_table_name, in_table_name, sum_column, groupby_columns):
+        """ select sum(`sum_column`), `other_columns` from table
+        :param out_table_name: name of the output table
+        :param in_table_name: name of the input table
+        :param sum_column: name of column over which sum is taken
+        :param groupby_columns: names of columns to group by
+        :return: None
+        """
+        if not self.__exists(in_table_name):
+            print("Table %s not found" % in_table_name)
+            return False
+        in_table = self.__get_table(in_table_name)
+        out_table = in_table.countgroup(out_table_name, sum_column, groupby_columns)
+        out_table.print()
+        print("%d rows returned" % len(out_table.rows))
+        self.__save_table(out_table_name, out_table)
 
     def movavg(self, out_table_name, in_table_name, column, n):
         """ perform `n` item moving average over `column` of `table'

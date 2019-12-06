@@ -300,6 +300,16 @@ class Table:
             result_table.insert_row([new_row])
         return result_table
 
+    def countgroup(self, out_table_name, count_column, groupby_columns):
+        result_table = Table(out_table_name, ["count_" + count_column] + groupby_columns)
+        count_idx = self.__get_column_idx(count_column)
+        keys, groups = self.group(groupby_columns)
+        for i in range(0, len(groups)):
+            s = len(groups[i])
+            new_row = np.insert(keys[i], 0, s)
+            result_table.insert_row([new_row])
+        return result_table
+
     def movavg(self, out_table_name, column, n):
         result_table = Table(out_table_name, list(self.col_names.keys()) + ["mov_avg"])
         weights = np.ones(n)

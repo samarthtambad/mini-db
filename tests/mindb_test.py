@@ -73,4 +73,4 @@ def test_parsing(get_parser,get_argparser):
     parse_assert(utils, "Hash(R,itemid)", None, "Hash", "(R,itemid)")
 
     parse_assert(utils, "R1:= select(t1, (time > 50))", "R1", "select", "(t1,(time>50))")
-    criteria_assert(parser, "select", "(t1,(time>50))", ["time","50"])
+    # criteria_assert(parser, "select", "(t1,(time>50))", ["time","50"])

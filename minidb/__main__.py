@@ -65,6 +65,9 @@ def start():
         elif cmd == "sumgroup":
             db.sumgroup(table_name, in_table[0], columns[0], columns[1:])
 
+        elif cmd == "countgroup":
+            db.countgroup(table_name, in_table[0], columns[0], columns[1:])
+
         elif cmd == "movavg":
             n = int(criteria)
             db.movavg(table_name, in_table[0], columns, n)
