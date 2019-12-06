@@ -18,6 +18,8 @@ class ArgParser:
         def __init__(self, criteria_str, query_type):
             self.criteria_str=criteria_str
             self.query_type=query_type
+            self.num_conditions = 0   # number of conditions
+
 
             self.comparator_pattern = re.compile("=|!=|<|>|≥|≤")
             self.comparator_pattern_ne = re.compile("|!=|<|>|≥|≤")
@@ -27,7 +29,6 @@ class ArgParser:
             
             self.comparators = []
             self.logic_operators = []
-            self.num_conditions = 0   # number of conditions
             self.conditions = []
             self.arithops= []
             self.constants=[]
@@ -102,7 +103,7 @@ class ArgParser:
                 fields = field.split(arithop)
                 tokenized_expr = [fields[0],constant,fields[1]]
             else:
-                tokenized_expr=[field,constant]
+                tokenized_expr=[field.strip(),constant.strip()]
             self.conditions.append(tokenized_expr)
 
         def parse_join_expression(self, condition, i):

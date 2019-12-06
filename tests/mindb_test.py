@@ -29,9 +29,14 @@ def parse_assert(utils, txt, table_name, cmd, args):
     assert parsed_cmd == cmd, "Error parsing command"
     assert parsed_args == args, "Error parsing arguments"
 
-def criteria_assert(parser, cmd, args, correct_result):
+def criteria_assert(parser, cmd, args, correct_conditions, correct_comparators, correct_arithops, correct_constants, correct_logic_operators):
     in_table, columns, criteria = parser(cmd, args).get_args()
-    assert criteria.conditions == correct_result
+    assert criteria.conditions == correct_conditions
+    assert criteria.comparators == correct_comparators
+    assert criteria.arithops == correct_arithops
+    assert criteria.constants == correct_constants
+    assert criteria.logic_operators == correct_logic_operators
+
 
 def test(get_db):
     db = get_db
@@ -51,9 +56,8 @@ def test(get_db):
 
 
 # tests for detecting parsing errors
-def test_parsing(get_parser,get_argparser):
+def test_parsing(get_parser):
     utils = get_parser
-    parser = get_argparser
     parse_assert(utils, "// parser handling comments test", None, None, None)
     parse_assert(utils, "R := inputfromfile(sales1) // import vertical bar delimited foo, first line",
                  "R", "inputfromfile", "(sales1)")
@@ -71,6 +75,51 @@ def test_parsing(get_parser,get_argparser):
                  "T1", "join", "(R1,S,(R1.qty>S.Q)and(R1.saleid=S.saleid))")
     parse_assert(utils, "outputtofile(Q5, Q5)", None, "outputtofile", "(Q5,Q5)")
     parse_assert(utils, "Hash(R,itemid)", None, "Hash", "(R,itemid)")
-
     parse_assert(utils, "R1:= select(t1, (time > 50))", "R1", "select", "(t1,(time>50))")
-    # criteria_assert(parser, "select", "(t1,(time>50))", ["time","50"])
+
+def test_criteria_parsing(get_argparser):
+    #correct_conditions, correct_comparators, correct_arithops, correct_constants, correct_logic_operators):
+
+    parser = get_argparser
+    # select test cases
+    criteria_assert(parser, "select", "(t1,(time=50))", [["time","50"]], ["="], [None], [], [])
+    # test with spaces
+    criteria_assert(parser, "select", "(t1,(time = 50))", [["time","50"]], ["="], [None], [], [])
+    # test with multiple conditions
+    criteria_assert(parser, "select", "(t1,(time = 50) or (time > 100))", [["time","50"],["time", "100"]], ["=", ">"], [None,None], [], ["or"])
+
+
+    # test all arithmetic operators
+    criteria_assert(parser, "select", "(t1,(time*2=50))", [["time","50","2"]], ["="], ["*"], [], [])
+    criteria_assert(parser, "select", "(t1,(time/2=50))", [["time","50","2"]], ["="],["/"], [], [])
+    # criteria_assert(parser, "select", "(t1,(time+2=50))", ["time","50"])
+    # criteria_assert(parser, "select", "(t1,(time-2=50))", ["time","50"])
+    # criteria_assert(parser, "select", "(t1,(time^2=50))", ["time","50"])
+
+
+    # # join test cases
+    # # test single conditions
+    criteria_assert(parser, "join", "(t1,t2,(t1.time+10>t2.T))",
+        [["t1", "time", "t2", "T"]],
+        [">"], [["+",None]],
+        [["10",None]],
+        [])
+    # criteria_asset(parser, "join", "(t1,t2,(t1.time+10>t2.T+10))")
+    # # test multiple conditions
+    criteria_assert(parser, "join", "(t1,t2,(t1.time+10>t2.T+10) and (t1.saleid=t2.saleid))",
+        [["t1", "saleid", "t2", "saleid"],["t1", "time", "t2", "T"]],
+        ["=", ">"],
+        [[None,None], ["+","+"]],
+        [[None,None], ["10","10"]],
+        ["and"])
+
+    criteria_assert(parser, "join", "(t1,t2, ( t1.time + 10 > t2.T+10 ) and  (t1.saleid=t2.saleid))",
+        [["t1", "saleid", "t2", "saleid"],["t1", "time", "t2", "T"]],
+        ["=", ">"],
+        [[None,None], ["+","+"]],
+        [[None,None], ["10","10"]],
+        ["and"])
+    # criteria_asset(parser, "join", "(t1,t2,(t1.time+10>t2.T+10) and (t1.saleid!=t2.saleid))")
+
+
+
