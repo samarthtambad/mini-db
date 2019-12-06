@@ -22,7 +22,7 @@ class ArgParser:
             self.comparator_pattern = re.compile("=|!=|<|>|≥|≤")
             self.comparator_pattern_ne = re.compile("|!=|<|>|≥|≤")
             self.equijoin_comparator_pattern = re.compile("=")
-            self.arithops_pattern ="[*/+\-\^]"
+            self.arithops_pattern =r'[*/+\-\^]'
             self.logic_pattern = re.compile("and|or")
             
             self.comparators = []
