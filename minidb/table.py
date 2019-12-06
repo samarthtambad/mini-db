@@ -32,13 +32,6 @@ class Table:
         except ValueError:
             return False
 
-    # def is_col_int(self,col_name):
-    #     if col_name in self.col_names.keys():
-    #         idx = self.col_names[col_name]
-    #         return self.__is_col_int(idx)
-    #     else:
-    #         return False
-
     def __is_col_float(self, idx):
         try:
             float(self.rows[0][idx])
@@ -78,6 +71,9 @@ class Table:
         return col_width+2
 
     def copy(self, out_table_name):
+        """create a "deep" copy of the input table
+        :return: copied table
+        """
         out_table = Table(out_table_name,self.col_names.keys())
         out_table.rows = self.rows
         out_table.num_rows = self.num_rows
@@ -88,10 +84,11 @@ class Table:
         out_table.num_columns = self.num_columns
         return out_table
 
-    # def get_dimensions(self):
-    #     return self.rows.shape
-
     def set_data(self,rows):
+        """set rows, length of table, and data types for columns
+        :param rows: np array of table data
+        :return: None
+        """
         self.rows=np.array(rows)
         self.num_rows=len(rows)
         if (self.num_rows>0):
@@ -197,6 +194,11 @@ class Table:
         return projected_table
 
     def sort(self, result_table_name, columns):
+        """sort table in ascending order on given column(s)
+        :param result_table_name: name of table to output
+        :columns: ordered list of columns to sort on
+        :return: None if column does not exist or sorted result table
+        """
         result_table = Table(result_table_name, self.col_names)
         idx = []
         for col in columns:

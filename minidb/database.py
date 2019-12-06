@@ -105,7 +105,7 @@ class Database:
         :param out_table_name: name of the resulting table
         :param tables: list of tables to join
         :param criteria: condition(s) that each selected row must satisfy
-        :return: None
+        :return: success True/False
         """
         print("here")
 
@@ -113,8 +113,6 @@ class Database:
         t2 = self.__get_table(tables[1])
         if t1 is None or t2 is None:
             return False
-
-
 
         # create new table with appropriate name and columns
         t1_cols = [tables[0] + "_" + x for x in t1.col_names]
@@ -148,7 +146,7 @@ class Database:
         :param out_table_name: name of the output table
         :param in_table_name: name of the input table
         :param criteria: condition(s) that each selected row must satisfy
-        :return: None
+        :return: success True/False
         """
         if not self.__exists(in_table_name):
             print("Table %s does not exist" % in_table_name)
@@ -208,7 +206,7 @@ class Database:
         :param out_table_name: name of the output table
         :param in_table_name: name of the input table
         :param columns: name of the columns to sort by (in the given order)
-        :return: None
+        :return: success True/False
         """
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
@@ -218,6 +216,7 @@ class Database:
         out_table.print()
         print("%d rows returned" % len(out_table.rows))
         self.__save_table(out_table_name, out_table)
+        return True
 
     def avggroup(self, out_table_name, in_table_name, avg_column, groupby_columns):
         """ select avg(`sum_column`), `other_columns` from table
@@ -225,7 +224,7 @@ class Database:
         :param in_table_name: name of the input table
         :param avg_column: name of column over which avg is taken
         :param groupby_columns: names of columns to group by
-        :return: None
+        :return: success True/False
         """
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
@@ -234,6 +233,7 @@ class Database:
         out_table = in_table.avggroup(out_table_name, avg_column, groupby_columns)
         print("%d rows returned" % len(out_table.rows))
         out_table.print()
+        return True
 
     def sumgroup(self, out_table_name, in_table_name, sum_column, groupby_columns):
         """ select sum(`sum_column`), `other_columns` from table
@@ -241,8 +241,8 @@ class Database:
         :param in_table_name: name of the input table
         :param sum_column: name of column over which sum is taken
         :param groupby_columns: names of columns to group by
-        :return: None
-        """
+        :return: sucess True/False
+         """
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
             return False
@@ -251,23 +251,25 @@ class Database:
         out_table.print()
         print("%d rows returned" % len(out_table.rows))
         self.__save_table(out_table_name, out_table)
+        return True
     
-    def countgroup(self, out_table_name, in_table_name, sum_column, groupby_columns):
+    def countgroup(self, out_table_name, in_table_name, count_column, groupby_columns):
         """ select sum(`sum_column`), `other_columns` from table
         :param out_table_name: name of the output table
         :param in_table_name: name of the input table
-        :param sum_column: name of column over which sum is taken
+        :param count_column: name of column over which count is taken
         :param groupby_columns: names of columns to group by
-        :return: None
+        :return: sucess True/False
         """
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
             return False
         in_table = self.__get_table(in_table_name)
-        out_table = in_table.countgroup(out_table_name, sum_column, groupby_columns)
+        out_table = in_table.countgroup(out_table_name, count_column, groupby_columns)
         out_table.print()
         print("%d rows returned" % len(out_table.rows))
         self.__save_table(out_table_name, out_table)
+        return True
 
     def movavg(self, out_table_name, in_table_name, column, n):
         """ perform `n` item moving average over `column` of `table'
@@ -275,7 +277,7 @@ class Database:
         :param in_table_name: name of the input table
         :param column: name of the column
         :param n: number of items over which to take moving average
-        :return: None
+        :return: success True/False
         """
         if not self.__exists(in_table_name):
             print("No table found")
@@ -284,6 +286,7 @@ class Database:
         out_table = in_table.movavg(out_table_name, column, n)
         out_table.print()
         self.__save_table(out_table_name, out_table)
+        return True
 
     def movsum(self, out_table_name, in_table_name, column, n):
         """ perform `n` item moving sum over `column` of `table'
@@ -291,7 +294,7 @@ class Database:
         :param in_table_name: name of the input table
         :param column: name of the column
         :param n: number of items over which to take moving sum
-        :return: None
+        :return: success True/False
         """
         if not self.__exists(in_table_name):
             print("No table found")
@@ -301,8 +304,14 @@ class Database:
         self.__save_table(out_table_name, out_table)
         out_table.print(num_rows=5)
         return out_table
+        return True
 
     def count(self, out_table_name, in_table_name):
+        """get count of rows in table
+        :param out_table_name: name of the resulting table
+        :param in_table_name: name of the input table
+        :return: success True/False
+        """
         if (not self.__exists(in_table_name)):
             print("Table %s not found" % in_table_name)
             return False
@@ -311,6 +320,7 @@ class Database:
         out_table=in_table.count(out_table_name)
         self.__save_table(out_table_name, out_table)
         out_table.print()
+        return True
 
 
     def avg(self, out_table_name, in_table_name, column):
@@ -318,7 +328,7 @@ class Database:
         :param out_table_name: name of the output table
         :param in_table_name: name of the input table
         :param column: name of the column to average over
-        :return: None
+        :return: success True/False
         """
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
@@ -328,6 +338,7 @@ class Database:
         out_table = in_table.avg(out_table_name,column)
         self.__save_table(out_table_name, out_table)
         out_table.print()
+        return True
 
 
     def sum(self, out_table_name, in_table_name, column):
@@ -335,7 +346,7 @@ class Database:
         :param out_table_name: name of the output table
         :param in_table_name: name of the input table
         :param column: name of the column to average over
-        :return: None
+        :return: success True/False
         """
         if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
@@ -345,6 +356,7 @@ class Database:
         out_table = in_table.sum(out_table_name,column)
         self.__save_table(out_table_name, out_table)
         out_table.print()
+        return True
 
     def Btree(self, table_name, column):
         """ create a Btree index on `table` based on `column`
