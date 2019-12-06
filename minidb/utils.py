@@ -7,8 +7,9 @@ class Utils:
     # lookups
     OPERATORS = {
     "<": operator.lt, ">": operator.gt, "=": operator.eq, "!=": operator.ne,
-    "≥":   operator.ge, "≤": operator.le, "and": operator.and_, "or": operator.or_, "*":operator.mul, "+":operator.add,
-    "/":operator.truediv,"-":operator.sub
+    "≥":   operator.ge, "≤": operator.le, "and": operator.and_, "or": operator.or_,
+    "*":operator.mul, "+":operator.add,
+    "/":operator.truediv,"-":operator.sub, "^":operator.pow
     }
 
     NUMERIC = {

@@ -90,8 +90,10 @@ E2:=join(A,B,(A.saleid=B.saleid) and (A.qty≥B.Q))
 E3:=join(A,B,(A.saleid=B.saleid) and (A.qty≤B.Q))
 E3:=join(A,B,(A.qty≤B.Q) and (A.saleid=B.saleid))
 
-
 E3:=join(A,B,(2*A.qty=B.Q))
+E3:=join(A,B,(A.qty^2=B.Q))
+E3:=join(A,B,(2*A.saleid=B.saleid))
+E3:=join(A,B,(36-A.saleid=B.saleid))
 E3:=join(A,B,(A.qty*2=B.Q))
 
 E3:=join(A,B,(A.qty=3*B.Q))
