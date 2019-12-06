@@ -22,6 +22,8 @@ R5 := sumgroup(R1, qty, time, pricerange) // select sum(qty), time,
 R6 := avggroup(R1, qty, pricerange) // select avg(qty), pricerange
 // from R1 group by by pricerange
 
+R7:= countgroup(R1, qty, pricerange)
+
 S := inputfromfile(sales2) // suppose column headers are
 // saleid|I|C|S|T|Q|P
 
@@ -61,9 +63,49 @@ outputtofile(Q5, Q5) // This should output the table Q5 into a file
 outputtofile(T, T) // This should output the table T
 
 
+
 <---- more tests --->
-A:=select(R, itemid=7)
-A1:=select(R,7=itemid)
+A:=inputfromfile(sales1)
+A:=inputfromfile(sales1_small)
+A1:=select(A,7=itemid)
+A2:=select(A,itemid*2=14)
+A3:=select(A,14=itemid*2)
+
+B:=inputfromfile(sales2_medium)
+B:=inputfromfile(sales2_small)
+B:=inputfromfile(sales2)
+B1:=select(B,Q<600)
+
+D:=join(A,B,A.saleid=B.saleid)
+D1:=join(A,B,A.saleid*2=B.saleid)
+D2:=join(A,B,A.saleid=B.saleid/2)
+
+
+
+D3:=join(A,B,(A.qty=B.Q)) --> -->
+
+E:=join(A,B,(A.saleid=B.saleid) and (A.pricerange=B.P))
+E1:=join(A,B,(A.saleid=B.saleid) and (A.pricerange!=B.P))
+E2:=join(A,B,(A.saleid=B.saleid) and (A.qty≥B.Q))
+E3:=join(A,B,(A.saleid=B.saleid) and (A.qty≤B.Q))
+E3:=join(A,B,(A.qty≤B.Q) and (A.saleid=B.saleid))
+
+
+E3:=join(A,B,(2*A.qty=B.Q))
+E3:=join(A,B,(A.qty*2=B.Q))
+
+E3:=join(A,B,(A.qty=3*B.Q))
+E3:=join(A,B,(A.qty=B.Q*3))
+
+E4:=join(A,B,(B.Q<A.qty))
+E3:=join(A,B,(A.qty<B.Q))
+
+E4:=join(A,B,(B.Q<A.qty) and (A.saleid>B.saleid))
+E5:=join(A,B,(B.Q≤A.qty))
+
+
+
+F:=input
 
 
 ```

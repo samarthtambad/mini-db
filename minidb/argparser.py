@@ -107,7 +107,6 @@ class ArgParser:
 
         def parse_join_expression(self, condition, i):
             left, right = re.split(self.comparator_pattern, condition)
-
             # process left side of comparator
             t1_arithop = self.get_arithop(left)
             # check for arithmetic operators
@@ -137,10 +136,10 @@ class ArgParser:
             else:
                 left2,right2 = right.split(t2_arithop)
                 if (utils.is_numeric(left2)):
-                    t2_constant = utils.remove_parentheses(left1).strip()
-                    t2_ = utils.remove_parentheses(right1).strip()
+                    t2_constant = utils.remove_parentheses(left2).strip()
+                    t2_ = utils.remove_parentheses(right2).strip()
                     t2=t2_.split(".")[0]
-                    t2_field = t2.split(".")[1]
+                    t2_field = t2_.split(".")[1]
                 else:
                     t2_constant=utils.remove_parentheses(right2).strip()
                     t2_=utils.remove_parentheses(left2).strip()
