@@ -38,9 +38,11 @@ def criteria_assert(parser, cmd, args, correct_conditions, correct_comparators, 
     assert criteria.logic_operators == correct_logic_operators
 
 
-def test(get_db):
-    db = get_db
+def join_assert(count, correct_count):
+    assert count == correct_count
 
+def test(get_db, get_parser, get_argparser):
+    db = get_db
     # test taking input from file
     assert db.input_from_file("table1", "data/sales1") is True, "File not found"
     assert len(db.tables) == 1, "Created table not saved in database"
@@ -54,6 +56,26 @@ def test(get_db):
         is True, "Error in db.project()"
     assert len(db.tables) == 2, "Projected table not saved in database"
 
+
+def test_join(get_db, get_parser, get_argparser):
+    db = get_db
+    argparser = get_argparser
+    utils = get_parser
+    db.input_from_file("A", "data/sales1")
+    db.input_from_file("B", "data/sales2")
+    db.input_from_file("A_small", "data/sales1_small")
+    db.input_from_file("B_small", "data/sales2_small")
+
+
+    queries = ["E3:=join(A,B,(A.qty=3*B.Q))", "E3:=join(A,B,(A.saleid-36=B.saleid))","E3:=join(A_small,B_small,(A_small.qty≤B_small.Q)", "E3:=join(A,B,(A.qty≤B.Q) and (A.saleid=B.saleid))", "E1:=join(A,B,(A.saleid=B.saleid) and (A.pricerange!=B.P))",
+    "E1:=join(A,B,(3*B.Q=A.qty"]
+    results = [598839, 964, 51, 539, 868,598839]
+    for i in range(0, len(queries)):
+        table_name, cmd, args = utils.parse(queries[i])
+        in_table, columns, criteria = argparser(cmd, args).get_args()
+        assert db.join(table_name, in_table, criteria) is True, ""
+        t = db.tables[table_name]
+        join_assert(t.num_rows, results[i])
 
 # tests for detecting parsing errors
 def test_parsing(get_parser):
@@ -79,7 +101,6 @@ def test_parsing(get_parser):
 
 def test_criteria_parsing(get_argparser):
     #correct_conditions, correct_comparators, correct_arithops, correct_constants, correct_logic_operators):
-
     parser = get_argparser
     # select test cases
     criteria_assert(parser, "select", "(t1,(time=50))", [["time","50"]], ["="], [None], [], [])
