@@ -107,10 +107,14 @@ class Database:
         :param criteria: condition(s) that each selected row must satisfy
         :return: None
         """
+        print("here")
+
         t1 = self.__get_table(tables[0])
         t2 = self.__get_table(tables[1])
         if t1 is None or t2 is None:
             return False
+
+
 
         # create new table with appropriate name and columns
         t1_cols = [tables[0] + "_" + x for x in t1.col_names]
@@ -121,8 +125,9 @@ class Database:
         data=join.do_join()
         table.set_data(data)
         self.__save_table(out_table_name, table)
-        table.print()
+        # table.print()
         print("%d rows returned" % len(data))
+        return True
 
     def output_to_file(self, table_name, file):
         """ Output contents of `table` (with vertical bar separators) into `file`.
