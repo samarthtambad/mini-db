@@ -16,35 +16,32 @@ class ArgParser:
         """inner class to store criteria for joins and selects
         """
         def __init__(self, criteria_str, query_type):
-            self.criteria_str=criteria_str
-            self.query_type=query_type
+            self.criteria_str = criteria_str
+            self.query_type = query_type
             self.num_conditions = 0   # number of conditions
-
-
             self.comparator_pattern = re.compile("=|!=|<|>|≥|≤")
             self.comparator_pattern_ne = re.compile("|!=|<|>|≥|≤")
             self.equijoin_comparator_pattern = re.compile("=")
-            self.arithops_pattern =r'[*/+\-\^]'
+            self.arithops_pattern = r'[*/+\-\^]'
             self.logic_pattern = re.compile("and|or")
             
             self.comparators = []
             self.logic_operators = []
             self.conditions = []
-            self.arithops= []
-            self.constants=[]
+            self.arithops = []
+            self.constants = []
             
-            #for joins only
-
-            #constants
+            # for joins only
+            # constants
             self.eq_constants = []
             self.ne_constants = []
-            #arithops
+            # arithops
             self.eq_arithops = []
             self.ne_arithops = []
-            #conditions
+            # conditions
             self.eq_conditions = []
             self.ne_conditions = []
-            #comparators
+            # comparators
             self.eq_comparators = []
             self.ne_comparators = []
 
@@ -55,8 +52,8 @@ class ArgParser:
         def get_arithop(self, criteria_str):
             """returns arithmetic operator or None if no arithmetic operator is found
             """
-            arithop = re.findall(self.arithops_pattern,criteria_str)
-            if len(arithop)>0:
+            arithop = re.findall(self.arithops_pattern, criteria_str)
+            if len(arithop) > 0:
                 return arithop[0]
             else:
                 return None 
@@ -64,21 +61,19 @@ class ArgParser:
         def set_conditions(self):
             conditions = re.split(self.logic_pattern, self.criteria_str)
             for i in range(0, self.num_conditions):
-                arithop=self.get_arithop(str(conditions[i]))
+                arithop = self.get_arithop(str(conditions[i]))
                 # expr = self.parse_expression(arithop, str(conditions[i]), i)
                 self.parse_expression(arithop, str(conditions[i]), i)
 
-            
-            if (self.query_type=="join"):
+            if self.query_type == "join":
                 self.conditions = self.eq_conditions + self.ne_conditions
                 self.arithops = self.eq_arithops + self.ne_arithops
                 self.comparators = self.eq_comparators + self.ne_comparators
                 self.constants = self.eq_constants + self.ne_constants
 
-
         def parse_expression(self, arithop, condition, i):
             condition = utils.remove_parentheses(condition)
-            if self.query_type=="join":
+            if self.query_type == "join":
                 self.parse_join_expression(condition, i)
             else:
                 self.parse_select_expression(condition, arithop, i)
@@ -96,14 +91,14 @@ class ArgParser:
                 self.comparators.append(utils.REVERSE_COMPARATOR[comparator])
             else:
                 constant = right
-                field=left
+                field = left
                 self.comparators.append(comparator)
 
-            if (arithop is not None):
+            if arithop is not None:
                 fields = field.split(arithop)
-                tokenized_expr = [fields[0],constant,fields[1]]
+                tokenized_expr = [fields[0], constant, fields[1]]
             else:
-                tokenized_expr=[field.strip(),constant.strip()]
+                tokenized_expr = [field.strip(), constant.strip()]
             self.conditions.append(tokenized_expr)
 
         def parse_join_expression(self, condition, i):
@@ -111,39 +106,39 @@ class ArgParser:
             # process left side of comparator
             t1_arithop = self.get_arithop(left)
             # check for arithmetic operators
-            if (t1_arithop is None):
+            if t1_arithop is None:
                 t1 = utils.remove_parentheses(left.split(".")[0]).strip()
                 t1_field = left.split(".")[1].strip()
-                t1_constant=None
+                t1_constant = None
             else:
-                left1,right1 = left.split(t1_arithop)
-                if (utils.is_numeric(left1)):
-                    t1_constant=utils.remove_parentheses(left1).strip()
+                left1, right1 = left.split(t1_arithop)
+                if utils.is_numeric(left1):
+                    t1_constant = utils.remove_parentheses(left1).strip()
                     t1_ = utils.remove_parentheses(right1).strip()
-                    t1=t1_.split(".")[0]
-                    t1_field=t1_.split(".")[1]
+                    t1 = t1_.split(".")[0]
+                    t1_field = t1_.split(".")[1]
                 else:
-                    t1_constant=utils.remove_parentheses(right1).strip()
+                    t1_constant = utils.remove_parentheses(right1).strip()
                     t1_ = utils.remove_parentheses(left1).strip()
-                    t1=t1_.split(".")[0]
-                    t1_field=t1_.split(".")[1]
+                    t1 = t1_.split(".")[0]
+                    t1_field = t1_.split(".")[1]
 
             # process right side of comparator
             t2_arithop = self.get_arithop(right)
-            if (t2_arithop is None):
+            if t2_arithop is None:
                 t2 = right.split(".")[0].strip()
-                t2_field=utils.remove_parentheses(right.split(".")[1]).strip()
-                t2_constant=None
+                t2_field = utils.remove_parentheses(right.split(".")[1]).strip()
+                t2_constant = None
             else:
-                left2,right2 = right.split(t2_arithop)
-                if (utils.is_numeric(left2)):
+                left2, right2 = right.split(t2_arithop)
+                if utils.is_numeric(left2):
                     t2_constant = utils.remove_parentheses(left2).strip()
                     t2_ = utils.remove_parentheses(right2).strip()
-                    t2=t2_.split(".")[0]
+                    t2 = t2_.split(".")[0]
                     t2_field = t2_.split(".")[1]
                 else:
-                    t2_constant=utils.remove_parentheses(right2).strip()
-                    t2_=utils.remove_parentheses(left2).strip()
+                    t2_constant = utils.remove_parentheses(right2).strip()
+                    t2_= utils.remove_parentheses(left2).strip()
                     t2 = t2_.split(".")[0]
                     t2_field = t2_.split(".")[1]
 
@@ -151,13 +146,13 @@ class ArgParser:
             if "=" in condition and "!=" not in condition:
                 self.eq_conditions.append(tokenized_expr)
                 self.eq_comparators.append("=")
-                self.eq_arithops.append([t1_arithop,t2_arithop])
-                self.eq_constants.append([t1_constant,t2_constant])
+                self.eq_arithops.append([t1_arithop, t2_arithop])
+                self.eq_constants.append([t1_constant, t2_constant])
             else:
                 self.ne_conditions.append(tokenized_expr)
                 self.ne_comparators.append(re.findall(self.comparator_pattern, condition)[0])
-                self.ne_arithops.append([t1_arithop,t2_arithop])
-                self.ne_constants.append([t1_constant,t2_constant])
+                self.ne_arithops.append([t1_arithop, t2_arithop])
+                self.ne_constants.append([t1_constant, t2_constant])
 
     def __init__(self, cmd, args):
         self.command = cmd
@@ -200,7 +195,7 @@ class ArgParser:
 
         # has only 1 argument
         if self.command in self.types[self.Types.ONE_ARGS]:
-            in_table=utils.remove_parentheses(self.args)
+            in_table = utils.remove_parentheses(self.args)
             return in_table, None, None
 
         # has two arguments, no need to worry about criteria
