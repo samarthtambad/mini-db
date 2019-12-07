@@ -343,7 +343,7 @@ class Table:
 
     def btree_index(self, column):
         index = Index(self, self.__get_column_idx(column), "Btree")
-        index.print()
+        # index.print()
         self.indexes[column] = index
 
     def hash_index(self, column):
