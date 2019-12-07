@@ -23,6 +23,7 @@ mini-db (container folder)
 ├── tests
 │   ├── mindb_test.py (pytest, tests to check implementation)
 ├── README.md
+├── input_file (commands to run)
 ├── requirements.txt (dependencies to install)
 ```
 
