@@ -1,14 +1,13 @@
-T1 := inputfromfile(sales1)
-T2 := inputfromfile(sales2)
-T2 := project(T1, saleid, qty, pricerange)
-T3 := movavg(T1, qty, 3)
-T3 := movsum(T1, qty, 3)
+// does it handle comments without code
+// can it load data into tables
+R:=inputfromfile(sales1)
+B := inputfromfile(sales1_small)
+S :=inputfromfile(sales2)
+Y:= inputfromfile(sales2_medium)    // can it handle comments after code
 
-Hash(T1,qty)
-Btree(T1, qty)
-
-
-T2 := movavg(T1, Q, 3)
-T3 := movsum(T1, Q, 3)
-
-outputtofile(T1, T1)
+// can it handle blank lines
+R1 := select(R, (time > 50) or (qty < 30))
+R2 := project(R, saleid, qty, pricerange)
+R3 := avg(R1, qty)
+R4 := sumgroup(R1, time, qty)
+R5 := sumgroup(R1, qty, time, pricerange)

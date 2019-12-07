@@ -28,13 +28,14 @@ def start():
         
             # handle other commands after parsing
             table_name, cmd, args = utils.parse(txt)
-            in_table, columns, criteria = ArgParser(cmd, args).get_args()
 
             # there were only comments in the input text
             if cmd is None:
                 continue
 
-            elif cmd == "count":
+            in_table, columns, criteria = ArgParser(cmd, args).get_args()
+
+            if cmd == "count":
                 db.count(table_name, in_table)
 
             elif cmd == "inputfromfile":
@@ -93,8 +94,9 @@ def start():
             end_time = time.time()
             print("\nTime taken: %0.5f s" % (end_time - start_time))
 
-        except Exception as e:
+        except EOFError as e:
             print(e)
+            break
     
 
 if __name__ == "__main__":
