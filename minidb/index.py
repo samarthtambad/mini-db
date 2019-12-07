@@ -16,8 +16,12 @@ class Index:
             self.create_transform_hash_index(col_idx)
         else:
             self.index = OOBTree()
-            for i, row in enumerate(table.rows):
-                self.index[row[col_idx]] = (i, col_idx)
+            for i, row in enumerate(self.table.rows):
+                k = row[col_idx]
+                if k in self.index:
+                    self.index[k].append((i, col_idx))
+                else:
+                    self.index[k] = [(i, col_idx)]
 
     def create_hash_index(self, col_idx):
         self.index = {}
@@ -29,7 +33,7 @@ class Index:
                 else:
                     self.index[k] = [(i, col_idx)]
     
-        else: #indexed column is not numberic ; keys should be strings
+        else:  # indexed column is not numberic ; keys should be strings
             for i, row in enumerate(self.table.rows):
                 k = row[col_idx]
                 if k in self.index.keys():
