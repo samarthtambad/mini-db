@@ -312,16 +312,15 @@ class Database:
         :param in_table_name: name of the input table
         :return: success True/False
         """
-        if (not self.__exists(in_table_name)):
+        if not self.__exists(in_table_name):
             print("Table %s not found" % in_table_name)
             return False
 
         in_table = self.__get_table(in_table_name)
-        out_table=in_table.count(out_table_name)
+        out_table = in_table.count(out_table_name)
         self.__save_table(out_table_name, out_table)
         out_table.print()
         return True
-
 
     def avg(self, out_table_name, in_table_name, column):
         """ select avg(`column`) from `table`
@@ -339,7 +338,6 @@ class Database:
         self.__save_table(out_table_name, out_table)
         out_table.print()
         return True
-
 
     def sum(self, out_table_name, in_table_name, column):
         """ select avg(`column`) from `table`

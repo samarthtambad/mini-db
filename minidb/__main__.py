@@ -34,7 +34,7 @@ def start():
             if cmd is None:
                 continue
 
-            elif cmd=="count":
+            elif cmd == "count":
                 db.count(table_name, in_table)
 
             elif cmd == "inputfromfile":
@@ -45,7 +45,6 @@ def start():
 
             elif cmd == "select":
                 db.select(table_name, in_table, criteria)
-                pass
 
             elif cmd == "project":
                 db.project(table_name, in_table[0], columns)
@@ -79,7 +78,7 @@ def start():
             elif cmd == "avg":
                 db.avg(table_name, in_table[0], columns[0])
 
-            elif cmd=="sum":
+            elif cmd == "sum":
                 db.sum(table_name, in_table[0], columns[0])
 
             elif cmd == "Btree":
@@ -97,7 +96,6 @@ def start():
         except Exception as e:
             print(e)
     
-
 
 if __name__ == "__main__":
     start()

@@ -6,10 +6,10 @@ class Utils:
 
     # lookups
     OPERATORS = {
-    "<": operator.lt, ">": operator.gt, "=": operator.eq, "!=": operator.ne,
-    "≥":   operator.ge, "≤": operator.le, "and": operator.and_, "or": operator.or_,
-    "*":operator.mul, "+":operator.add,
-    "/":operator.truediv,"-":operator.sub, "^":operator.pow
+        "<": operator.lt, ">": operator.gt, "=": operator.eq, "!=": operator.ne,
+        "≥": operator.ge, "≤": operator.le, "and": operator.and_, "or": operator.or_,
+        "*": operator.mul, "+": operator.add,
+        "/": operator.truediv, "-": operator.sub, "^": operator.pow
     }
 
     NUMERIC = {
@@ -18,12 +18,12 @@ class Utils:
     }
 
     REVERSE_COMPARATOR = {
-        "<":">",
-        "=":"=",
-        "!=":"!=",
-        ">":"<",
-        "≥":"≤",
-        "≤":"≥"
+        "<": ">",
+        "=": "=",
+        "!=": "!=",
+        ">": "<",
+        "≥": "≤",
+        "≤": "≥"
     }
 
     # COMPARATOR_VALUES = {
@@ -59,7 +59,7 @@ class Utils:
 
     @staticmethod
     def remove_parentheses(params):
-        return params.replace(")","").replace("(","")
+        return params.replace(")", "").replace("(", "")
 
     @staticmethod
     def parse(txt):

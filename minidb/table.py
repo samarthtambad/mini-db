@@ -20,7 +20,7 @@ class Table:
             self.col_names[col] = idx
 
     def is_col_numeric(self,idx):
-        if (self.__is_col_int(idx) or self.__is_col_float(idx)):
+        if self.__is_col_int(idx) or self.__is_col_float(idx):
             return True
         else:
             return False
@@ -62,19 +62,19 @@ class Table:
             return None
 
     def __get_max_col_width(self):
-        col_width=1;
-        for col_idx,dtype in self.col_dtypes.items():
-            if (dtype):
-                w = len(max(self.rows[:,col_idx], key=len))
-                if col_width<w:
-                    col_width=w
+        col_width = 1;
+        for col_idx, dtype in self.col_dtypes.items():
+            if dtype:
+                w = len(max(self.rows[:, col_idx], key=len))
+                if col_width < w:
+                    col_width = w
         return col_width+2
 
     def copy(self, out_table_name):
         """create a "deep" copy of the input table
         :return: copied table
         """
-        out_table = Table(out_table_name,self.col_names.keys())
+        out_table = Table(out_table_name, self.col_names.keys())
         out_table.rows = self.rows
         out_table.num_rows = self.num_rows
         out_table.indexes = self.indexes
@@ -84,26 +84,26 @@ class Table:
         out_table.num_columns = self.num_columns
         return out_table
 
-    def set_data(self,rows):
+    def set_data(self, rows):
         """set rows, length of table, and data types for columns
         :param rows: np array of table data
         :return: None
         """
-        self.rows=np.array(rows)
-        self.num_rows=len(rows)
-        if (self.num_rows>0):
+        self.rows = np.array(rows)
+        self.num_rows = len(rows)
+        if self.num_rows > 0:
             self.set_dtypes
 
     def set_dtypes(self):
         for col in list(self.col_names.keys()):
-            idx=self.__get_column_idx(col)
-            if (self.__is_col_int(idx)):
-                self.col_dtypes[idx]=1
-            elif (self.__is_col_float(idx)):
+            idx = self.__get_column_idx(col)
+            if self.__is_col_int(idx):
+                self.col_dtypes[idx] = 1
+            elif self.__is_col_float(idx):
                 # set to 0 so condition can be checked as a bool
-                self.col_dtypes[idx]=0
+                self.col_dtypes[idx] = 0
             else:
-                self.col_dtypes[idx]=2
+                self.col_dtypes[idx] = 2
 
     def insert_row(self, new_row):
         self.rows = np.concatenate((self.rows, new_row))
@@ -141,11 +141,11 @@ class Table:
         :param f: file to print to. Prints to stdout if None
         :return: None
         """
-        if (self.num_rows>0):
+        if self.num_rows > 0:
             self.set_dtypes()
-        col_width=self.__get_max_col_width()
+        col_width = self.__get_max_col_width()
         # print header
-        self.print_columns_formatted(col_width,f)
+        self.print_columns_formatted(col_width, f)
         if "num_rows" in kwargs:
             num_rows = kwargs["num_rows"]
         else:
@@ -158,7 +158,7 @@ class Table:
                 print(str(value).ljust(col_width), end='', file=f)
             print("")
 
-    def print_columns_formatted(self,col_width, f=None):
+    def print_columns_formatted(self, col_width, f=None):
         """ print column names (separated by |)
         :param f: file to print to. Prints to stdout if None
         :return: None
@@ -196,7 +196,7 @@ class Table:
     def sort(self, result_table_name, columns):
         """sort table in ascending order on given column(s)
         :param result_table_name: name of table to output
-        :columns: ordered list of columns to sort on
+        :param columns: ordered list of columns to sort on
         :return: None if column does not exist or sorted result table
         """
         result_table = Table(result_table_name, self.col_names)
@@ -228,15 +228,15 @@ class Table:
             # get value on right side of comparator
             val = criteria.conditions[i][1]
 
-            if (criteria.arithops[i] is None):
+            if criteria.arithops[i] is None:
                 if utils.NUMERIC[comparator]:
                     c_new = comparator(self.rows[:, idx].astype(float), int(val))
                 else:
                     c_new = comparator(self.rows[:, idx], val)
             else:
-                arithop=utils.OPERATORS[criteria.arithops[i]]
-                arithm = arithop(self.rows[:,idx].astype(float),float(criteria.conditions[i][2]))
-                c_new=comparator(arithm, float(val))
+                arithop = utils.OPERATORS[criteria.arithops[i]]
+                arithm = arithop(self.rows[:, idx].astype(float), float(criteria.conditions[i][2]))
+                c_new = comparator(arithm, float(val))
 
             if i - 1 < 0:
                 c = c_new
@@ -246,26 +246,26 @@ class Table:
         
         return self.rows[np.where(c)]
 
-    def avg(self,out_table_name, column):
+    def avg(self, out_table_name, column):
         # will average have multiple columns?
         result_table = Table(out_table_name, ["avg_"+column])
         idx = self.__get_column_idx(column)
         avg = np.mean(self.rows[:, idx].astype(float))
-        avg="{:.4f}".format(avg)
+        avg = "{:.4f}".format(avg)
         result_table.insert_row([[avg]])
         return result_table
 
-    def sum(self,out_table_name, column):
+    def sum(self, out_table_name, column):
         # will average have multiple columns?
         result_table = Table(out_table_name, ["sum_"+column])
         idx = self.__get_column_idx(column)
         s = np.sum(self.rows[:, idx].astype(float))
-        s="{:.4f}".format(s)
+        s = "{:.4f}".format(s)
         result_table.insert_row([[s]])
         return result_table
 
     def count(self, out_table_name):
-        result_table=Table(out_table_name, ["count"])
+        result_table = Table(out_table_name, ["count"])
         result_table.insert_row([[self.__get_length()]])
         return result_table
 
@@ -352,7 +352,7 @@ class Table:
         self.indexes[column] = index
 
     def apply_hash_transformation(self, column, constant, arithop_):
-        arithop=utils.OPERATORS[arithop_]
+        arithop = utils.OPERATORS[arithop_]
         transformed_index = Index(self, self.__get_column_idx(column), "Hash_Transform", (arithop,constant))        
         self.indexes[column + "_tr"] = transformed_index
 
