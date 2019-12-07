@@ -33,13 +33,13 @@ mini-db (container folder)
 ```python3 -m minidb```\
 This will show ```minidb>> ``` after which commands can be entered.\
 OR\
-```python3 -m minidb < input_file.txt```\
+```python3 -m minidb < input_file```\
 This will run all the commands in your input file, for example ```input_file.txt```. 
 Note that your input file must be present inside ```mini-db``` folder.
 
 #### Dependencies
 1. Python3
-2. ```BTrees``` package\
+2. BTree package\
 ```pip install BTrees```\
 More info about this package can be found at: https://pypi.org/project/BTrees. 
 
