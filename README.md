@@ -26,15 +26,20 @@ mini-db (container folder)
 ├── input_file (commands to run)
 ├── requirements.txt (dependencies to install)
 ```
-
-#### Steps to run
+#### Steps to run with reprozip  
+```reprounzip directory setup DBProject.rpz project```  
+```reprounzip directory run project``` 
+Note that our reprounzip run worked on multiple Linux environments and works on https://server.reprozip.org/.  
+On certain environemtns we have experienced issues with ```numpy```. If this occurs, please defer to the steps below to run the source code.
+#### Steps to run without reprozip
 1. Make sure dependencies are installed as described in the next section
 2. Navigate inside ```mini-db``` folder
 3. To run it to, type the following:
-```python3 -m minidb inputFile.txt```\ . 
+```python3 -m minidb inputFile.txt```. 
 (any input file name will work)
 This will run all the commands in your input file, for example ```inputFile.txt```. 
 Note that your input file must be present inside ```mini-db``` folder.  
+The program expects all datasets (ie, sales1, sales2) to reside in the "/data" subdirectory of minid-db.
 4. Output for latest run resides in output.txt file.
 #### Dependencies
 1. Python3
