@@ -43,11 +43,11 @@ The program expects all datasets (ie, sales1, sales2) to reside in the "/data" s
 4. Output for latest run resides in output.txt file.
 #### Dependencies
 1. Python3
-2. BTree package\
-```pip install BTrees```\
+2. BTree package  
+ ```pip3 install Btrees``` . 
 More info about this package can be found at: https://pypi.org/project/BTrees. \
-If there is an issue with permission, try with ```pip install --user BTrees```
-On linux environment, install ```pip3 install Btrees```. If you get an error, first run ```sudo apt-get isntall python3-dev```
+If there is an issue with permission on CIMS, try with ```pip install --user BTrees```
+On linux environment, if you get an error, first run ```sudo apt-get isntall python3-dev```, then run ```pip2 install Btrees```.
 
 3. Numpy\
 ```pip3 install numpy```
