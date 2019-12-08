@@ -92,7 +92,6 @@ class Database:
             table.num_rows = len(rows)
             if (table.num_rows>0):
                 table.set_dtypes()
-            table.print()
             self.__save_table(table_name, table)
             return True
         except OSError as e:
