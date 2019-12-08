@@ -55,7 +55,7 @@ class Database:
         if table_name not in self.tables:
             print("Table", table_name, "not present in database")
             return None
-        table: Table = self.tables[table_name]
+        table = self.tables[table_name]
         return table
 
     def input_from_file(self, table_name, file):
@@ -175,7 +175,7 @@ class Database:
 
         columns = [s.strip() for s in columns]
         print(columns)
-        projection: Table = self.tables[in_table_name].projection(projected_table_name, columns)
+        projection = self.tables[in_table_name].projection(projected_table_name, columns)
         if projection is None:
             return False
         self.__save_table(projected_table_name, projection)
