@@ -42,7 +42,8 @@ Note that your input file must be present inside ```mini-db``` folder.
 1. Python3
 2. BTree package\
 ```pip install BTrees```\
-More info about this package can be found at: https://pypi.org/project/BTrees. 
+More info about this package can be found at: https://pypi.org/project/BTrees. \
+If there is an issue with permission, try with ```pip install --user BTrees```
 
 3. Numpy\
 ```pip install numpy```
