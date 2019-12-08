@@ -8,6 +8,9 @@ data_path = "data/"
 def start():
     db = mdb()
 
+    with open("output.txt", "w"):
+        print()
+
     while True:
         try: 
             txt = input("\nminidb>> ")
@@ -37,6 +40,7 @@ def start():
 
             if cmd == "count":
                 db.count(table_name, in_table)
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "inputfromfile":
                 db.input_from_file(table_name, data_path + in_table)
@@ -46,41 +50,59 @@ def start():
 
             elif cmd == "select":
                 db.select(table_name, in_table, criteria)
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "project":
                 db.project(table_name, in_table[0], columns)
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "concat":
                 db.concat(table_name, in_table)
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "sort":
                 db.sort(table_name, in_table[0], columns)
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "join":
                 db.join(table_name, in_table, criteria)
+                db.output_to_file(table_name, "output.txt")
+                end_time = time.time()
+                db.tables[table_name].print()
+                print("\nTime taken: %0.5f s" % (end_time - start_time))
+                with open("output.txt", "a") as f:
+                    print("\nTime taken: %0.5f s" % (end_time - start_time), file=f)
+                continue
 
             elif cmd == "avggroup":
                 db.avggroup(table_name, in_table[0], columns[0], columns[1:])
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "sumgroup":
                 db.sumgroup(table_name, in_table[0], columns[0], columns[1:])
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "countgroup":
                 db.countgroup(table_name, in_table[0], columns[0], columns[1:])
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "movavg":
                 n = int(criteria)
                 db.movavg(table_name, in_table[0], columns, n)
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "movsum":
                 n = int(criteria)
                 db.movsum(table_name, in_table[0], columns, n)
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "avg":
                 db.avg(table_name, in_table[0], columns[0])
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "sum":
                 db.sum(table_name, in_table[0], columns[0])
+                db.output_to_file(table_name, "output.txt")
 
             elif cmd == "Btree":
                 db.Btree(in_table[0], columns[0])
@@ -92,7 +114,11 @@ def start():
                 print("Wrong command. Use help to find out the correct usage")
 
             end_time = time.time()
+
             print("\nTime taken: %0.5f s" % (end_time - start_time))
+            with open("output.txt", "a") as f:
+                print("\nTime taken: %0.5f s\n\n" % (end_time - start_time), file=f)
+
 
         except EOFError as e:
             print(e)
