@@ -303,7 +303,6 @@ class Database:
         out_table = in_table.movsum(out_table_name, column, n)
         self.__save_table(out_table_name, out_table)
         out_table.print(num_rows=5)
-        return out_table
         return True
 
     def count(self, out_table_name, in_table_name):
@@ -334,7 +333,7 @@ class Database:
             return False
 
         in_table = self.__get_table(in_table_name)
-        out_table = in_table.avg(out_table_name,column)
+        out_table = in_table.avg(out_table_name, column)
         self.__save_table(out_table_name, out_table)
         out_table.print()
         return True
@@ -351,7 +350,7 @@ class Database:
             return False
 
         in_table = self.__get_table(in_table_name)
-        out_table = in_table.sum(out_table_name,column)
+        out_table = in_table.sum(out_table_name, column)
         self.__save_table(out_table_name, out_table)
         out_table.print()
         return True

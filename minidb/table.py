@@ -130,6 +130,7 @@ class Table:
         :param f: file to print to. Prints to stdout if None
         :return: None
         """
+        print("")
         for idx, name in enumerate(self.col_names):
             if idx != 0:
                 print(" | ", end='', file=f)
@@ -160,6 +161,7 @@ class Table:
 
     def print_columns_formatted(self, col_width, f=None):
         """ print column names (separated by |)
+        :param col_width: width of column
         :param f: file to print to. Prints to stdout if None
         :return: None
         """
