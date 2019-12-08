@@ -107,8 +107,6 @@ class Database:
         :param criteria: condition(s) that each selected row must satisfy
         :return: success True/False
         """
-        print("here")
-
         t1 = self.__get_table(tables[0])
         t2 = self.__get_table(tables[1])
         if t1 is None or t2 is None:
