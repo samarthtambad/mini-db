@@ -92,7 +92,7 @@ class Database:
             table.num_rows = len(rows)
             if (table.num_rows>0):
                 table.set_dtypes()
-            table.print(num_rows=5)
+            table.print()
             self.__save_table(table_name, table)
             return True
         except OSError as e:
@@ -301,7 +301,7 @@ class Database:
         in_table = self.__get_table(in_table_name)
         out_table = in_table.movsum(out_table_name, column, n)
         self.__save_table(out_table_name, out_table)
-        out_table.print(num_rows=5)
+        out_table.print()
         return True
 
     def count(self, out_table_name, in_table_name):
