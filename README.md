@@ -34,8 +34,8 @@ mini-db (container folder)
 ```python3 -m minidb inputFile.txt```\ . 
 (any input file name will work)
 This will run all the commands in your input file, for example ```inputFile.txt```. 
-Note that your input file must be present inside ```mini-db``` folder.
-
+Note that your input file must be present inside ```mini-db``` folder.  
+4. Output for latest run resides in output.txt file.
 #### Dependencies
 1. Python3
 2. BTree package\
