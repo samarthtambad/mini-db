@@ -30,12 +30,10 @@ mini-db (container folder)
 #### Steps to run
 1. Make sure dependencies are installed as described in the next section
 2. Navigate inside ```mini-db``` folder
-3. To run it to take commands one-by-one (like any database), run:\
-```python3 -m minidb```\
-This will show ```minidb>> ``` after which commands can be entered.\
-OR\
-```python3 -m minidb inputFile.txt```\
-This will run all the commands in your input file, for example ```input_file.txt```. 
+3. To run it to, type the following:
+```python3 -m minidb inputFile.txt```\ . 
+(any input file name will work)
+This will run all the commands in your input file, for example ```inputFile.txt```. 
 Note that your input file must be present inside ```mini-db``` folder.
 
 #### Dependencies
