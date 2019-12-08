@@ -202,23 +202,26 @@ class Table:
         :return: None if column does not exist or sorted result table
         """
         result_table = Table(result_table_name, self.col_names)
-        idx = []
-        for col in columns:
-            if col not in self.col_names:
-                print("Invalid command. Column not present in table")
-                return None
-            else:
-                i = self.__get_column_idx(col)
-                idx.insert(0, self.__get_col_with_dtype(i))
-        
-        order = np.lexsort(idx)
-        sorted_rows = self.rows[order]
-        result_table.rows = sorted_rows
-        result_table.num_rows = len(sorted_rows)
+        if (self.num_rows)>0:
+            idx = []
+            for col in columns:
+                if col not in self.col_names:
+                    print("Invalid command. Column not present in table")
+                    return None
+                else:
+                    i = self.__get_column_idx(col)
+                    idx.insert(0, self.__get_col_with_dtype(i))
+            
+            order = np.lexsort(idx)
+            sorted_rows = self.rows[order]
+            result_table.rows = sorted_rows
+            result_table.num_rows = len(sorted_rows)
+        else:
+            result_table.num_rows=0
         return result_table
 
     def select(self, criteria):
-        # perform select. select subset of rows and return resulting table
+    # perform select. select subset of rows and return resulting table
         for i in range(0, criteria.num_conditions):
             idx = self.__get_column_idx(criteria.conditions[i][0])
             if idx is None:
