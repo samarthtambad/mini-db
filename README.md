@@ -49,7 +49,7 @@ More info about this package can be found at: https://pypi.org/project/BTrees. \
 If there is an issue with permission, try with ```pip install --user BTrees```
 
 3. Numpy\
-```pip install numpy```
+```pip3 install numpy```
 
 Alternatively, navigate inside ```mini-db``` folder and run:\
 ```pip install -r requirements.txt```
