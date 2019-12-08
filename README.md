@@ -47,6 +47,7 @@ The program expects all datasets (ie, sales1, sales2) to reside in the "/data" s
 ```pip install BTrees```\
 More info about this package can be found at: https://pypi.org/project/BTrees. \
 If there is an issue with permission, try with ```pip install --user BTrees```
+On linux environment, install ```pip3 install Btrees```. If you get an error, first run ```sudo apt-get isntall python3-dev```
 
 3. Numpy\
 ```pip3 install numpy```
