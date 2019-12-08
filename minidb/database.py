@@ -230,6 +230,7 @@ class Database:
         in_table = self.__get_table(in_table_name)
         out_table = in_table.avggroup(out_table_name, avg_column, groupby_columns)
         print("%d rows returned" % len(out_table.rows))
+        self.__save_table(out_table_name, out_table)
         out_table.print()
         return True
 
