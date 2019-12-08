@@ -1,5 +1,5 @@
 
-Time taken: 0.00313 s
+Time taken: 0.00225 s
 
 
 saleid | itemid | customerid | storeid | time | qty | pricerange
@@ -904,7 +904,7 @@ saleid | itemid | customerid | storeid | time | qty | pricerange
 873 | 86 | 2 | 89 | 49 | 5 | supercheap
 370 | 85 | 59 | 13 | 80 | 19 | outrageous
 
-Time taken: 0.02448 s
+Time taken: 0.10832 s
 
 
 saleid | qty | pricerange
@@ -1809,13 +1809,13 @@ saleid | qty | pricerange
 873 | 5 | supercheap
 370 | 19 | outrageous
 
-Time taken: 0.03462 s
+Time taken: 0.15444 s
 
 
 avg_qty
 23.7367
 
-Time taken: 0.00066 s
+Time taken: 0.00067 s
 
 
 sum_time | qty
@@ -1870,7 +1870,7 @@ sum_time | qty
 1342 | 8
 860 | 9
 
-Time taken: 0.01274 s
+Time taken: 0.03426 s
 
 
 sum_qty | time | pricerange
@@ -2053,7 +2053,7 @@ sum_qty | time | pricerange
 20 | 99 | moderate
 65 | 99 | outrageous
 
-Time taken: 0.02548 s
+Time taken: 0.07549 s
 
 
 avg_qty | pricerange
@@ -2063,7 +2063,7 @@ avg_qty | pricerange
 23.7170 | outrageous
 26.1013 | supercheap
 
-Time taken: 0.00968 s
+Time taken: 0.02310 s
 
 
 count_qty | pricerange
@@ -2073,11 +2073,11 @@ count_qty | pricerange
 569 | outrageous
 79 | supercheap
 
-Time taken: 0.00981 s
+Time taken: 0.02923 s
 
 
 
-Time taken: 0.27663 s
+Time taken: 0.24381 s
 
 
 R_saleid | R_itemid | R_customerid | R_storeid | R_time | R_qty | R_pricerange | S_saleid | S_I | S_C | S_S | S_T | S_Q | S_P
@@ -5724,7 +5724,7 @@ R_saleid | R_itemid | R_customerid | R_storeid | R_time | R_qty | R_pricerange |
 370 | 85 | 59 | 13 | 80 | 19 | outrageous | 31043 | 10675 | 59 | 29 | 73 | 10 | outrageous
 370 | 85 | 59 | 13 | 80 | 19 | outrageous | 61517 | 13041 | 59 | 85 | 73 | 46 | supercheap
 
-Time taken: 0.17116 s
+Time taken: 0.22140 s
 R1_saleid | R1_itemid | R1_customerid | R1_storeid | R1_time | R1_qty | R1_pricerange | S_saleid | S_I | S_C | S_S | S_T | S_Q | S_P
 905 | 79 | 119 | 81 | 67 | 44 | outrageous | 905 | 9852 | 5746 | 2 | 14 | 40 | moderate
 227 | 68 | 2 | 66 | 67 | 42 | supercheap | 227 | 6963 | 5746 | 37 | 73 | 27 | supercheap
@@ -6118,7 +6118,7 @@ R1_saleid | R1_itemid | R1_customerid | R1_storeid | R1_time | R1_qty | R1_price
 931 | 13 | 118 | 20 | 63 | 45 | supercheap | 931 | 11709 | 9213 | 29 | 92 | 10 | cheap
 929 | 88 | 59 | 20 | 58 | 23 | outrageous | 929 | 19565 | 5746 | 38 | 73 | 14 | moderate
 
-Time taken: 0.14582 s
+Time taken: 0.21286 s
 R1_saleid | R1_itemid | R1_customerid | R1_storeid | R1_time | R1_qty | R1_pricerange | S_saleid | S_I | S_C | S_S | S_T | S_Q | S_P
 118 | 113 | 2 | 58 | 67 | 24 | supercheap | 118 | 13801 | 279 | 27 | 54 | 12 | cheap
 781 | 108 | 200 | 50 | 67 | 44 | outrageous | 781 | 11205 | 439 | 84 | 73 | 38 | supercheap
@@ -6512,7 +6512,7 @@ R1_saleid | R1_itemid | R1_customerid | R1_storeid | R1_time | R1_qty | R1_price
 86 | 71 | 154 | 1 | 67 | 22 | moderate | 86 | 10641 | 19831 | 11 | 73 | 15 | expensive
 809 | 74 | 2 | 86 | 67 | 47 | expensive | 809 | 12927 | 19947 | 89 | 92 | 28 | supercheap
 
-Time taken: 0.01626 s
+Time taken: 0.06048 s
 
 
 R1_saleid | R1_itemid | R1_customerid | R1_storeid | R1_time | R1_qty | R1_pricerange | S_saleid | S_I | S_C | S_S | S_T | S_Q | S_P
@@ -6908,7 +6908,7 @@ R1_saleid | R1_itemid | R1_customerid | R1_storeid | R1_time | R1_qty | R1_price
 221 | 79 | 2 | 92 | 100 | 25 | outrageous | 221 | 7516 | 5746 | 6 | 73 | 14 | moderate
 284 | 119 | 193 | 65 | 100 | 47 | outrageous | 284 | 10747 | 9991 | 60 | 85 | 44 | cheap
 
-Time taken: 0.01700 s
+Time taken: 0.06009 s
 
 
 R1_saleid | R1_itemid | R1_customerid | R1_storeid | R1_time | R1_qty | R1_pricerange | S_saleid | S_I | S_C | S_S | S_T | S_Q | S_P | mov_avg
@@ -7304,7 +7304,7 @@ R1_saleid | R1_itemid | R1_customerid | R1_storeid | R1_time | R1_qty | R1_price
 221 | 79 | 2 | 92 | 100 | 25 | outrageous | 221 | 7516 | 5746 | 6 | 73 | 14 | moderate | 27.333333333333332
 284 | 119 | 193 | 65 | 100 | 47 | outrageous | 284 | 10747 | 9991 | 60 | 85 | 44 | cheap | 39.0
 
-Time taken: 0.01753 s
+Time taken: 0.07422 s
 
 
 R1_saleid | R1_itemid | R1_customerid | R1_storeid | R1_time | R1_qty | R1_pricerange | S_saleid | S_I | S_C | S_S | S_T | S_Q | S_P | mov_sum
@@ -7700,7 +7700,7 @@ R1_saleid | R1_itemid | R1_customerid | R1_storeid | R1_time | R1_qty | R1_price
 221 | 79 | 2 | 92 | 100 | 25 | outrageous | 221 | 7516 | 5746 | 6 | 73 | 14 | moderate | 157.0
 284 | 119 | 193 | 65 | 100 | 47 | outrageous | 284 | 10747 | 9991 | 60 | 85 | 44 | cheap | 154.0
 
-Time taken: 0.00815 s
+Time taken: 0.01698 s
 
 
 saleid | itemid | customerid | storeid | time | qty | pricerange
@@ -7733,11 +7733,11 @@ saleid | itemid | customerid | storeid | time | qty | pricerange
 972 | 107 | 21 | 14 | 27 | 5 | outrageous
 873 | 86 | 2 | 89 | 49 | 5 | supercheap
 
-Time taken: 0.00091 s
+Time taken: 0.00238 s
 
 
 
-Time taken: 0.00091 s
+Time taken: 0.00120 s
 
 
 saleid | itemid | customerid | storeid | time | qty | pricerange
@@ -7770,23 +7770,23 @@ saleid | itemid | customerid | storeid | time | qty | pricerange
 972 | 107 | 21 | 14 | 27 | 5 | outrageous
 873 | 86 | 2 | 89 | 49 | 5 | supercheap
 
-Time taken: 0.00097 s
+Time taken: 0.00537 s
 
 
 saleid | itemid | customerid | storeid | time | qty | pricerange
 975 | 7 | 167 | 19 | 63 | 9 | outrageous
 
-Time taken: 0.00045 s
+Time taken: 0.00051 s
 
 
 
-Time taken: 0.00082 s
+Time taken: 0.00073 s
 
 
 saleid | itemid | customerid | storeid | time | qty | pricerange
 975 | 7 | 167 | 19 | 63 | 9 | outrageous
 
-Time taken: 0.00028 s
+Time taken: 0.00324 s
 
 
 saleid | itemid | customerid | storeid | time | qty | pricerange
@@ -7819,14 +7819,14 @@ saleid | itemid | customerid | storeid | time | qty | pricerange
 972 | 107 | 21 | 14 | 27 | 5 | outrageous
 873 | 86 | 2 | 89 | 49 | 5 | supercheap
 
-Time taken: 0.00107 s
+Time taken: 0.00241 s
 
 
 
-Time taken: 0.00072 s
+Time taken: 0.00046 s
 
 
 
-Time taken: 0.05674 s
+Time taken: 0.10817 s
 
 
