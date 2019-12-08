@@ -28,7 +28,7 @@ mini-db (container folder)
 ```
 #### Steps to run with reprozip  
 ```reprounzip directory setup DBProject.rpz project```  
-```reprounzip directory run project``` 
+```reprounzip directory run project```  
 Note that our reprounzip run worked on multiple Linux environments and works on https://server.reprozip.org/.  
 On certain environemtns we have experienced issues with ```numpy```. If this occurs, please defer to the steps below to run the source code.
 #### Steps to run without reprozip
