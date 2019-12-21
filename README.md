@@ -26,31 +26,33 @@ mini-db (container folder)
 ├── input_file (commands to run)
 ├── requirements.txt (dependencies to install)
 ```
-#### Steps to run with reprozip  
-```reprounzip directory setup DBProject.rpz project```  
-```reprounzip directory run project```  
-Note that our ```reprounzip run``` worked on multiple Linux environments and works on https://server.reprozip.org/.  
-On certain environments we have experienced issues with ```numpy```. If this occurs, please defer to the steps below to run the source code.
-#### Steps to run without reprozip
+
+#### Steps to run
 1. Make sure dependencies are installed as described in the next section
 2. Navigate inside ```mini-db``` folder
-3. To run it, type the following:
-```python3 -m minidb inputFile.txt```. 
-(any input file name will work)
-This will run all the commands in your input file, for example ```inputFile.txt```. 
-Note that your input file must be present inside ```mini-db``` folder.  
-The program expects all datasets (ie, sales1, sales2) to reside in the "/data" subdirectory of minid-db.
-4. Output for latest run resides in output.txt file.
+3. To run it to take commands one-by-one (like any database), run:\
+```python3 -m minidb```\
+This will show ```minidb>> ``` after which commands can be entered.\
+OR\
+```python3 -m minidb < path_to_input_file```\
+This will run all the commands in your input file (for example ```input_file.txt```). 
+The path_to_input_file must be relative to the mini-db folder.
+Sample commands can be found under docs/usage.md
+
 #### Dependencies
 1. Python3
-2. BTree package  
- ```pip3 install Btrees``` . 
+2. BTree package\
+```pip install BTrees```\
 More info about this package can be found at: https://pypi.org/project/BTrees. \
-If there is an issue with permission on CIMS, try with ```pip install --user BTrees```
-On linux environment, if you get an error, first run ```sudo apt-get isntall python3-dev```, then run ```pip3 install Btrees```.
+If there is an issue with permission, try with ```pip install --user BTrees```
 
 3. Numpy\
-```pip3 install numpy```
+```pip install numpy```
 
 Alternatively, navigate inside ```mini-db``` folder and run:\
 ```pip install -r requirements.txt```
+
+#### Team
+
+1. [Samarth Tambad](https://github.com/samarthtambad)
+2. [Katherine Pully](https://github.com/kpully)
